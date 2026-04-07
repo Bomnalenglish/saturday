@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>어진중3 OMR 채점</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&family=Teko:wght@600&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --card: #22263a;
+    --accent: #4f8ef7;
+    --accent2: #f7a34f;
+    --green: #3ecf6e;
+    --red: #f7504f;
+    --text: #e8eaf6;
+    --muted: #8891b0;
+    --border: #2e3352;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a2040 0%, #0f1530 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 20px 16px 16px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(79,142,247,0.15);
+  }
+  .header h1 {
+    font-family: 'Teko', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(79,142,247,0.5);
+  }
+  .header p { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+
+  /* WEEK TABS */
+  .week-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    flex-wrap: wrap;
+  }
+  .week-btn {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    color: var(--muted);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .week-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(79,142,247,0.12);
+    box-shadow: 0 0 12px rgba(79,142,247,0.25);
+  }
+
+  /* SCHOOL TABS */
+  .school-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 16px 16px;
+    flex-wrap: wrap;
+  }
+  .school-btn {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    padding: 7px 16px;
+    border-radius: 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .school-btn.active {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(247,163,79,0.12);
+  }
+
+  /* SECTION */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* SCHOOL CONTENT */
+  .school-content { display: none; padding: 0 12px; }
+  .school-content.active { display: block; }
+
+  .school-title {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 16px;
+    padding: 10px;
+    background: var(--surface);
+    border-radius: 12px;
+    border-left: 4px solid var(--accent2);
+  }
+
+  /* QUESTIONS */
+  .questions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  /* MULTIPLE CHOICE */
+  .q-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .q-card.correct { border-color: var(--green) !important; background: rgba(62,207,110,0.07); }
+  .q-card.wrong { border-color: var(--red) !important; background: rgba(247,80,79,0.07); }
+
+  .q-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .q-num {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(79,142,247,0.15);
+    padding: 3px 10px;
+    border-radius: 8px;
+  }
+  .q-type-badge {
+    font-size: 0.7rem;
+    color: var(--muted);
+    background: var(--surface);
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .q-status { font-size: 1.2rem; }
+
+  .choices {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .choice-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .choice-btn:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
+  .choice-btn.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .choice-btn.correct-ans { background: var(--green); border-color: var(--green); color: #fff; }
+  .choice-btn.wrong-ans { background: var(--red); border-color: var(--red); color: #fff; }
+
+  /* SUBJECTIVE - REVEAL TYPE */
+  .q-subjective {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+  }
+  .reveal-btn {
+    width: 100%;
+    padding: 10px;
+    background: rgba(79,142,247,0.15);
+    border: 1.5px dashed var(--accent);
+    border-radius: 10px;
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .reveal-btn:hover { background: rgba(79,142,247,0.25); }
+
+  .answer-reveal {
+    display: none;
+    margin-top: 10px;
+    background: rgba(62,207,110,0.1);
+    border: 1.5px solid var(--green);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .answer-reveal.show { display: block; }
+  .answer-reveal .label {
+    font-size: 0.75rem;
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .answer-reveal .ans-text {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* SELF CHECK */
+  .self-check {
+    display: none;
+    margin-top: 8px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .self-check.show { display: flex; }
+  .self-o, .self-x {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+  .self-o { background: rgba(62,207,110,0.2); color: var(--green); border: 2px solid var(--green); }
+  .self-x { background: rgba(247,80,79,0.2); color: var(--red); border: 2px solid var(--red); }
+  .self-o.picked { background: var(--green); color: #fff; }
+  .self-x.picked { background: var(--red); color: #fff; }
+
+  /* SCORE */
+  .score-section {
+    max-width: 640px;
+    margin: 20px auto;
+    padding: 0 12px;
+  }
+  .score-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #7b5ef7);
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: 1px;
+    transition: opacity 0.2s;
+    box-shadow: 0 4px 20px rgba(79,142,247,0.4);
+  }
+  .score-btn:hover { opacity: 0.9; }
+
+  .result-box {
+    display: none;
+    margin-top: 14px;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 30px rgba(79,142,247,0.2);
+  }
+  .result-box.show { display: block; }
+  .result-box .big-score {
+    font-family: 'Teko', sans-serif;
+    font-size: 3.5rem;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(79,142,247,0.6);
+  }
+  .result-box .score-label { color: var(--muted); font-size: 0.85rem; margin: 4px 0 12px; }
+  .result-box .detail { font-size: 0.82rem; color: var(--muted); }
+  .result-box .capture-note {
+    margin-top: 14px;
+    padding: 10px;
+    background: rgba(247,163,79,0.15);
+    border: 1.5px solid var(--accent2);
+    border-radius: 10px;
+    color: var(--accent2);
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  /* RESET */
+  .reset-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-top: 8px;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    max-width: 640px;
+    margin: 0 auto 12px;
+    padding: 0 12px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+  .progress-text {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📝 어진중3 OMR 채점</h1>
+  <p>2024년 중3 영어 1학기 중간기출 · 천재(이재영)</p>
+</div>
+
+<!-- Week Tabs -->
+<div class="week-tabs">
+  <button class="week-btn active" onclick="showWeek(1)">📅 1주차</button>
+  <button class="week-btn" onclick="showWeek(2)">📅 2주차</button>
+  <button class="week-btn" onclick="showWeek(3)">📅 3주차</button>
+</div>
+
+<!-- ==================== 1주차 ==================== -->
+<div class="section active" id="week1">
+  <div class="school-tabs">
+    <button class="school-btn active" onclick="showSchool('w1','gosan')">고산중</button>
+    <button class="school-btn" onclick="showSchool('w1','gwangju')">광주진흥중</button>
+    <button class="school-btn" onclick="showSchool('w1','guam')">구암중</button>
+  </div>
+
+  <!-- 고산중 -->
+  <div class="school-content active" id="w1-gosan">
+    <div class="school-title">🏫 고산중학교 · 25문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-gosan"></div></div>
+      <div class="progress-text" id="prog-text-w1-gosan">0 / 25 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-gosan"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-gosan')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-gosan"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-gosan')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <!-- 광주진흥중 -->
+  <div class="school-content" id="w1-gwangju">
+    <div class="school-title">🏫 광주진흥중학교 · 30문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-gwangju"></div></div>
+      <div class="progress-text" id="prog-text-w1-gwangju">0 / 30 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-gwangju"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-gwangju')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-gwangju"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-gwangju')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <!-- 구암중 -->
+  <div class="school-content" id="w1-guam">
+    <div class="school-title">🏫 구암중학교 · 25문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-guam"></div></div>
+      <div class="progress-text" id="prog-text-w1-guam">0 / 25 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-guam"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-guam')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-guam"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-guam')">🔄 다시 풀기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 2주차 ==================== -->
+<div class="section" id="week2">
+  <div class="school-tabs">
+    <button class="school-btn active" onclick="showSchool('w2','gupo')">구포중</button>
+    <button class="school-btn" onclick="showSchool('w2','geumpa')">금파중</button>
+    <button class="school-btn" onclick="showSchool('w2','baekseok')">백석중</button>
+  </div>
+
+  <div class="school-content active" id="w2-gupo">
+    <div class="school-title">🏫 구포중학교 · 25문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w2-gupo"></div></div>
+      <div class="progress-text" id="prog-text-w2-gupo">0 / 25 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w2-gupo"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w2-gupo')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w2-gupo"></div>
+      <button class="reset-btn" onclick="resetSchool('w2-gupo')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="school-content" id="w2-geumpa">
+    <div class="school-title">🏫 금파중학교 · 24문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w2-geumpa"></div></div>
+      <div class="progress-text" id="prog-text-w2-geumpa">0 / 24 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w2-geumpa"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w2-geumpa')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w2-geumpa"></div>
+      <button class="reset-btn" onclick="resetSchool('w2-geumpa')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="school-content" id="w2-baekseok">
+    <div class="school-title">🏫 백석중학교 · 23문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w2-baekseok"></div></div>
+      <div class="progress-text" id="prog-text-w2-baekseok">0 / 23 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w2-baekseok"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w2-baekseok')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w2-baekseok"></div>
+      <button class="reset-btn" onclick="resetSchool('w2-baekseok')">🔄 다시 풀기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 3주차 ==================== -->
+<div class="section" id="week3">
+  <div class="school-tabs">
+    <button class="school-btn active" onclick="showSchool('w3','salesio')">살레시오중</button>
+    <button class="school-btn" onclick="showSchool('w3','seryu')">세류중</button>
+    <button class="school-btn" onclick="showSchool('w3','yeonsu')">연수중</button>
+  </div>
+
+  <div class="school-content active" id="w3-salesio">
+    <div class="school-title">🏫 살레시오중학교 · 24문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w3-salesio"></div></div>
+      <div class="progress-text" id="prog-text-w3-salesio">0 / 24 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w3-salesio"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w3-salesio')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w3-salesio"></div>
+      <button class="reset-btn" onclick="resetSchool('w3-salesio')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="school-content" id="w3-seryu">
+    <div class="school-title">🏫 세류중학교 · 20문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w3-seryu"></div></div>
+      <div class="progress-text" id="prog-text-w3-seryu">0 / 20 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w3-seryu"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w3-seryu')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w3-seryu"></div>
+      <button class="reset-btn" onclick="resetSchool('w3-seryu')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="school-content" id="w3-yeonsu">
+    <div class="school-title">🏫 연수중학교 · 25문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w3-yeonsu"></div></div>
+      <div class="progress-text" id="prog-text-w3-yeonsu">0 / 25 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w3-yeonsu"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w3-yeonsu')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w3-yeonsu"></div>
+      <button class="reset-btn" onclick="resetSchool('w3-yeonsu')">🔄 다시 풀기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =============================================
+// DATA
+// =============================================
+const SCHOOLS = {
+  'w1-gosan': {
+    name: '고산중',
+    questions: [
+      {n:1,type:'mc',ans:3},{n:2,type:'mc',ans:1},{n:3,type:'mc',ans:2},{n:4,type:'mc',ans:4},
+      {n:5,type:'sub',ans:'the straw is what Omar treasures most for her health.\n/ the straw is what is most treasured for her health.'},
+      {n:6,type:'mc',ans:5},{n:7,type:'mc',ans:3},
+      {n:8,type:'sub',ans:'Which do you think is better, dancing or hiking?'},
+      {n:9,type:'mc',ans:4},
+      {n:10,type:'sub',ans:'(A) Despite their nonstop movement, worker ants make time to rest.\n(B) They take about 250 short naps lasting about a minute each day.'},
+      {n:11,type:'mc',ans:3},{n:12,type:'mc',ans:2},
+      {n:13,type:'sub',ans:'I saw a man creeping into an empty store and stealing some cash.'},
+      {n:14,type:'mc',ans:4},{n:15,type:'mc',ans:2},{n:16,type:'mc',ans:5},{n:17,type:'mc',ans:1},
+      {n:18,type:'mc',ans:4},{n:19,type:'mc',ans:5},
+      {n:20,type:'sub',ans:'(A) the queen presented the chest filled with jewels to him.\n(B) he presented the queen gifts.'},
+      {n:21,type:'mc',ans:3},{n:22,type:'mc',ans:1},
+      {n:23,type:'sub',ans:'Since an ant has very sensitive hairs on its legs, it can sense even the smallest rub.'},
+      {n:24,type:'mc',ans:2},
+      {n:25,type:'sub',ans:'What she does her entire life is lay eggs.'}
+    ]
+  },
+  'w1-gwangju': {
+    name: '광주진흥중',
+    questions: [
+      {n:1,type:'mc',ans:1},{n:2,type:'mc',ans:5},{n:3,type:'mc',ans:4},{n:4,type:'mc',ans:4},
+      {n:5,type:'mc',ans:1},{n:6,type:'mc',ans:2},{n:7,type:'mc',ans:3},{n:8,type:'mc',ans:3},
+      {n:9,type:'mc',ans:2},{n:10,type:'sub',ans:'정답 3개: ① ② ④\n(ⓐ he was filled his ship → filled, ⓑ chased away them → chased them away, ⓓ let them to run → let them run)'},
+      {n:11,type:'mc',ans:1},
+      {n:12,type:'sub',ans:'When the queen saw cats chase the rats.'},
+      {n:13,type:'mc',ans:5},{n:14,type:'mc',ans:3},
+      {n:15,type:'sub',ans:'What the queen thinks most valuable is the kittens.'},
+      {n:16,type:'mc',ans:4},{n:17,type:'mc',ans:4},{n:18,type:'mc',ans:1},{n:19,type:'mc',ans:3},
+      {n:20,type:'mc',ans:2},{n:21,type:'mc',ans:5},{n:22,type:'mc',ans:4},{n:23,type:'mc',ans:2},
+      {n:24,type:'mc',ans:2},{n:25,type:'mc',ans:5},{n:26,type:'mc',ans:2},{n:27,type:'mc',ans:3},
+      {n:28,type:'mc',ans:4},
+      {n:29,type:'sub',ans:'예시: (1) Since Tom didn\'t want to be scolded, he ran away.\n(2) After that, Mr. Lee tried to find him but he couldn\'t.'},
+      {n:30,type:'sub',ans:'예시: (1) The boys riding a seesaw were happy.\n(2) The man taking care of the flowers is Tom.'}
+    ]
+  },
+  'w1-guam': {
+    name: '구암중',
+    questions: [
+      {n:1,type:'mc',ans:2},{n:2,type:'mc',ans:4},{n:3,type:'mc',ans:5},{n:4,type:'mc',ans:2},
+      {n:5,type:'sub',ans:'What is most valuable to Isabel'},
+      {n:6,type:'mc',ans:3},{n:7,type:'mc',ans:4},{n:8,type:'mc',ans:5},
+      {n:9,type:'sub',ans:'he filled his ship with goods'},
+      {n:10,type:'sub',ans:'what they needed'},
+      {n:11,type:'mc',ans:1},{n:12,type:'mc',ans:3},{n:13,type:'mc',ans:1},
+      {n:14,type:'sub',ans:'which do you think is better'},
+      {n:15,type:'mc',ans:5},{n:16,type:'mc',ans:4},
+      {n:17,type:'sub',ans:'covered with very sensitive hairs'},
+      {n:18,type:'mc',ans:5},{n:19,type:'mc',ans:1},{n:20,type:'mc',ans:2},
+      {n:21,type:'sub',ans:'what you told me'},
+      {n:22,type:'sub',ans:'A farmer watched a bird fly away suddenly'},
+      {n:23,type:'sub',ans:'The boy wearing sunglasses is my brother'},
+      {n:24,type:'sub',ans:'Since I had a cold, I was absent.'},
+      {n:25,type:'sub',ans:'It is a cute animal with small ears that can climb trees.'}
+    ]
+  },
+  'w2-gupo': {
+    name: '구포중',
+    questions: [
+      {n:1,type:'mc',ans:3},
+      {n:2,type:'sub',ans:'The islanders could get what they needed.'},
+      {n:3,type:'mc',ans:5},{n:4,type:'mc',ans:5},{n:5,type:'mc',ans:5},
+      {n:6,type:'mc',ans:2},{n:7,type:'mc',ans:4},{n:8,type:'mc',ans:1},{n:9,type:'mc',ans:2},
+      {n:10,type:'sub',ans:'정답 2개: ① ④\n① We waved at the woman watering the plants.\n④ My brother bought a watch made in Switzerland.'},{n:11,type:'mc',ans:3},
+      {n:12,type:'sub',ans:'Which picture do you think is better?'},
+      {n:13,type:'mc',ans:4},{n:14,type:'mc',ans:4},{n:15,type:'mc',ans:1},{n:16,type:'mc',ans:5},
+      {n:17,type:'mc',ans:4},
+      {n:18,type:'sub',ans:'They rest by taking very short naps about 250 times a day'},
+      {n:19,type:'mc',ans:5},
+      {n:20,type:'sub',ans:'What worries my parents is my personality'},
+      {n:21,type:'sub',ans:'watched the comedian fall on stage.'},
+      {n:22,type:'sub',ans:'heard the singer sing a popular song'},
+      {n:23,type:'sub',ans:'has many novels written in English.'},
+      {n:24,type:'sub',ans:'Though I was tired, I did my best to finish my homework.'},
+      {n:25,type:'sub',ans:'Since it stopped raining, he went out for a walk.'}
+    ]
+  },
+  'w2-geumpa': {
+    name: '금파중',
+    questions: [
+      {n:1,type:'mc',ans:3},{n:2,type:'mc',ans:1},{n:3,type:'mc',ans:5},{n:4,type:'mc',ans:5},
+      {n:5,type:'mc',ans:1},{n:6,type:'mc',ans:3},{n:7,type:'mc',ans:2},{n:8,type:'mc',ans:3},
+      {n:9,type:'mc',ans:5},{n:10,type:'mc',ans:1},{n:11,type:'mc',ans:3},{n:12,type:'mc',ans:4},
+      {n:13,type:'mc',ans:2},{n:14,type:'mc',ans:2},{n:15,type:'mc',ans:5},{n:16,type:'mc',ans:5},
+      {n:17,type:'mc',ans:3},{n:18,type:'mc',ans:3},{n:19,type:'mc',ans:1},{n:20,type:'mc',ans:4},
+      {n:21,type:'mc',ans:4},{n:22,type:'mc',ans:4},{n:23,type:'mc',ans:2},{n:24,type:'mc',ans:4}
+    ]
+  },
+  'w2-baekseok': {
+    name: '백석중',
+    questions: [
+      {n:1,type:'mc',ans:4},{n:2,type:'mc',ans:2},{n:3,type:'mc',ans:4},{n:4,type:'mc',ans:5},
+      {n:5,type:'mc',ans:4},{n:6,type:'mc',ans:2},{n:7,type:'mc',ans:5},{n:8,type:'mc',ans:1},
+      {n:9,type:'mc',ans:4},{n:10,type:'mc',ans:3},{n:11,type:'mc',ans:3},{n:12,type:'mc',ans:4},
+      {n:13,type:'mc',ans:5},{n:14,type:'mc',ans:5},{n:15,type:'mc',ans:2},{n:16,type:'mc',ans:1},
+      {n:17,type:'mc',ans:1},{n:18,type:'mc',ans:1},{n:19,type:'mc',ans:2},{n:20,type:'mc',ans:1},
+      {n:21,type:'mc',ans:4},{n:22,type:'mc',ans:4},{n:23,type:'mc',ans:1}
+    ]
+  },
+  'w3-salesio': {
+    name: '살레시오중',
+    questions: [
+      {n:1,type:'mc',ans:4},
+      {n:2,type:'sub',ans:'What I need most is a bike.'},
+      {n:3,type:'mc',ans:3},{n:4,type:'mc',ans:2},{n:5,type:'mc',ans:5},{n:6,type:'mc',ans:5},
+      {n:7,type:'mc',ans:2},{n:8,type:'mc',ans:5},
+      {n:9,type:'sub',ans:'He was a good friend of Antonio\'s.'},
+      {n:10,type:'mc',ans:3},{n:11,type:'mc',ans:2},{n:12,type:'mc',ans:1},{n:13,type:'mc',ans:4},
+      {n:14,type:'mc',ans:4},{n:15,type:'mc',ans:2},{n:16,type:'mc',ans:2},{n:17,type:'mc',ans:2},
+      {n:18,type:'mc',ans:4},
+      {n:19,type:'sub',ans:'(1) nothing → anything\n(2) hardly는 "거의~않다"라는 부정의 뜻이므로 nothing을 anything으로 고쳐야 한다.'},
+      {n:20,type:'mc',ans:1},
+      {n:21,type:'sub',ans:'What she does her entire life is lay eggs.'},
+      {n:22,type:'mc',ans:4},{n:23,type:'mc',ans:3},{n:24,type:'mc',ans:1}
+    ]
+  },
+  'w3-seryu': {
+    name: '세류중',
+    questions: [
+      {n:1,type:'mc',ans:2},{n:2,type:'mc',ans:3},{n:3,type:'mc',ans:5},{n:4,type:'mc',ans:2},
+      {n:5,type:'mc',ans:3},{n:6,type:'mc',ans:1},{n:7,type:'mc',ans:4},{n:8,type:'mc',ans:2},
+      {n:9,type:'mc',ans:3},{n:10,type:'mc',ans:5},{n:11,type:'mc',ans:4},{n:12,type:'mc',ans:2},
+      {n:13,type:'mc',ans:5},{n:14,type:'mc',ans:5},{n:15,type:'mc',ans:1},{n:16,type:'mc',ans:4},
+      {n:17,type:'mc',ans:1},{n:18,type:'mc',ans:4},{n:19,type:'mc',ans:1},{n:20,type:'mc',ans:2}
+    ]
+  },
+  'w3-yeonsu': {
+    name: '연수중',
+    questions: [
+      {n:1,type:'mc',ans:5},{n:2,type:'mc',ans:4},{n:3,type:'mc',ans:3},{n:4,type:'mc',ans:5},
+      {n:5,type:'mc',ans:2},{n:6,type:'mc',ans:2},{n:7,type:'mc',ans:1},{n:8,type:'mc',ans:5},
+      {n:9,type:'mc',ans:4},{n:10,type:'mc',ans:2},{n:11,type:'mc',ans:4},{n:12,type:'mc',ans:1},
+      {n:13,type:'mc',ans:1},{n:14,type:'mc',ans:1},{n:15,type:'mc',ans:3},{n:16,type:'mc',ans:4},
+      {n:17,type:'mc',ans:3},{n:18,type:'mc',ans:2},{n:19,type:'mc',ans:1},{n:20,type:'mc',ans:3},
+      {n:21,type:'mc',ans:5},{n:22,type:'mc',ans:1},{n:23,type:'mc',ans:3},{n:24,type:'mc',ans:2},
+      {n:25,type:'mc',ans:4}
+    ]
+  }
+};
+
+// Track answers
+const userAnswers = {};
+
+// =============================================
+// BUILD QUESTIONS
+// =============================================
+function buildSchool(schoolId) {
+  const data = SCHOOLS[schoolId];
+  if (!data) return;
+  const grid = document.getElementById('qgrid-' + schoolId);
+  if (grid.innerHTML !== '') return; // already built
+
+  userAnswers[schoolId] = {};
+  data.questions.forEach(q => {
+    userAnswers[schoolId][q.n] = null;
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'qcard-' + schoolId + '-' + q.n;
+
+    if (q.type === 'mc') {
+      // determine max choices
+      let maxChoice = 5;
+      if (Array.isArray(q.ans)) maxChoice = 5;
+      let choicesHTML = '';
+      for (let i = 1; i <= maxChoice; i++) {
+        choicesHTML += `<button class="choice-btn" id="cb-${schoolId}-${q.n}-${i}" onclick="selectChoice('${schoolId}',${q.n},${i})">${i}</button>`;
+      }
+      card.innerHTML = `
+        <div class="q-top">
+          <span class="q-num">Q${q.n}</span>
+          <span class="q-type-badge">객관식</span>
+          <span class="q-status" id="qs-${schoolId}-${q.n}">⬜</span>
+        </div>
+        <div class="choices">${choicesHTML}</div>
+      `;
+    } else {
+      // subjective
+      const ansText = Array.isArray(q.ans) ? q.ans.join('\n') : q.ans;
+      card.innerHTML = `
+        <div class="q-top">
+          <span class="q-num">Q${q.n}</span>
+          <span class="q-type-badge">서술형</span>
+          <span class="q-status" id="qs-${schoolId}-${q.n}">⬜</span>
+        </div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px;">정답을 확인 후 O/X로 자가채점하세요</div>
+        <button class="reveal-btn" onclick="revealAns('${schoolId}',${q.n})">🔍 정답 보기</button>
+        <div class="answer-reveal" id="ans-${schoolId}-${q.n}">
+          <div class="label">✅ 정답</div>
+          <div class="ans-text">${ansText.replace(/\n/g,'<br>')}</div>
+        </div>
+        <div class="self-check" id="sc-${schoolId}-${q.n}">
+          <button class="self-o" id="so-${schoolId}-${q.n}" onclick="selfCheck('${schoolId}',${q.n},'o')">⭕ 맞았어요</button>
+          <button class="self-x" id="sx-${schoolId}-${q.n}" onclick="selfCheck('${schoolId}',${q.n},'x')">❌ 틀렸어요</button>
+        </div>
+      `;
+      card.className = 'q-card q-subjective';
+    }
+    grid.appendChild(card);
+  });
+}
+
+function selectChoice(schoolId, qNum, choice) {
+  const data = SCHOOLS[schoolId];
+  const q = data.questions.find(x => x.n === qNum);
+
+  // Already answered
+  if (userAnswers[schoolId][qNum] !== null) return;
+
+  userAnswers[schoolId][qNum] = choice;
+
+  const correct = Array.isArray(q.ans) ? q.ans.includes(choice) : q.ans === choice;
+  const correctAns = Array.isArray(q.ans) ? q.ans : [q.ans];
+
+  // Update button styles
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.getElementById(`cb-${schoolId}-${qNum}-${i}`);
+    if (!btn) continue;
+    btn.style.pointerEvents = 'none';
+    if (i === choice) {
+      btn.classList.add(correct ? 'correct-ans' : 'wrong-ans');
+    }
+    if (!correct && correctAns.includes(i)) {
+      btn.classList.add('correct-ans');
+    }
+  }
+
+  const card = document.getElementById(`qcard-${schoolId}-${qNum}`);
+  card.classList.add(correct ? 'correct' : 'wrong');
+
+  const status = document.getElementById(`qs-${schoolId}-${qNum}`);
+  status.textContent = correct ? '✅' : '❌';
+
+  updateProgress(schoolId);
+}
+
+function revealAns(schoolId, qNum) {
+  const ans = document.getElementById(`ans-${schoolId}-${qNum}`);
+  const sc = document.getElementById(`sc-${schoolId}-${qNum}`);
+  ans.classList.add('show');
+  sc.classList.add('show');
+  const revBtn = ans.previousElementSibling;
+  if(revBtn && revBtn.classList.contains('reveal-btn')) revBtn.style.display = 'none';
+}
+
+function selfCheck(schoolId, qNum, result) {
+  if (userAnswers[schoolId][qNum] !== null) return;
+  userAnswers[schoolId][qNum] = result;
+
+  const card = document.getElementById(`qcard-${schoolId}-${qNum}`);
+  card.classList.add(result === 'o' ? 'correct' : 'wrong');
+
+  const so = document.getElementById(`so-${schoolId}-${qNum}`);
+  const sx = document.getElementById(`sx-${schoolId}-${qNum}`);
+  if (result === 'o') { so.classList.add('picked'); so.style.pointerEvents='none'; sx.style.pointerEvents='none'; }
+  else { sx.classList.add('picked'); so.style.pointerEvents='none'; sx.style.pointerEvents='none'; }
+
+  const status = document.getElementById(`qs-${schoolId}-${qNum}`);
+  status.textContent = result === 'o' ? '✅' : '❌';
+
+  updateProgress(schoolId);
+}
+
+function updateProgress(schoolId) {
+  const data = SCHOOLS[schoolId];
+  const total = data.questions.length;
+  let done = 0;
+  data.questions.forEach(q => { if (userAnswers[schoolId][q.n] !== null) done++; });
+  const pct = (done / total * 100).toFixed(0);
+  const fill = document.getElementById('prog-' + schoolId);
+  const txt = document.getElementById('prog-text-' + schoolId);
+  if (fill) fill.style.width = pct + '%';
+  if (txt) txt.textContent = `${done} / ${total} 완료`;
+}
+
+function calcScore(schoolId) {
+  const data = SCHOOLS[schoolId];
+  let correct = 0, total = 0, unanswered = 0;
+
+  data.questions.forEach(q => {
+    total++;
+    const ua = userAnswers[schoolId][q.n];
+    if (ua === null) { unanswered++; return; }
+    if (q.type === 'mc') {
+      const isCorrect = Array.isArray(q.ans) ? q.ans.includes(ua) : q.ans === ua;
+      if (isCorrect) correct++;
+    } else {
+      if (ua === 'o') correct++;
+    }
+  });
+
+  const answered = total - unanswered;
+  const pct = answered > 0 ? Math.round(correct / answered * 100) : 0;
+  const score = Math.round(correct / total * 100);
+
+  const resultBox = document.getElementById('result-' + schoolId);
+  resultBox.innerHTML = `
+    <div class="big-score">${score}점</div>
+    <div class="score-label">전체 문항 기준 점수</div>
+    <div class="detail">
+      ${total}문항 중 ${correct}개 정답<br>
+      미응답: ${unanswered}문항 · 정답률: ${pct}%
+    </div>
+    <div class="capture-note">📸 캡처해서 선생님께 제출!</div>
+  `;
+  resultBox.classList.add('show');
+}
+
+function resetSchool(schoolId) {
+  const data = SCHOOLS[schoolId];
+  userAnswers[schoolId] = {};
+  data.questions.forEach(q => { userAnswers[schoolId][q.n] = null; });
+
+  // Rebuild
+  const grid = document.getElementById('qgrid-' + schoolId);
+  grid.innerHTML = '';
+  buildSchool(schoolId);
+
+  const resultBox = document.getElementById('result-' + schoolId);
+  resultBox.classList.remove('show');
+  resultBox.innerHTML = '';
+
+  updateProgress(schoolId);
+}
+
+// =============================================
+// NAVIGATION
+// =============================================
+let currentWeek = 1;
+
+function showWeek(n) {
+  currentWeek = n;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('week' + n).classList.add('active');
+  document.querySelectorAll('.week-btn')[n-1].classList.add('active');
+}
+
+function showSchool(weekPrefix, schoolKey) {
+  const schoolId = weekPrefix + '-' + schoolKey;
+  const weekEl = document.getElementById('week' + weekPrefix.replace('w',''));
+  weekEl.querySelectorAll('.school-content').forEach(s => s.classList.remove('active'));
+  weekEl.querySelectorAll('.school-btn').forEach(b => b.classList.remove('active'));
+
+  const target = document.getElementById(schoolId);
+  if (target) target.classList.add('active');
+
+  // find the button that matches
+  const btns = weekEl.querySelectorAll('.school-btn');
+  const keys = {
+    w1: ['gosan','gwangju','guam'],
+    w2: ['gupo','geumpa','baekseok'],
+    w3: ['salesio','seryu','yeonsu']
+  };
+  const wk = 'w' + weekPrefix.replace('w','');
+  const idx = keys[wk].indexOf(schoolKey);
+  if (idx >= 0) btns[idx].classList.add('active');
+
+  buildSchool(schoolId);
+}
+
+// Initialize
+(function init() {
+  // Build first visible school in each week
+  buildSchool('w1-gosan');
+  buildSchool('w2-gupo');
+  buildSchool('w3-salesio');
+})();
+</script>
+
+</body>
+</html>
