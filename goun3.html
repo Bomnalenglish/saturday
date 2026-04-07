@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>고운중3 OMR 채점</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&family=Teko:wght@600&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --card: #22263a;
+    --accent: #bc8cff;
+    --accent2: #f7a34f;
+    --green: #3ecf6e;
+    --red: #f7504f;
+    --text: #e8eaf6;
+    --muted: #8891b0;
+    --border: #2e3352;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1a1540 0%, #0f1030 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 20px 16px 16px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(188,140,255,0.15);
+  }
+  .header h1 {
+    font-family: 'Teko', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(188,140,255,0.5);
+  }
+  .header p { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+
+  /* SCHOOL TABS - scrollable */
+  .school-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .school-tabs::-webkit-scrollbar { display: none; }
+
+  .school-btn {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    padding: 8px 14px;
+    border-radius: 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .school-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(188,140,255,0.12);
+    box-shadow: 0 0 10px rgba(188,140,255,0.2);
+  }
+
+  /* WEEK LABEL */
+  .week-label {
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    padding: 2px 0 8px;
+    text-transform: uppercase;
+  }
+
+  .school-content { display: none; padding: 0 12px; }
+  .school-content.active { display: block; }
+
+  .school-title {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 16px;
+    padding: 10px;
+    background: var(--surface);
+    border-radius: 12px;
+    border-left: 4px solid var(--accent2);
+  }
+  .school-title span { font-size: 0.75rem; color: var(--muted); margin-left: 6px; }
+
+  .questions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .q-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .q-card.correct { border-color: var(--green) !important; background: rgba(62,207,110,0.07); }
+  .q-card.wrong { border-color: var(--red) !important; background: rgba(247,80,79,0.07); }
+
+  .q-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .q-num {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(188,140,255,0.15);
+    padding: 3px 10px;
+    border-radius: 8px;
+  }
+  .q-type-badge {
+    font-size: 0.7rem;
+    color: var(--muted);
+    background: var(--surface);
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .q-status { font-size: 1.2rem; }
+
+  .choices { display: flex; gap: 8px; flex-wrap: wrap; }
+  .choice-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .choice-btn:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
+  .choice-btn.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .choice-btn.correct-ans { background: var(--green); border-color: var(--green); color: #fff; }
+  .choice-btn.wrong-ans { background: var(--red); border-color: var(--red); color: #fff; }
+
+  .q-subjective {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+  }
+  .reveal-btn {
+    width: 100%;
+    padding: 10px;
+    background: rgba(188,140,255,0.12);
+    border: 1.5px dashed var(--accent);
+    border-radius: 10px;
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .reveal-btn:hover { background: rgba(188,140,255,0.22); }
+
+  .answer-reveal {
+    display: none;
+    margin-top: 10px;
+    background: rgba(62,207,110,0.1);
+    border: 1.5px solid var(--green);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .answer-reveal.show { display: block; }
+  .answer-reveal .label { font-size: 0.75rem; color: var(--green); font-weight: 700; margin-bottom: 4px; }
+  .answer-reveal .ans-text { font-size: 0.88rem; color: var(--text); line-height: 1.6; }
+
+  .self-check { display: none; margin-top: 8px; gap: 8px; }
+  .self-check.show { display: flex; }
+  .self-o, .self-x {
+    flex: 1; padding: 8px;
+    border-radius: 8px; border: none;
+    font-size: 1.1rem; font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+  .self-o { background: rgba(62,207,110,0.2); color: var(--green); border: 2px solid var(--green); }
+  .self-x { background: rgba(247,80,79,0.2); color: var(--red); border: 2px solid var(--red); }
+  .self-o.picked { background: var(--green); color: #fff; }
+  .self-x.picked { background: var(--red); color: #fff; }
+
+  .progress-wrap { max-width: 640px; margin: 0 auto 12px; padding: 0 12px; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+  .progress-text { font-size: 0.75rem; color: var(--muted); text-align: right; margin-top: 4px; }
+
+  .score-section { max-width: 640px; margin: 20px auto; padding: 0 12px; }
+  .score-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #8957e5);
+    border: none; border-radius: 14px;
+    color: #fff; font-size: 1rem; font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 20px rgba(188,140,255,0.35);
+    transition: opacity 0.2s;
+  }
+  .score-btn:hover { opacity: 0.9; }
+
+  .result-box {
+    display: none;
+    margin-top: 14px;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 30px rgba(188,140,255,0.2);
+  }
+  .result-box.show { display: block; }
+  .result-box .big-score {
+    font-family: 'Teko', sans-serif;
+    font-size: 3.5rem;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(188,140,255,0.6);
+  }
+  .result-box .score-label { color: var(--muted); font-size: 0.85rem; margin: 4px 0 12px; }
+  .result-box .detail { font-size: 0.82rem; color: var(--muted); }
+  .result-box .capture-note {
+    margin-top: 14px; padding: 10px;
+    background: rgba(247,163,79,0.15);
+    border: 1.5px solid var(--accent2);
+    border-radius: 10px;
+    color: var(--accent2);
+    font-size: 0.88rem; font-weight: 700;
+  }
+
+  .reset-btn {
+    width: 100%; padding: 10px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted); font-size: 0.85rem;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-top: 8px;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* WEEK DIVIDER in tabs */
+  .tab-divider {
+    width: 1px; background: var(--border);
+    flex-shrink: 0; align-self: stretch;
+    margin: 4px 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📝 고운중3 OMR 채점</h1>
+  <p>2020~2022년 중3 영어 1학기 중간기출 · 천재(정사열)</p>
+</div>
+
+<!-- School Tabs -->
+<div class="week-label" id="week-indicator">1주차</div>
+<div class="school-tabs">
+  <button class="school-btn active" onclick="showSchool('munnyoung')" data-week="1">서울문영여중</button>
+  <button class="school-btn" onclick="showSchool('hwashin')" data-week="1">화신중</button>
+  <button class="school-btn" onclick="showSchool('daesung21')" data-week="1">대성중(21)</button>
+  <div class="tab-divider"></div>
+  <button class="school-btn" onclick="showSchool('mangpo21')" data-week="2">망포중(21)</button>
+  <button class="school-btn" onclick="showSchool('snu')" data-week="2">서울대사범부설여중</button>
+  <button class="school-btn" onclick="showSchool('wonju')" data-week="2">원주대성중</button>
+  <div class="tab-divider"></div>
+  <button class="school-btn" onclick="showSchool('mangpo22')" data-week="3">망포중(22)</button>
+  <button class="school-btn" onclick="showSchool('gwangdong')" data-week="3">광동중</button>
+  <button class="school-btn" onclick="showSchool('daesung22')" data-week="3">대성중(22)</button>
+</div>
+
+<!-- 서울문영여중 -->
+<div class="school-content active" id="sc-munnyoung">
+  <div class="school-title">🏫 2020 서울문영여자중학교 <span>· 24문항</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-munnyoung"></div></div>
+    <div class="progress-text" id="prog-text-munnyoung">0 / 24 완료</div>
+  </div>
+  <div class="questions-grid" id="qgrid-munnyoung"></div>
+  <div class="score-section">
+    <button class="score-btn" onclick="calcScore('munnyoung')">📊 점수 확인하기</button>
+    <div class="result-box" id="result-munnyoung"></div>
+    <button class="reset-btn" onclick="resetSchool('munnyoung')">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<!-- 화신중 -->
+<div class="school-content" id="sc-hwashin">
+  <div class="school-title">🏫 2020 화신중학교 <span>· 36문항</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-hwashin"></div></div>
+    <div class="progress-text" id="prog-text-hwashin">0 / 36 완료</div>
+  </div>
+  <div class="questions-grid" id="qgrid-hwashin"></div>
+  <div class="score-section">
+    <button class="score-btn" onclick="calcScore('hwashin')">📊 점수 확인하기</button>
+    <div class="result-box" id="result-hwashin"></div>
+    <button class="reset-btn" onclick="resetSchool('hwashin')">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<!-- 대성중(21) -->
+<div class="school-content" id="sc-daesung21">
+  <div class="school-title">🏫 2021 대성중학교 <span>· 24문항</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-daesung21"></div></div>
+    <div class="progress-text" id="prog-text-daesung21">0 / 24 완료</div>
+  </div>
+  <div class="questions-grid" id="qgrid-daesung21"></div>
+  <div class="score-section">
+    <button class="score-btn" onclick="calcScore('daesung21')">📊 점수 확인하기</button>
+    <div class="result-box" id="result-daesung21"></div>
+    <button class="reset-btn" onclick="resetSchool('daesung21')">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<!-- 망포중(21) -->
+<div class="school-content" id="sc-mangpo21">
+  <div class="school-title">🏫 2021 망포중학교 <span>· 25문항</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-mangpo21"></div></div>
+    <div class="progress-text" id="prog-text-mangpo21">0 / 25 완료</div>
+  </div>
+  <div class="questions-grid" id="qgrid-mangpo21"></div>
+  <div class="score-section">
+    <button class="score-btn" onclick="calcScore('mangpo21')">📊 점수 확인하기</button>
+    <div class="result-box" id="result-mangpo21"></div>
+    <button class="reset-btn" onclick="resetSchool('mangpo21')">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<!-- 서울대사범부설여중 -->
+<div class="school-content" id="sc-snu">
+  <div class="school-title">🏫 2021 서울대사범대부설여자중학교 <span>· 26문항</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-snu"></div></div>
+    <div class="progress-text" id="prog-text-snu">0 / 26 완료</div>
+  </div>
+  <div class="questions-grid" id="qgrid-snu"></div>
+  <div class="score-section">
+    <button class="score-btn" onclick="calcScore('snu')">📊 점수 확인하기</button>
+    <div class="result-box" id="result-snu"></div>
+    <button class="reset-btn" onclick="resetSchool('snu')">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<!-- 원주대성중 -->
+<div class="school-content" id="sc-wonju">
+  <div class="school-title">🏫 2021 원주대성중학교 <span>· 22문항</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-wonju"></div></div>
+    <div class="progress-text" id="prog-text-wonju">0 / 22 완료</div>
+  </div>
+  <div class="questions-grid" id="qgrid-wonju"></div>
+  <div class="score-section">
+    <button class="score-btn" onclick="calcScore('wonju')">📊 점수 확인하기</button>
+    <div class="result-box" id="result-wonju"></div>
+    <button class="reset-btn" onclick="resetSchool('wonju')">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<!-- 망포중(22) -->
+<div class="school-content" id="sc-mangpo22">
+  <div class="school-title">🏫 2022 망포중학교 <span>· 24문항</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-mangpo22"></div></div>
+    <div class="progress-text" id="prog-text-mangpo22">0 / 24 완료</div>
+  </div>
+  <div class="questions-grid" id="qgrid-mangpo22"></div>
+  <div class="score-section">
+    <button class="score-btn" onclick="calcScore('mangpo22')">📊 점수 확인하기</button>
+    <div class="result-box" id="result-mangpo22"></div>
+    <button class="reset-btn" onclick="resetSchool('mangpo22')">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<!-- 광동중 -->
+<div class="school-content" id="sc-gwangdong">
+  <div class="school-title">🏫 2022 광동중학교 <span>· 30문항</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-gwangdong"></div></div>
+    <div class="progress-text" id="prog-text-gwangdong">0 / 30 완료</div>
+  </div>
+  <div class="questions-grid" id="qgrid-gwangdong"></div>
+  <div class="score-section">
+    <button class="score-btn" onclick="calcScore('gwangdong')">📊 점수 확인하기</button>
+    <div class="result-box" id="result-gwangdong"></div>
+    <button class="reset-btn" onclick="resetSchool('gwangdong')">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<!-- 대성중(22) -->
+<div class="school-content" id="sc-daesung22">
+  <div class="school-title">🏫 2022 대성중학교 <span>· 25문항</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-daesung22"></div></div>
+    <div class="progress-text" id="prog-text-daesung22">0 / 25 완료</div>
+  </div>
+  <div class="questions-grid" id="qgrid-daesung22"></div>
+  <div class="score-section">
+    <button class="score-btn" onclick="calcScore('daesung22')">📊 점수 확인하기</button>
+    <div class="result-box" id="result-daesung22"></div>
+    <button class="reset-btn" onclick="resetSchool('daesung22')">🔄 다시 풀기</button>
+  </div>
+</div>
+
+<script>
+const SCHOOLS = {
+  'munnyoung': {
+    name: '서울문영여중(2020)',
+    questions: [
+      {n:1,type:'mc',ans:1},{n:2,type:'mc',ans:4},{n:3,type:'mc',ans:5},{n:4,type:'mc',ans:2},
+      {n:5,type:'sub',ans:"I'm glad to hear that."},
+      {n:6,type:'mc',ans:2},{n:7,type:'mc',ans:4},{n:8,type:'mc',ans:3},{n:9,type:'mc',ans:3},
+      {n:10,type:'mc',ans:3},{n:11,type:'mc',ans:2},{n:12,type:'mc',ans:4},
+      {n:13,type:'sub',ans:"Would you mind telling me if(whether) I need a reservation?"},
+      {n:14,type:'mc',ans:1},{n:15,type:'mc',ans:2},
+      {n:16,type:'sub',ans:"Thank you for teaching me how to ride a bike.\n(= Thanks for teaching me how to ride a bike.)"},
+      {n:17,type:'mc',ans:4},{n:18,type:'mc',ans:3},{n:19,type:'mc',ans:4},{n:20,type:'mc',ans:1},
+      {n:21,type:'mc',ans:2},{n:22,type:'mc',ans:4},{n:23,type:'mc',ans:5},
+      {n:24,type:'sub',ans:"I had already eaten lunch when he called.\n(= When he called, I had already eaten lunch.)"}
+    ]
+  },
+  'hwashin': {
+    name: '화신중(2020)',
+    questions: [
+      {n:1,type:'mc',ans:4},{n:2,type:'mc',ans:3},{n:3,type:'mc',ans:1},{n:4,type:'mc',ans:5},
+      {n:5,type:'mc',ans:3},{n:6,type:'mc',ans:5},{n:7,type:'mc',ans:5},{n:8,type:'mc',ans:5},
+      {n:9,type:'mc',ans:5},{n:10,type:'mc',ans:2},{n:11,type:'mc',ans:3},{n:12,type:'mc',ans:5},
+      {n:13,type:'mc',ans:5},{n:14,type:'mc',ans:5},
+      {n:15,type:'sub',ans:"How happy we are with them"},
+      {n:16,type:'mc',ans:1},{n:17,type:'mc',ans:5},{n:18,type:'mc',ans:4},
+      {n:19,type:'sub',ans:"I didn't understand why we were working on this place"},
+      {n:20,type:'mc',ans:5},{n:21,type:'mc',ans:4},{n:22,type:'mc',ans:4},{n:23,type:'mc',ans:5},
+      {n:24,type:'mc',ans:1},{n:25,type:'mc',ans:4},{n:26,type:'mc',ans:5},
+      {n:27,type:'sub',ans:"(1) how tall the building is\n(2) who she likes"},
+      {n:28,type:'sub',ans:"(1) who every girl likes much\n(2) who lives in Busan"},
+      {n:29,type:'sub',ans:"(1) she had ordered a new computer\n(2) she had borrowed a pencil from me"},
+      {n:30,type:'sub',ans:"I think sandwiches are even more delicious than candies."},
+      {n:31,type:'sub',ans:"How are you feeling"},
+      {n:32,type:'sub',ans:"glad to cook my favorite food"},
+      {n:33,type:'sub',ans:"is japchae, which is delicious and healthy."},
+      {n:34,type:'sub',ans:"Let's talk about"},
+      {n:35,type:'sub',ans:"How about cleaning the place"},
+      {n:36,type:'sub',ans:"They will make the bus stop much more beautiful."}
+    ]
+  },
+  'daesung21': {
+    name: '대성중(2021)',
+    questions: [
+      {n:1,type:'mc',ans:4},{n:2,type:'mc',ans:4},{n:3,type:'mc',ans:5},{n:4,type:'mc',ans:3},
+      {n:5,type:'mc',ans:3},{n:6,type:'mc',ans:3},{n:7,type:'mc',ans:3},{n:8,type:'mc',ans:3},
+      {n:9,type:'mc',ans:5},{n:10,type:'mc',ans:3},{n:11,type:'mc',ans:2},{n:12,type:'mc',ans:1},
+      {n:13,type:'mc',ans:1},{n:14,type:'mc',ans:4},{n:15,type:'mc',ans:3},{n:16,type:'mc',ans:3},
+      {n:17,type:'mc',ans:1},{n:18,type:'mc',ans:3},{n:19,type:'mc',ans:5},{n:20,type:'mc',ans:2},
+      {n:21,type:'mc',ans:2},{n:22,type:'mc',ans:2},{n:23,type:'mc',ans:1},{n:24,type:'mc',ans:1}
+    ]
+  },
+  'mangpo21': {
+    name: '망포중(2021)',
+    questions: [
+      {n:1,type:'mc',ans:1},{n:2,type:'mc',ans:2},{n:3,type:'mc',ans:1},{n:4,type:'mc',ans:2},
+      {n:5,type:'mc',ans:3},{n:6,type:'mc',ans:2},{n:7,type:'mc',ans:4},{n:8,type:'mc',ans:3},
+      {n:9,type:'mc',ans:2},{n:10,type:'mc',ans:1},{n:11,type:'mc',ans:1},{n:12,type:'mc',ans:4},
+      {n:13,type:'mc',ans:4},{n:14,type:'mc',ans:2},{n:15,type:'mc',ans:5},{n:16,type:'mc',ans:5},
+      {n:17,type:'mc',ans:3},{n:18,type:'mc',ans:5},{n:19,type:'mc',ans:4},{n:20,type:'mc',ans:4},
+      {n:21,type:'mc',ans:1},{n:22,type:'mc',ans:1},{n:23,type:'mc',ans:3},{n:24,type:'mc',ans:3},
+      {n:25,type:'mc',ans:1}
+    ]
+  },
+  'snu': {
+    name: '서울대사범부설여중(2021)',
+    questions: [
+      {n:1,type:'mc',ans:3},{n:2,type:'mc',ans:5},{n:3,type:'mc',ans:2},{n:4,type:'mc',ans:4},
+      {n:5,type:'mc',ans:4},{n:6,type:'mc',ans:3},{n:7,type:'mc',ans:2},{n:8,type:'mc',ans:5},
+      {n:9,type:'mc',ans:3},{n:10,type:'mc',ans:5},{n:11,type:'mc',ans:1},{n:12,type:'mc',ans:1},
+      {n:13,type:'mc',ans:2},{n:14,type:'mc',ans:4},{n:15,type:'mc',ans:4},{n:16,type:'mc',ans:5},
+      {n:17,type:'mc',ans:3},{n:18,type:'mc',ans:5},{n:19,type:'mc',ans:2},{n:20,type:'mc',ans:1},
+      {n:21,type:'mc',ans:3},{n:22,type:'mc',ans:2},{n:23,type:'mc',ans:4},{n:24,type:'mc',ans:3},
+      {n:25,type:'mc',ans:2},{n:26,type:'mc',ans:1}
+    ]
+  },
+  'wonju': {
+    name: '원주대성중(2021)',
+    questions: [
+      {n:1,type:'mc',ans:2},{n:2,type:'mc',ans:1},{n:3,type:'mc',ans:5},{n:4,type:'mc',ans:2},
+      {n:5,type:'sub',ans:"정답 3개: ③④⑤"},
+      {n:6,type:'mc',ans:1},{n:7,type:'mc',ans:4},{n:8,type:'mc',ans:3},{n:9,type:'mc',ans:2},
+      {n:10,type:'sub',ans:"정답 2개: ①⑤"},
+      {n:11,type:'mc',ans:3},{n:12,type:'mc',ans:5},{n:13,type:'mc',ans:4},
+      {n:14,type:'sub',ans:"(A) I wonder what place you want to go\n(B) I love Jejudo, which has a lot of things to see."},
+      {n:15,type:'sub',ans:"(A) which my girl friend bought for me last year\n(B) who can speak English"},
+      {n:16,type:'sub',ans:"이 시계는 저 시계보다 훨씬 더 비싸다. (번역 문제)"},
+      {n:17,type:'sub',ans:"She found someone had left a letter.\n(= She found a letter someone had left)"},
+      {n:18,type:'sub',ans:"This phone is what I want."},
+      {n:19,type:'sub',ans:"Not only you but also your friend is creative."},
+      {n:20,type:'sub',ans:"(A) BTS was popular enough to win the award.\n(B) Their fans were excited enough to cry out."},
+      {n:21,type:'sub',ans:"(A) Having no money, I could not buy anything to eat.\n(B) Crossing the street, I met one of my friends."},
+      {n:22,type:'sub',ans:"(A) As she was tired, she sat on the chair.\n(B) As he heard the news, he called his mom last evening."}
+    ]
+  },
+  'mangpo22': {
+    name: '망포중(2022)',
+    questions: [
+      {n:1,type:'mc',ans:5},{n:2,type:'mc',ans:5},{n:3,type:'mc',ans:5},{n:4,type:'mc',ans:1},
+      {n:5,type:'mc',ans:2},{n:6,type:'mc',ans:4},{n:7,type:'mc',ans:4},{n:8,type:'mc',ans:3},
+      {n:9,type:'mc',ans:3},{n:10,type:'mc',ans:3},{n:11,type:'mc',ans:3},{n:12,type:'mc',ans:1},
+      {n:13,type:'mc',ans:2},{n:14,type:'mc',ans:1},{n:15,type:'mc',ans:3},{n:16,type:'mc',ans:4},
+      {n:17,type:'mc',ans:4},{n:18,type:'mc',ans:4},{n:19,type:'mc',ans:5},{n:20,type:'mc',ans:4},
+      {n:21,type:'mc',ans:4},{n:22,type:'mc',ans:4},{n:23,type:'mc',ans:5},{n:24,type:'mc',ans:4}
+    ]
+  },
+  'gwangdong': {
+    name: '광동중(2022)',
+    questions: [
+      {n:1,type:'mc',ans:3},{n:2,type:'mc',ans:5},{n:3,type:'mc',ans:4},{n:4,type:'mc',ans:5},
+      {n:5,type:'mc',ans:2},{n:6,type:'mc',ans:2},{n:7,type:'mc',ans:3},{n:8,type:'mc',ans:2},
+      {n:9,type:'mc',ans:5},{n:10,type:'mc',ans:5},{n:11,type:'mc',ans:4},{n:12,type:'mc',ans:1},
+      {n:13,type:'mc',ans:1},{n:14,type:'mc',ans:2},{n:15,type:'mc',ans:3},{n:16,type:'mc',ans:1},
+      {n:17,type:'mc',ans:2},{n:18,type:'mc',ans:3},{n:19,type:'mc',ans:4},{n:20,type:'mc',ans:5},
+      {n:21,type:'mc',ans:4},{n:22,type:'mc',ans:5},{n:23,type:'mc',ans:1},{n:24,type:'mc',ans:1},
+      {n:25,type:'mc',ans:4},{n:26,type:'mc',ans:3},{n:27,type:'mc',ans:4},{n:28,type:'mc',ans:1},
+      {n:29,type:'mc',ans:2},{n:30,type:'mc',ans:3}
+    ]
+  },
+  'daesung22': {
+    name: '대성중(2022)',
+    questions: [
+      {n:1,type:'mc',ans:1},{n:2,type:'mc',ans:3},{n:3,type:'mc',ans:4},{n:4,type:'mc',ans:2},
+      {n:5,type:'mc',ans:3},{n:6,type:'mc',ans:5},{n:7,type:'mc',ans:2},{n:8,type:'mc',ans:2},
+      {n:9,type:'mc',ans:1},{n:10,type:'mc',ans:1},{n:11,type:'mc',ans:4},{n:12,type:'mc',ans:1},
+      {n:13,type:'mc',ans:5},{n:14,type:'mc',ans:3},{n:15,type:'mc',ans:4},{n:16,type:'mc',ans:4},
+      {n:17,type:'mc',ans:3},{n:18,type:'mc',ans:1},{n:19,type:'mc',ans:5},{n:20,type:'mc',ans:2},
+      {n:21,type:'mc',ans:5},{n:22,type:'mc',ans:5},{n:23,type:'mc',ans:4},{n:24,type:'mc',ans:3},
+      {n:25,type:'mc',ans:2}
+    ]
+  }
+};
+
+const userAnswers = {};
+const WEEK_MAP = {
+  'munnyoung':1,'hwashin':1,'daesung21':1,
+  'mangpo21':2,'snu':2,'wonju':2,
+  'mangpo22':3,'gwangdong':3,'daesung22':3
+};
+const WEEK_NAMES = {1:'1주차',2:'2주차',3:'3주차'};
+
+function buildSchool(id) {
+  const data = SCHOOLS[id];
+  if (!data) return;
+  const grid = document.getElementById('qgrid-' + id);
+  if (grid.innerHTML !== '') return;
+
+  userAnswers[id] = {};
+  data.questions.forEach(q => {
+    userAnswers[id][q.n] = null;
+    const card = document.createElement('div');
+
+    if (q.type === 'mc') {
+      card.className = 'q-card';
+      card.id = 'qcard-' + id + '-' + q.n;
+      let choices = '';
+      for (let i = 1; i <= 5; i++) {
+        choices += `<button class="choice-btn" id="cb-${id}-${q.n}-${i}" onclick="selectChoice('${id}',${q.n},${i})">${i}</button>`;
+      }
+      card.innerHTML = `
+        <div class="q-top">
+          <span class="q-num">Q${q.n}</span>
+          <span class="q-type-badge">객관식</span>
+          <span class="q-status" id="qs-${id}-${q.n}">⬜</span>
+        </div>
+        <div class="choices">${choices}</div>`;
+    } else {
+      card.className = 'q-card q-subjective';
+      card.id = 'qcard-' + id + '-' + q.n;
+      const ansText = q.ans.replace(/\n/g,'<br>');
+      card.innerHTML = `
+        <div class="q-top">
+          <span class="q-num">Q${q.n}</span>
+          <span class="q-type-badge">서술형</span>
+          <span class="q-status" id="qs-${id}-${q.n}">⬜</span>
+        </div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px;">정답 확인 후 O/X로 자가채점하세요</div>
+        <button class="reveal-btn" onclick="revealAns('${id}',${q.n})">🔍 정답 보기</button>
+        <div class="answer-reveal" id="ans-${id}-${q.n}">
+          <div class="label">✅ 정답</div>
+          <div class="ans-text">${ansText}</div>
+        </div>
+        <div class="self-check" id="sc-${id}-${q.n}">
+          <button class="self-o" id="so-${id}-${q.n}" onclick="selfCheck('${id}',${q.n},'o')">⭕ 맞았어요</button>
+          <button class="self-x" id="sx-${id}-${q.n}" onclick="selfCheck('${id}',${q.n},'x')">❌ 틀렸어요</button>
+        </div>`;
+    }
+    grid.appendChild(card);
+  });
+}
+
+function selectChoice(id, qNum, choice) {
+  if (userAnswers[id][qNum] !== null) return;
+  const q = SCHOOLS[id].questions.find(x => x.n === qNum);
+  userAnswers[id][qNum] = choice;
+
+  const correct = Array.isArray(q.ans) ? q.ans.includes(choice) : q.ans === choice;
+  const correctArr = Array.isArray(q.ans) ? q.ans : [q.ans];
+
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.getElementById(`cb-${id}-${qNum}-${i}`);
+    if (!btn) continue;
+    btn.style.pointerEvents = 'none';
+    if (i === choice) btn.classList.add(correct ? 'correct-ans' : 'wrong-ans');
+    if (!correct && correctArr.includes(i)) btn.classList.add('correct-ans');
+  }
+  document.getElementById(`qcard-${id}-${qNum}`).classList.add(correct ? 'correct' : 'wrong');
+  document.getElementById(`qs-${id}-${qNum}`).textContent = correct ? '✅' : '❌';
+  updateProgress(id);
+}
+
+function revealAns(id, qNum) {
+  document.getElementById(`ans-${id}-${qNum}`).classList.add('show');
+  document.getElementById(`sc-${id}-${qNum}`).classList.add('show');
+  const btn = document.getElementById(`ans-${id}-${qNum}`).previousElementSibling;
+  if (btn && btn.classList.contains('reveal-btn')) btn.style.display = 'none';
+}
+
+function selfCheck(id, qNum, result) {
+  if (userAnswers[id][qNum] !== null) return;
+  userAnswers[id][qNum] = result;
+  const card = document.getElementById(`qcard-${id}-${qNum}`);
+  card.classList.add(result === 'o' ? 'correct' : 'wrong');
+  const so = document.getElementById(`so-${id}-${qNum}`);
+  const sx = document.getElementById(`sx-${id}-${qNum}`);
+  if (result === 'o') { so.classList.add('picked'); } else { sx.classList.add('picked'); }
+  so.style.pointerEvents = 'none'; sx.style.pointerEvents = 'none';
+  document.getElementById(`qs-${id}-${qNum}`).textContent = result === 'o' ? '✅' : '❌';
+  updateProgress(id);
+}
+
+function updateProgress(id) {
+  const qs = SCHOOLS[id].questions;
+  const done = qs.filter(q => userAnswers[id][q.n] !== null).length;
+  const pct = (done / qs.length * 100).toFixed(0);
+  const fill = document.getElementById('prog-' + id);
+  const txt = document.getElementById('prog-text-' + id);
+  if (fill) fill.style.width = pct + '%';
+  if (txt) txt.textContent = `${done} / ${qs.length} 완료`;
+}
+
+function calcScore(id) {
+  const qs = SCHOOLS[id].questions;
+  let correct = 0, unanswered = 0;
+  qs.forEach(q => {
+    const ua = userAnswers[id][q.n];
+    if (ua === null) { unanswered++; return; }
+    if (q.type === 'mc') {
+      if ((Array.isArray(q.ans) ? q.ans.includes(ua) : q.ans === ua)) correct++;
+    } else {
+      if (ua === 'o') correct++;
+    }
+  });
+  const total = qs.length;
+  const score = Math.round(correct / total * 100);
+  const answered = total - unanswered;
+  const pct = answered > 0 ? Math.round(correct / answered * 100) : 0;
+
+  const box = document.getElementById('result-' + id);
+  box.innerHTML = `
+    <div class="big-score">${score}점</div>
+    <div class="score-label">전체 문항 기준 점수</div>
+    <div class="detail">${total}문항 중 ${correct}개 정답 · 미응답 ${unanswered}문항 · 정답률 ${pct}%</div>
+    <div class="capture-note">📸 캡처해서 선생님께 제출!</div>`;
+  box.classList.add('show');
+}
+
+function resetSchool(id) {
+  const grid = document.getElementById('qgrid-' + id);
+  grid.innerHTML = '';
+  buildSchool(id);
+  const box = document.getElementById('result-' + id);
+  box.classList.remove('show');
+  box.innerHTML = '';
+  updateProgress(id);
+}
+
+function showSchool(id) {
+  document.querySelectorAll('.school-content').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.school-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sc-' + id).classList.add('active');
+
+  const btns = document.querySelectorAll('.school-btn');
+  const keys = ['munnyoung','hwashin','daesung21','mangpo21','snu','wonju','mangpo22','gwangdong','daesung22'];
+  const idx = keys.indexOf(id);
+  if (idx >= 0 && btns[idx]) btns[idx].classList.add('active');
+
+  const week = WEEK_MAP[id];
+  document.getElementById('week-indicator').textContent = WEEK_NAMES[week];
+
+  buildSchool(id);
+}
+
+// Init
+buildSchool('munnyoung');
+</script>
+</body>
+</html>
