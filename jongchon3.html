@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>종촌중 3학년 · 기출문제 OMR 채점</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --accent: #e8401c;
+  --accent2: #2563eb;
+  --correct: #16a34a;
+  --wrong: #dc2626;
+  --border: #e2d9cc;
+  --text: #1a1208;
+  --muted: #8b7d6b;
+  --week1: #e8401c;
+  --week2: #2563eb;
+  --week3: #7c3aed;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; min-height: 100vh; }
+
+.site-header { background: var(--text); color: #f5f0e8; padding: 14px 24px; display: flex; align-items: center; gap: 16px; }
+.back-btn { color: #f5f0e8; text-decoration: none; font-size: 20px; opacity: 0.7; }
+.back-btn:hover { opacity: 1; }
+.site-header h1 { font-family: 'Black Han Sans', sans-serif; font-size: 20px; flex: 1; }
+.site-header .tag { background: var(--accent); color: white; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+
+.name-section { background: white; border-bottom: 2px solid var(--border); padding: 16px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.name-label { font-weight: 700; font-size: 15px; white-space: nowrap; }
+.name-input { border: 2px solid var(--border); border-radius: 8px; padding: 8px 14px; font-family: 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 700; width: 180px; outline: none; }
+.name-input:focus { border-color: var(--accent2); }
+.name-hint { font-size: 12px; color: var(--muted); }
+
+.tabs { display: flex; border-bottom: 2px solid var(--border); background: white; padding: 0 24px; overflow-x: auto; }
+.tab-btn { padding: 14px 20px; border: none; background: none; font-family: 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--muted); white-space: nowrap; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+.tab-btn.w1.active { color: var(--week1); border-color: var(--week1); }
+.tab-btn.w2.active { color: var(--week2); border-color: var(--week2); }
+.tab-btn.w3.active { color: var(--week3); border-color: var(--week3); }
+.tab-btn:hover { color: var(--text); }
+
+.content { display: none; padding: 24px; max-width: 960px; margin: 0 auto; }
+.content.active { display: block; }
+
+.school-selector { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+.school-btn { padding: 8px 18px; border-radius: 20px; border: 2px solid var(--border); background: white; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; color: var(--muted); }
+.school-btn:hover { border-color: var(--text); color: var(--text); }
+.school-btn.active.w1 { background: var(--week1); border-color: var(--week1); color: white; }
+.school-btn.active.w2 { background: var(--week2); border-color: var(--week2); color: white; }
+.school-btn.active.w3 { background: var(--week3); border-color: var(--week3); color: white; }
+
+.omr-card { background: white; border-radius: 16px; border: 2px solid var(--border); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.omr-header { padding: 20px 24px 16px; border-bottom: 2px dashed var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.omr-title { font-family: 'Black Han Sans', sans-serif; font-size: 20px; }
+.omr-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.omr-meta { font-size: 12px; color: var(--muted); text-align: right; }
+
+/* 객관식 그리드 */
+.answer-grid { padding: 20px 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px; }
+.answer-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
+.q-num { font-weight: 700; font-size: 13px; width: 28px; text-align: right; color: var(--muted); flex-shrink: 0; }
+.choices { display: flex; gap: 5px; }
+.choice-btn { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border); background: white; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; color: var(--muted); display: flex; align-items: center; justify-content: center; }
+.choice-btn:hover { border-color: var(--text); color: var(--text); }
+.choice-btn.selected { border-color: var(--text); background: var(--text); color: white; }
+.choice-btn.correct-answer { border-color: var(--correct); background: var(--correct); color: white; }
+.choice-btn.wrong-pick { border-color: var(--wrong); background: var(--wrong); color: white; }
+.choice-btn:disabled { cursor: default; }
+.result-icon { font-size: 16px; margin-left: 2px; width: 22px; flex-shrink: 0; }
+
+/* 서술형 섹션 */
+.essay-section { padding: 0 24px 20px; }
+.essay-divider { border: none; border-top: 2px dashed var(--border); margin: 8px 0 16px; }
+.essay-title { font-weight: 700; font-size: 14px; margin-bottom: 12px; color: var(--muted); }
+.essay-row { background: #fafafa; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+.essay-qnum { font-weight: 700; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.essay-input { width: 100%; border: 1.5px solid var(--border); border-radius: 7px; padding: 8px 12px; font-family: 'Noto Sans KR', sans-serif; font-size: 14px; outline: none; resize: vertical; min-height: 52px; }
+.essay-input:focus { border-color: var(--accent2); }
+.essay-answer-reveal { display: none; margin-top: 10px; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 10px 14px; }
+.essay-answer-reveal.show { display: block; }
+.essay-answer-label { font-size: 11px; font-weight: 700; color: #16a34a; margin-bottom: 4px; letter-spacing: 0.5px; }
+.essay-answer-text { font-size: 13px; color: #15803d; line-height: 1.5; }
+.essay-self-check { display: none; margin-top: 8px; gap: 8px; }
+.essay-self-check.show { display: flex; }
+.self-btn { flex: 1; padding: 7px; border-radius: 8px; border: 2px solid var(--border); background: white; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+.self-btn.o.selected { background: var(--correct); border-color: var(--correct); color: white; }
+.self-btn.x.selected { background: var(--wrong); border-color: var(--wrong); color: white; }
+
+/* 푸터 */
+.omr-footer { border-top: 2px dashed var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.submit-btn { background: var(--text); color: white; border: none; border-radius: 10px; padding: 12px 32px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.submit-btn:hover { transform: scale(1.02); opacity: 0.9; }
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.reset-btn { background: none; border: 2px solid var(--border); border-radius: 10px; padding: 11px 20px; font-family: 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--muted); transition: all 0.2s; }
+.reset-btn:hover { border-color: var(--text); color: var(--text); }
+
+/* 결과 */
+.score-result { display: none; background: linear-gradient(135deg, #1a1208, #3d2b1a); color: white; border-radius: 16px; padding: 28px 24px; margin-top: 20px; text-align: center; }
+.score-result.show { display: block; }
+.score-badge { font-family: 'Black Han Sans', sans-serif; font-size: 56px; line-height: 1; margin-bottom: 6px; }
+.score-label { font-size: 13px; opacity: 0.7; margin-bottom: 12px; }
+.score-detail { font-size: 14px; opacity: 0.9; margin-bottom: 8px; }
+.score-essay-note { font-size: 12px; opacity: 0.6; margin-bottom: 18px; }
+.capture-msg { background: var(--accent); color: white; font-size: 14px; font-weight: 700; padding: 12px 24px; border-radius: 10px; display: inline-block; animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+.score-name { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <a href="index.html" class="back-btn">←</a>
+  <h1>종촌중학교 3학년</h1>
+  <span class="tag">토요보강</span>
+</div>
+
+<div class="name-section">
+  <span class="name-label">✏️ 이름</span>
+  <input class="name-input" id="studentName" type="text" placeholder="이름을 입력하세요" maxlength="10">
+  <span class="name-hint">결과 캡처 시 이름이 함께 표시됩니다</span>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn w1 active" onclick="switchWeek(1)">1주차</button>
+  <button class="tab-btn w2" onclick="switchWeek(2)">2주차</button>
+  <button class="tab-btn w3" onclick="switchWeek(3)">3주차</button>
+</div>
+
+<div class="content active" id="week1">
+  <div class="school-selector">
+    <button class="school-btn w1 active" onclick="switchSchool(1,'가림중')">가림중</button>
+    <button class="school-btn w1" onclick="switchSchool(1,'간재울중')">간재울중</button>
+    <button class="school-btn w1" onclick="switchSchool(1,'개운중')">개운중</button>
+  </div>
+  <div id="week1-omr"></div>
+</div>
+
+<div class="content" id="week2">
+  <div class="school-selector">
+    <button class="school-btn w2 active" onclick="switchSchool(2,'고실중')">고실중</button>
+    <button class="school-btn w2" onclick="switchSchool(2,'교문중')">교문중</button>
+    <button class="school-btn w2" onclick="switchSchool(2,'구남중')">구남중</button>
+  </div>
+  <div id="week2-omr"></div>
+</div>
+
+<div class="content" id="week3">
+  <div class="school-selector">
+    <button class="school-btn w3 active" onclick="switchSchool(3,'구월중')">구월중</button>
+    <button class="school-btn w3" onclick="switchSchool(3,'김포신곡중')">김포신곡중</button>
+    <button class="school-btn w3" onclick="switchSchool(3,'나래중')">나래중</button>
+  </div>
+  <div id="week3-omr"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// ★ 학교 데이터 ★
+// mc: 객관식 정답 배열 (1~5)
+// essay: 서술형 [{q: "문제번호표시", a: "정답"}]
+// ═══════════════════════════════════════════════════════
+const SCHOOLS = {
+  '가림중': {
+    week: 1, total: 22,
+    mc: [5,2,3,3,2, 1,4,2,4,5, 1,1,5,2,5, 1,1,5,4,3, 4,5],
+    essay: []
+  },
+  '간재울중': {
+    week: 1, total: 25,
+    mc: [1,4,5,3,2, 2,5,4,4,2, 4,4,1,3,2, 4,3,1,5,3, 5,4,1,5,3],
+    essay: []
+  },
+  '개운중': {
+    week: 1, total: 23,
+    mc: [4,3,1,2,2, 5,3,3,1,2, 3,3,3,4,2, 1,2,5,4,2, 5,3,5],
+    essay: [
+      {q:'24번', a:'If(whether) Jimin goes to the gym after school.'},
+      {q:'25번', a:'made me clean the house.'},
+      {q:'26번', a:'I need something cold to drink. 또는 I need to drink something cold.'},
+      {q:'27번', a:'I need a chair to sit on.'},
+      {q:'28번', a:'so that you can finish your project by Monday. 또는 so that you can finish your project.'}
+    ]
+  },
+  '고실중': {
+    week: 2, total: 17,
+    mc: [1,5,4,1,3, 2,5,2,4,3, 2,5,3,4,1, 4,3],
+    essayMode: 'show', // 정답 바로 보여주고 셀프채점
+    essay: [
+      {q:'18번(A)', a:'Making cookies for someone who lives alone'},
+      {q:'18번(B)', a:'Putting dirty dishes in the sink'},
+      {q:'18번(C)', a:'throwing away a wrapper or recycling a bottle'},
+      {q:'18번(D)', a:'using people\'s names'},
+      {q:'18번(E)', a:'Teaching someone something I\'m good at'},
+      {q:'18번(F)', a:'Sticking up for someone when other kids aren\'t kind'},
+      {q:'19번(1)', a:'He goes slowly downstairs, counting every step(sixteen)'},
+      {q:'19번(2)', a:'He washes his hands and face very thoroughly'},
+      {q:'19번(3)', a:'He brushes his teeth for exactly four minutes'},
+      {q:'19번(4)', a:'He puts on his pajamas'},
+      {q:'19번(5)', a:'He uses the toilet'},
+      {q:'19번(6)', a:'He drives into bed'},
+      {q:'20번(A)', a:'so pleased that he ran all the way home'},
+      {q:'20번(B)', a:'too excited to sleep'},
+      {q:'21번(A)', a:'Camilla turned all purple polka-dotty'},
+      {q:'21번(B)', a:'Someone else shouted "Checkerboard!"'},
+      {q:'21번(C)', a:'Everyone was calling out different shapes and colors'},
+      {q:'21번(D)', a:'The school principal asked Camilla\'s mom to keep her home from school'},
+      {q:'21번(E)', a:'Camilla was embarrassed'},
+      {q:'22번', a:'I should love myself as I am'},
+      {q:'23번(A)', a:'I was covered with stripes'},
+      {q:'23번(B)', a:'there was a giant, multi-colored pill'},
+      {q:'23번(C)', a:'my nose was a dresser, and two paintings were my eyes'},
+      {q:'23번(D)', a:'I was cured'}
+    ]
+  },
+  '교문중': {
+    week: 2, total: 25,
+    mc: [3,5,4,1,1, 5,4,1,4,1, 5,3,2,2,1, 2,3,4,4,2, 2,2,4,3,5],
+    essay: []
+  },
+  '구남중': {
+    week: 2, total: 22,
+    mc: [5,1,5,4,1, 5,3,4,3,3, 2,2,2,2,2, 2,1,3,5,4, 2,2],
+    essay: [
+      {q:'11번', a:'He entered a photo contest with the pictures he took in Iceland.'},
+      {q:'12번(1)', a:'what you like to do'},
+      {q:'12번(2)', a:'what makes you happy'},
+      {q:'15번', a:'the crisp sound of eating chips made her feel better.'},
+      {q:'21번', a:'They enjoy madeleines as an afternoon snack.'},
+      {q:'22번', a:'I need a pencil to write with.'},
+      {q:'23번', a:'Tom hurried in the morning so that he could catch the train. (또는 I save money so that I can buy what I want.)'},
+      {q:'24번', a:'예시) My teacher made me study hard.'},
+      {q:'25번(1)', a:'whether/if she has her passport with her.'},
+      {q:'25번(2)', a:'whether/if she can help him.'}
+    ]
+  },
+  '구월중': {
+    week: 3, total: 26,
+    mc: [4,5,3,5,2, 5,2,5,4,4, 3,3,1,3,3, 4,1,1,5,1, 2,5,2,2,2,1],
+    essay: []
+  },
+  '김포신곡중': {
+    week: 3, total: 23,
+    mc: [1,3,3,2,3, 3,4,4,3,4, 2,1,3,5,4, 2,4,5,3,5, 1,2,5],
+    essay: []
+  },
+  '나래중': {
+    week: 3, total: 25,
+    mc: [3,5,3,2,4, 1,3,3,2,1, 4,2,4,5,4, 5,1,1,4,5, 4,5,2,2,3],
+    essay: []
+  }
+};
+
+const state = {
+  week: 1,
+  school: { 1: '가림중', 2: '고실중', 3: '구월중' },
+  picks: {},
+  essayInputs: {},
+  essaySelf: {},
+  submitted: {}
+};
+
+function getPicks(school) {
+  if (!state.picks[school]) state.picks[school] = new Array(SCHOOLS[school].mc.length).fill(0);
+  return state.picks[school];
+}
+function getEssayInputs(school) {
+  if (!state.essayInputs[school]) state.essayInputs[school] = SCHOOLS[school].essay.map(() => '');
+  return state.essayInputs[school];
+}
+function getEssaySelf(school) {
+  if (!state.essaySelf[school]) state.essaySelf[school] = SCHOOLS[school].essay.map(() => null);
+  return state.essaySelf[school];
+}
+function isSubmitted(school) { return !!state.submitted[school]; }
+
+function switchWeek(w) {
+  state.week = w;
+  document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
+  document.getElementById('week' + w).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === w - 1));
+  renderOMR(w, state.school[w]);
+}
+
+function switchSchool(week, school) {
+  state.school[week] = school;
+  document.getElementById('week' + week).querySelectorAll('.school-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === school);
+  });
+  renderOMR(week, school);
+}
+
+function renderOMR(week, school) {
+  const container = document.getElementById('week' + week + '-omr');
+  const data = SCHOOLS[school];
+  const picks = getPicks(school);
+  const essayInputs = getEssayInputs(school);
+  const essaySelf = getEssaySelf(school);
+  const submitted = isSubmitted(school);
+  const answers = data.mc;
+  const weekNames = {1:'1주차',2:'2주차',3:'3주차'};
+
+  // 객관식
+  let mcRows = '';
+  for (let i = 0; i < answers.length; i++) {
+    let choices = '';
+    for (let c = 1; c <= 5; c++) {
+      let cls = 'choice-btn';
+      if (submitted) {
+        if (c === answers[i] && c === picks[i]) cls += ' correct-answer';
+        else if (c === picks[i] && picks[i] !== answers[i]) cls += ' wrong-pick';
+        else if (c === picks[i]) cls += ' selected';
+      } else {
+        if (c === picks[i]) cls += ' selected';
+      }
+      choices += `<button class="${cls}" ${submitted ? 'disabled' : ''} onclick="pick(${week},'${school}',${i},${c})">${c}</button>`;
+    }
+    let icon = '';
+    if (submitted) icon = picks[i] === answers[i] ? '<span class="result-icon">✅</span>' : '<span class="result-icon">❌</span>';
+    mcRows += `<div class="answer-row"><span class="q-num">${i+1}</span><div class="choices">${choices}</div>${icon}</div>`;
+  }
+
+  // 서술형
+  let essayHTML = '';
+  if (data.essay.length > 0) {
+    const showMode = data.essayMode === 'show'; // 고실중: 정답 바로 보여주고 셀프채점
+    let essayRows = '';
+    data.essay.forEach((item, idx) => {
+      const val = essayInputs[idx] || '';
+      const selfVal = essaySelf[idx];
+      const oSel = selfVal === true ? 'selected' : '';
+      const xSel = selfVal === false ? 'selected' : '';
+      const resultIcon = selfVal === true ? '✅' : selfVal === false ? '❌' : '❓';
+
+      if (showMode) {
+        // 고실중 방식: 채점 후 정답 바로 보여주고 O/X 체크
+        const revealClass = submitted ? 'show' : '';
+        const selfClass = submitted ? 'show' : '';
+        essayRows += `
+          <div class="essay-row">
+            <div class="essay-qnum">📝 ${item.q} ${submitted ? resultIcon : ''}</div>
+            <div class="essay-answer-reveal ${revealClass}">
+              <div class="essay-answer-label">✔ 모범 정답</div>
+              <div class="essay-answer-text">${item.a}</div>
+            </div>
+            <div class="essay-self-check ${selfClass}">
+              <button class="self-btn o ${oSel}" onclick="setSelf('${school}',${idx},true,${week})">⭕ 맞음</button>
+              <button class="self-btn x ${xSel}" onclick="setSelf('${school}',${idx},false,${week})">❌ 틀림</button>
+            </div>
+          </div>`;
+      } else {
+        // 일반 방식: 입력 후 채점하면 정답 공개 + O/X
+        const revealClass = submitted ? 'show' : '';
+        const selfClass = submitted ? 'show' : '';
+        essayRows += `
+          <div class="essay-row">
+            <div class="essay-qnum">📝 ${item.q} ${submitted ? resultIcon : ''}</div>
+            <textarea class="essay-input" placeholder="답을 여기에 입력하세요" ${submitted ? 'disabled' : ''}
+              oninput="saveEssay('${school}',${idx},this.value)">${val}</textarea>
+            <div class="essay-answer-reveal ${revealClass}">
+              <div class="essay-answer-label">✔ 모범 정답</div>
+              <div class="essay-answer-text">${item.a}</div>
+            </div>
+            <div class="essay-self-check ${selfClass}">
+              <button class="self-btn o ${oSel}" onclick="setSelf('${school}',${idx},true,${week})">⭕ 맞음</button>
+              <button class="self-btn x ${xSel}" onclick="setSelf('${school}',${idx},false,${week})">❌ 틀림</button>
+            </div>
+          </div>`;
+      }
+    });
+
+    const noticeMsg = showMode
+      ? '📋 서술형 셀프채점합니다. 선생님께 확인받으세요.'
+      : '✏️ 서술형 문제 — 채점 후 정답을 확인하고 O/X를 직접 체크하세요';
+
+    essayHTML = `
+      <div class="essay-section">
+        <hr class="essay-divider">
+        <div class="essay-title">${noticeMsg}</div>
+        ${essayRows}
+      </div>`;
+  }
+
+  // 점수
+  let scoreHTML = '';
+  if (submitted) {
+    const name = document.getElementById('studentName').value.trim() || '학생';
+    const mcCorrect = picks.filter((p, i) => p === answers[i]).length;
+    const mcWrong = picks.filter((p, i) => p !== 0 && p !== answers[i]).length;
+    const mcBlank = picks.filter(p => p === 0).length;
+    const essayCorrect = essaySelf.filter(v => v === true).length;
+    const essayWrong = essaySelf.filter(v => v === false).length;
+    const essayBlank = essaySelf.filter(v => v === null).length;
+    const totalCorrect = mcCorrect + essayCorrect;
+    const totalQ = answers.length + data.essay.length;
+    const pct = Math.round(totalCorrect / totalQ * 100);
+    const essayNote = data.essay.length > 0 ? `<div class="score-essay-note">객관식 ${mcCorrect}/${answers.length} + 서술형 ${essayCorrect}/${data.essay.length} (자가채점)</div>` : '';
+    scoreHTML = `
+      <div class="score-result show">
+        <div class="score-name">📋 ${name} · ${school} 결과</div>
+        <div class="score-badge">${totalCorrect}<span style="font-size:28px">/${totalQ}</span></div>
+        <div class="score-label">${weekNames[week]} ${school} 기출문제</div>
+        ${essayNote}
+        <div class="score-detail">맞은 문제 ${totalCorrect}개 &nbsp;|&nbsp; 틀린 문제 ${mcWrong + essayWrong}개 &nbsp;|&nbsp; 정답률 ${pct}%</div>
+        <div class="capture-msg">📸 캡처해서 선생님께 제출!</div>
+      </div>`;
+  }
+
+  container.innerHTML = `
+    <div class="omr-card">
+      <div class="omr-header">
+        <div>
+          <div class="omr-title">${school} 기출문제</div>
+          <div class="omr-subtitle">2024학년도 · ${weekNames[week]} · 객관식 ${answers.length}문항${data.essay.length > 0 ? ' + 서술형 ' + data.essay.length + '문항' : ''}</div>
+        </div>
+        <div class="omr-meta">객관식: 1~5 클릭<br>${data.essay.length > 0 ? '서술형: 직접 입력 후 O/X' : '답을 클릭해서 선택'}</div>
+      </div>
+      <div class="answer-grid">${mcRows}</div>
+      ${essayHTML}
+      <div class="omr-footer">
+        <button class="reset-btn" onclick="resetSchool('${school}',${week})">↺ 초기화</button>
+        <button class="submit-btn" onclick="submitOMR('${school}',${week})" ${submitted ? 'disabled' : ''}>
+          ${submitted ? '✅ 채점 완료' : '채점하기'}
+        </button>
+      </div>
+    </div>
+    ${scoreHTML}
+  `;
+}
+
+function pick(week, school, qIdx, choice) {
+  if (isSubmitted(school)) return;
+  const picks = getPicks(school);
+  picks[qIdx] = picks[qIdx] === choice ? 0 : choice;
+  renderOMR(week, school);
+}
+
+function saveEssay(school, idx, val) {
+  getEssayInputs(school)[idx] = val;
+}
+
+function setSelf(school, idx, val, week) {
+  getEssaySelf(school)[idx] = val;
+  renderOMR(week, school);
+  setTimeout(() => {
+    const result = document.querySelector('.score-result.show');
+    if (result) result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
+
+function submitOMR(school, week) {
+  const name = document.getElementById('studentName').value.trim();
+  if (!name) { alert('⚠️ 이름을 먼저 입력해주세요!'); document.getElementById('studentName').focus(); return; }
+  const picks = getPicks(school);
+  const blank = picks.filter(p => p === 0).length;
+  if (blank > 0) {
+    if (!confirm(`⚠️ 객관식 중 ${blank}문제를 체크하지 않았어요.\n그래도 채점할까요?`)) return;
+  }
+  state.submitted[school] = true;
+  renderOMR(week, school);
+  setTimeout(() => {
+    const result = document.querySelector('.score-result.show');
+    if (result) result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
+function resetSchool(school, week) {
+  if (!confirm(`⚠️ ${school} 답안을 모두 초기화할까요?`)) return;
+  state.picks[school] = new Array(SCHOOLS[school].mc.length).fill(0);
+  state.essayInputs[school] = SCHOOLS[school].essay.map(() => '');
+  state.essaySelf[school] = SCHOOLS[school].essay.map(() => null);
+  state.submitted[school] = false;
+  renderOMR(week, school);
+}
+
+// 초기 렌더
+renderOMR(1, '가림중');
+renderOMR(2, '고실중');
+renderOMR(3, '구월중');
+</script>
+</body>
+</html>
