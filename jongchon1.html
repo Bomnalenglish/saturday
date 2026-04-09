@@ -115,6 +115,15 @@
     50% { opacity: 0.75; }
   }
 
+  /* O / X 결과 표시 */
+  .q-result {
+    font-size: 1.4rem; font-weight: 900;
+    width: 32px; text-align: center; flex-shrink: 0; display: none;
+  }
+  .q-result.show { display: block; }
+  .q-result.ox-o { color: #2ecc71; }
+  .q-result.ox-x { color: #e74c3c; }
+
   .reset-btn {
     margin-top: 10px; width: 100%; background: white;
     color: #3b5bdb; border: 2px solid #3b5bdb;
@@ -488,6 +497,11 @@ function buildGrid(secId) {
         choices.appendChild(btn);
       });
       row.appendChild(choices);
+      // O/X 결과 표시
+      const resultMark = document.createElement('div');
+      resultMark.className = 'q-result';
+      resultMark.id = `${secId}-mark${q.n}`;
+      row.appendChild(resultMark);
     } else {
       const inp = document.createElement('input');
       inp.type = 'text';
@@ -535,23 +549,17 @@ function gradeSection(secId) {
       const btns = row.querySelectorAll('.choice-btn');
       btns.forEach(b => {
         b.disabled = true;
-        b.classList.remove('correct', 'wrong', 'selected');
+        b.classList.remove('selected');
       });
       if (selected) {
+        const mark = document.getElementById(`${secId}-mark${q.n}`);
         if (selected.dataset.val === q.ans) {
           selected.classList.add('correct');
-          correct++;
+          if (mark) { mark.textContent = '⭕'; mark.classList.add('show', 'ox-o'); }
         } else {
           selected.classList.add('wrong');
-          // show correct
-          btns.forEach(b => {
-            if (b.dataset.val === q.ans) b.classList.add('correct');
-          });
+          if (mark) { mark.textContent = '❌'; mark.classList.add('show', 'ox-x'); }
         }
-      } else {
-        btns.forEach(b => {
-          if (b.dataset.val === q.ans) b.classList.add('correct');
-        });
       }
     } else {
       // SA: show model answer
@@ -571,8 +579,9 @@ function gradeSection(secId) {
   mcQs.forEach(q => {
     const row = document.getElementById(`${secId}-q${q.n}`);
     const btns = Array.from(row.querySelectorAll('.choice-btn'));
-    const hasWrong = btns.some(b => b.classList.contains('wrong'));
-    if (!hasWrong && btns.some(b => b.classList.contains('correct'))) mcCorrect++;
+    const selected = btns.find(b => b.classList.contains('correct') || b.classList.contains('wrong'));
+    // correct = selected and not wrong
+    if (selected && selected.classList.contains('correct')) mcCorrect++;
   });
 
   const saCount = sec.questions.filter(q => q.type === 'sa').length;
