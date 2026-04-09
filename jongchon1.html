@@ -494,6 +494,10 @@ function buildGrid(secId) {
       inp.className = 'short-input';
       inp.id = `${secId}-sa${q.n}`;
       inp.placeholder = `${q.n}번 답 쓰기`;
+      inp.autocomplete = 'off';
+      inp.setAttribute('autocorrect', 'off');
+      inp.setAttribute('autocapitalize', 'off');
+      inp.setAttribute('spellcheck', 'false');
       row.appendChild(inp);
     }
 
