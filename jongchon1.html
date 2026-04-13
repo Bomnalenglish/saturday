@@ -643,9 +643,72 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); min-
 
 <div class="submit-wrap">
   <button class="submit-btn" id="submitBtn" onclick="submitAll()">✅ 채점하기</button>
+  <br><br>
+  <button onclick="resetAll()" style="background:none;border:none;font-size:12px;color:#aaa;text-decoration:underline;cursor:pointer;">🔄 초기화 (답 지우기)</button>
 </div>
 
 <script>
+const STORAGE_KEY = 'jongchon1_omr_april18';
+
+// ── 저장 ──
+function saveState() {
+  const state = { name: document.getElementById('studentName').value, answers: {}, tf: {}, submitted: false };
+
+  document.querySelectorAll('.q-row').forEach((row, idx) => {
+    if (row.dataset.ans === 'essay') return;
+    const tfSet = row.querySelector('.tf-set');
+    if (tfSet) {
+      const vals = {};
+      tfSet.querySelectorAll('.tf-item').forEach(item => {
+        const sel = item.querySelector('.tf-btn.selected');
+        vals[item.id] = sel ? sel.dataset.tfVal : null;
+      });
+      state.tf[idx] = vals;
+    } else {
+      const sel = [...row.querySelectorAll('.choice-btn.selected')].map(b => b.dataset.v);
+      state.answers[idx] = sel;
+    }
+  });
+
+  if (document.getElementById('submitBtn').disabled) state.submitted = true;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// ── 복원 ──
+function loadState() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  let state;
+  try { state = JSON.parse(raw); } catch(e) { return; }
+
+  if (state.name) document.getElementById('studentName').value = state.name;
+
+  document.querySelectorAll('.q-row').forEach((row, idx) => {
+    if (row.dataset.ans === 'essay') return;
+    const tfSet = row.querySelector('.tf-set');
+    if (tfSet && state.tf && state.tf[idx]) {
+      tfSet.querySelectorAll('.tf-item').forEach(item => {
+        const val = state.tf[idx][item.id];
+        if (val) {
+          item.querySelectorAll('.tf-btn').forEach(b => {
+            b.classList.toggle('selected', b.dataset.tfVal === val);
+          });
+        }
+      });
+    } else if (state.answers && state.answers[idx]) {
+      state.answers[idx].forEach(v => {
+        const btn = row.querySelector(`.choice-btn[data-v="${v}"]`);
+        if (btn) btn.classList.add('selected');
+      });
+    }
+  });
+
+  // 이미 제출한 상태면 자동 채점
+  if (state.submitted) {
+    setTimeout(() => submitAll(true), 100);
+  }
+}
+
 // ── choice button interaction ──
 document.querySelectorAll('.q-row').forEach(row => {
   const isMulti = row.dataset.multi === 'true';
@@ -662,6 +725,7 @@ document.querySelectorAll('.q-row').forEach(row => {
         row.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
       }
+      saveState();
     });
   });
 });
@@ -673,14 +737,18 @@ document.querySelectorAll('.tf-btn').forEach(btn => {
     const wrap = btn.closest('.tf-wrap');
     wrap.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
+    saveState();
   });
 });
+
+// 이름 입력 시에도 저장
+document.getElementById('studentName').addEventListener('input', saveState);
 
 // 파트별 페이지 정보
 const partPages = {1: 'pp.60~63', 2: 'pp.118~121', 3: 'pp.172~175'};
 
 // ── Submit ──
-function submitAll() {
+function submitAll(silent = false) {
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
 
@@ -789,8 +857,21 @@ function submitAll() {
   }
 
   document.getElementById('scoreBoard').classList.add('show');
-  document.getElementById('scoreBoard').scrollIntoView({behavior:'smooth'});
+  if (!silent) {
+    saveState();
+    document.getElementById('scoreBoard').scrollIntoView({behavior:'smooth'});
+  }
 }
+
+// ── 초기화 ──
+function resetAll() {
+  if (!confirm('정말 초기화할까요? 저장된 답이 모두 지워져요.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// ── 페이지 로드 시 복원 ──
+loadState();
 </script>
 </body>
 </html>
