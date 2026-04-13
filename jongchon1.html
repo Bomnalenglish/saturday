@@ -651,9 +651,13 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); min-
 const STORAGE_KEY = 'jongchon1_omr_april18';
 
 // ── 저장 ──
-function saveState() {
-  const state = { name: document.getElementById('studentName').value, answers: {}, tf: {}, submitted: false };
-
+function saveState(submitted) {
+  const state = {
+    name: document.getElementById('studentName').value,
+    answers: {},
+    tf: {},
+    submitted: !!submitted
+  };
   document.querySelectorAll('.q-row').forEach((row, idx) => {
     if (row.dataset.ans === 'essay') return;
     const tfSet = row.querySelector('.tf-set');
@@ -669,20 +673,21 @@ function saveState() {
       state.answers[idx] = sel;
     }
   });
-
-  if (document.getElementById('submitBtn').disabled) state.submitted = true;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
 }
 
 // ── 복원 ──
 function loadState() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return;
   let state;
-  try { state = JSON.parse(raw); } catch(e) { return; }
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    state = JSON.parse(raw);
+  } catch(e) { return; }
 
   if (state.name) document.getElementById('studentName').value = state.name;
 
+  // 답 복원
   document.querySelectorAll('.q-row').forEach((row, idx) => {
     if (row.dataset.ans === 'essay') return;
     const tfSet = row.querySelector('.tf-set');
@@ -703,9 +708,9 @@ function loadState() {
     }
   });
 
-  // 이미 제출한 상태면 자동 채점
+  // 이미 제출했으면 채점 재실행
   if (state.submitted) {
-    setTimeout(() => submitAll(true), 100);
+    submitAll(true);
   }
 }
 
@@ -725,7 +730,7 @@ document.querySelectorAll('.q-row').forEach(row => {
         row.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
       }
-      saveState();
+      saveState(false);
     });
   });
 });
@@ -737,12 +742,12 @@ document.querySelectorAll('.tf-btn').forEach(btn => {
     const wrap = btn.closest('.tf-wrap');
     wrap.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
-    saveState();
+    saveState(false);
   });
 });
 
 // 이름 입력 시에도 저장
-document.getElementById('studentName').addEventListener('input', saveState);
+document.getElementById('studentName').addEventListener('input', () => saveState(false));
 
 // 파트별 페이지 정보
 const partPages = {1: 'pp.60~63', 2: 'pp.118~121', 3: 'pp.172~175'};
@@ -858,7 +863,7 @@ function submitAll(silent = false) {
 
   document.getElementById('scoreBoard').classList.add('show');
   if (!silent) {
-    saveState();
+    saveState(true);
     document.getElementById('scoreBoard').scrollIntoView({behavior:'smooth'});
   }
 }
@@ -866,7 +871,7 @@ function submitAll(silent = false) {
 // ── 초기화 ──
 function resetAll() {
   if (!confirm('정말 초기화할까요? 저장된 답이 모두 지워져요.')) return;
-  localStorage.removeItem(STORAGE_KEY);
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
   location.reload();
 }
 
