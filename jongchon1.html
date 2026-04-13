@@ -3,630 +3,794 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>종촌중 중1 | 봄날 English</title>
+<title>종촌중 1학년 OMR - 4월 18일 토요보강</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans KR', sans-serif; background: #f0f4ff; min-height: 100vh; padding: 20px; }
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap');
 
-  .top-bar { text-align: center; padding: 18px 0 10px; }
-  .top-bar h1 { font-size: 1.5rem; color: #3b5bdb; font-weight: 800; letter-spacing: -0.5px; }
-  .top-bar p { font-size: 0.85rem; color: #888; margin-top: 4px; }
+:root {
+  --bg: #f4f6f0;
+  --card: #ffffff;
+  --primary: #2d6a4f;
+  --accent: #52b788;
+  --accent2: #d8f3dc;
+  --warn: #e63946;
+  --warn-bg: #fff4f4;
+  --ok-bg: #f0faf4;
+  --border: #cce4d4;
+  --text: #1b2d23;
+  --sub: #5a7a66;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Noto Sans KR', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; padding: 18px 14px 60px; }
 
-  .section-tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0; }
-  .tab-btn {
-    padding: 8px 14px; border-radius: 20px; border: 2px solid #c5cae9;
-    background: #fff; color: #555; font-size: 0.78rem; cursor: pointer;
-    font-weight: 600; transition: all 0.2s;
-  }
-  .tab-btn.active { background: #3b5bdb; color: #fff; border-color: #3b5bdb; }
-  .tab-btn:hover:not(.active) { background: #e8eaf6; }
+.header { text-align: center; margin-bottom: 24px; }
+.badge { display: inline-block; background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 2px; padding: 4px 14px; border-radius: 20px; margin-bottom: 10px; }
+.header h1 { font-size: 21px; font-weight: 900; color: var(--primary); line-height: 1.3; }
+.header .sub { font-size: 12px; color: var(--sub); margin-top: 4px; }
 
-  .section-panel { display: none; }
-  .section-panel.active { display: block; }
+.name-box { background: var(--card); border: 2px solid var(--border); border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.name-box label { font-size: 14px; font-weight: 700; color: var(--primary); white-space: nowrap; }
+.name-box input { flex:1; border:none; border-bottom: 2px solid var(--border); background: transparent; font-family: var(--sans); font-size:16px; font-weight:700; color:var(--text); padding:4px 6px; outline:none; }
+.name-box input:focus { border-bottom-color: var(--primary); }
 
-  .section-header {
-    background: #3b5bdb; color: white; border-radius: 14px 14px 0 0;
-    padding: 14px 20px; margin-top: 8px;
-  }
-  .section-header h2 { font-size: 1.1rem; font-weight: 800; }
-  .section-header p { font-size: 0.8rem; opacity: 0.85; margin-top: 2px; }
+.section-card { background: var(--card); border: 2px solid var(--border); border-radius: 16px; margin-bottom: 18px; overflow: hidden; }
+.section-title { background: var(--primary); color:#fff; font-size:13px; font-weight:700; padding:10px 18px; }
+.section-pages { font-size:11px; font-weight:400; opacity:.75; margin-left:6px; }
+.q-grid { padding:12px 14px; display:flex; flex-direction:column; gap:7px; }
 
-  .omr-box {
-    background: white; border-radius: 0 0 14px 14px;
-    padding: 20px; box-shadow: 0 4px 18px rgba(59,91,219,0.10);
-  }
+.q-row { display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:10px; background:var(--bg); transition:background .15s; }
+.q-row.correct { background: var(--ok-bg); }
+.q-row.wrong   { background: var(--warn-bg); }
 
-  /* Name input */
-  .name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
-  .name-row label { font-size: 0.85rem; color: #555; font-weight: 600; white-space: nowrap; }
-  .name-row input {
-    flex: 1; border: 2px solid #c5cae9; border-radius: 8px;
-    padding: 8px 12px; font-size: 0.95rem; outline: none;
-  }
-  .name-row input:focus { border-color: #3b5bdb; }
+.q-num { font-family:var(--mono); font-size:12px; font-weight:600; color:var(--sub); width:24px; flex-shrink:0; text-align:right; }
 
-  /* Question rows */
-  .q-grid { display: flex; flex-direction: column; gap: 6px; }
-  .q-row {
-    display: flex; align-items: center; gap: 8px;
-    background: #f8f9ff; border-radius: 8px; padding: 8px 12px;
-  }
-  .q-num {
-    font-size: 0.8rem; font-weight: 700; color: #3b5bdb;
-    width: 28px; text-align: center; flex-shrink: 0;
-  }
-  .choices { display: flex; gap: 6px; flex-wrap: wrap; }
-  .choice-btn {
-    width: 34px; height: 34px; border-radius: 50%;
-    border: 2px solid #c5cae9; background: white;
-    font-size: 0.85rem; font-weight: 700; color: #555;
-    cursor: pointer; transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .choice-btn.selected { background: #3b5bdb; color: white; border-color: #3b5bdb; }
-  .choice-btn.correct { background: #2ecc71; color: white; border-color: #2ecc71; }
-  .choice-btn.wrong { background: #e74c3c; color: white; border-color: #e74c3c; }
+.choices { display:flex; gap:5px; flex-wrap:wrap; }
+.choice-btn {
+  width:34px; height:34px; border-radius:50%; border:2px solid var(--border);
+  background:#fff; font-family:var(--mono); font-size:13px; font-weight:600;
+  color:var(--sub); cursor:pointer; transition:all .15s;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.choice-btn:hover { border-color:var(--accent); color:var(--primary); }
+.choice-btn.selected { background:var(--primary); border-color:var(--primary); color:#fff; }
+.choice-btn.correct-mark { background:var(--accent); border-color:var(--accent); color:#fff; }
+.choice-btn.wrong-mark   { background:var(--warn);   border-color:var(--warn);   color:#fff; }
+.choice-btn:disabled { cursor:default; }
 
-  /* Short answer */
-  .short-input {
-    flex: 1; border: 2px solid #c5cae9; border-radius: 8px;
-    padding: 6px 10px; font-size: 0.9rem; outline: none; min-width: 0;
-  }
-  .short-input:focus { border-color: #3b5bdb; }
-  .q-row.essay .short-input { font-size: 0.82rem; }
+.result-icon { font-size:17px; flex-shrink:0; display:none; margin-left:4px; }
+.q-row.correct .result-icon,
+.q-row.wrong   .result-icon { display:block; }
 
-  /* Result area */
-  .result-area {
-    margin-top: 8px; padding: 10px 14px; border-radius: 8px;
-    font-size: 0.82rem; color: #555; background: #f0f4ff;
-    display: none;
-  }
-  .result-area.show { display: block; }
-  .answer-text { color: #3b5bdb; font-weight: 700; }
+.wrong-badge { display:none; margin-left:auto; font-size:11px; font-weight:700; color:var(--warn); }
+.q-row.wrong .wrong-badge { display:block; }
 
-  /* Submit button */
-  .submit-btn {
-    margin-top: 16px; width: 100%;
-    background: #3b5bdb; color: white;
-    border: none; border-radius: 10px;
-    padding: 14px; font-size: 1rem; font-weight: 800;
-    cursor: pointer; transition: background 0.2s;
-  }
-  .submit-btn:hover { background: #2f4ac7; }
-  .submit-btn:disabled { background: #aaa; cursor: not-allowed; }
+/* 서술형 */
+.essay-tag { font-size:11px; font-weight:700; background:#fff8e1; color:#7a5c00; padding:3px 9px; border-radius:20px; border:1.5px solid #f5c518; flex-shrink:0; }
+.essay-msg { font-size:12px; color:var(--sub); }
 
-  /* Score display */
-  .score-box {
-    margin-top: 16px; padding: 18px; border-radius: 12px;
-    text-align: center; display: none;
-    border: 3px solid #3b5bdb; background: #e8eaf6;
-  }
-  .score-box.show { display: block; }
-  .score-big { font-size: 2.2rem; font-weight: 900; color: #3b5bdb; }
-  .score-sub { font-size: 0.9rem; color: #555; margin-top: 6px; }
-  .capture-note {
-    margin-top: 12px; font-size: 1rem; color: #fff;
-    font-weight: 800; background: #e74c3c;
-    border-radius: 8px; padding: 10px 14px;
-    letter-spacing: -0.3px; animation: pulse 1.2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.75; }
-  }
+/* T/F */
+.tf-wrap { display:flex; gap:6px; }
+.tf-btn { padding:6px 16px; border-radius:20px; border:2px solid var(--border); background:#fff; font-family:var(--mono); font-size:12px; font-weight:700; cursor:pointer; transition:all .15s; color:var(--sub); }
+.tf-btn:hover { border-color:var(--accent); color:var(--primary); }
+.tf-btn.selected  { background:var(--primary); border-color:var(--primary); color:#fff; }
+.tf-btn.correct-mark { background:var(--accent); border-color:var(--accent); color:#fff; }
+.tf-btn.wrong-mark   { background:var(--warn);   border-color:var(--warn);   color:#fff; }
+.tf-btn:disabled { cursor:default; }
 
-  /* O / X 결과 표시 */
-  .q-result {
-    font-size: 1.4rem; font-weight: 900;
-    width: 32px; text-align: center; flex-shrink: 0; display: none;
-  }
-  .q-result.show { display: block; }
-  .q-result.ox-o { color: #2ecc71; }
-  .q-result.ox-x { color: #e74c3c; }
+/* 25번 T/F 세트 */
+.tf-set { display:flex; flex-direction:column; gap:5px; flex:1; }
+.tf-item { display:flex; align-items:center; gap:6px; }
+.tf-label { font-size:11px; color:var(--sub); font-family:var(--mono); width:32px; flex-shrink:0; }
+.tf-item-result { font-size:14px; display:none; margin-left:2px; }
+.tf-item.correct .tf-item-result,
+.tf-item.wrong   .tf-item-result { display:block; }
 
-  .reset-btn {
-    margin-top: 10px; width: 100%; background: white;
-    color: #3b5bdb; border: 2px solid #3b5bdb;
-    border-radius: 10px; padding: 10px;
-    font-size: 0.9rem; font-weight: 700; cursor: pointer;
-  }
+.submit-wrap { text-align:center; margin:8px 0 22px; }
+.submit-btn { background:var(--primary); color:#fff; border:none; border-radius:12px; padding:14px 44px; font-family:var(--sans); font-size:15px; font-weight:700; cursor:pointer; transition:all .15s; box-shadow:0 4px 16px rgba(45,106,79,.25); }
+.submit-btn:hover { background:#1f5c3e; transform:translateY(-1px); }
+.submit-btn:disabled { background:#aaa; cursor:default; transform:none; box-shadow:none; }
 
-  /* Section color themes */
-  .theme-blue .section-header, .theme-blue .submit-btn, .theme-blue .choice-btn.selected { background: #3b5bdb; }
-  .theme-blue .choice-btn.selected { border-color: #3b5bdb; }
-  .theme-green .section-header { background: #2d9e6b; }
-  .theme-green .submit-btn { background: #2d9e6b; }
-  .theme-green .submit-btn:hover { background: #237a54; }
-  .theme-green .choice-btn.selected { background: #2d9e6b; border-color: #2d9e6b; }
-  .theme-green .q-num { color: #2d9e6b; }
-  .theme-green .score-box { border-color: #2d9e6b; background: #e6f5ee; }
-  .theme-green .score-big { color: #2d9e6b; }
-  .theme-green .reset-btn { color: #2d9e6b; border-color: #2d9e6b; }
-  .theme-green .name-row input:focus { border-color: #2d9e6b; }
-  .theme-green .short-input:focus { border-color: #2d9e6b; }
-  .theme-purple .section-header { background: #7048e8; }
-  .theme-purple .submit-btn { background: #7048e8; }
-  .theme-purple .submit-btn:hover { background: #5e3bc2; }
-  .theme-purple .choice-btn.selected { background: #7048e8; border-color: #7048e8; }
-  .theme-purple .q-num { color: #7048e8; }
-  .theme-purple .score-box { border-color: #7048e8; background: #ede7ff; }
-  .theme-purple .score-big { color: #7048e8; }
-  .theme-purple .reset-btn { color: #7048e8; border-color: #7048e8; }
-  .theme-purple .name-row input:focus { border-color: #7048e8; }
-  .theme-purple .short-input:focus { border-color: #7048e8; }
-  .theme-orange .section-header { background: #e67e22; }
-  .theme-orange .submit-btn { background: #e67e22; }
-  .theme-orange .submit-btn:hover { background: #c96a10; }
-  .theme-orange .choice-btn.selected { background: #e67e22; border-color: #e67e22; }
-  .theme-orange .q-num { color: #e67e22; }
-  .theme-orange .score-box { border-color: #e67e22; background: #fff3e0; }
-  .theme-orange .score-big { color: #e67e22; }
-  .theme-orange .reset-btn { color: #e67e22; border-color: #e67e22; }
-  .theme-orange .name-row input:focus { border-color: #e67e22; }
-  .theme-orange .short-input:focus { border-color: #e67e22; }
-  .theme-teal .section-header { background: #0d9488; }
-  .theme-teal .submit-btn { background: #0d9488; }
-  .theme-teal .submit-btn:hover { background: #0a7a70; }
-  .theme-teal .choice-btn.selected { background: #0d9488; border-color: #0d9488; }
-  .theme-teal .q-num { color: #0d9488; }
-  .theme-teal .score-box { border-color: #0d9488; background: #e0f7f5; }
-  .theme-teal .score-big { color: #0d9488; }
-  .theme-teal .reset-btn { color: #0d9488; border-color: #0d9488; }
-  .theme-teal .name-row input:focus { border-color: #0d9488; }
-  .theme-teal .short-input:focus { border-color: #0d9488; }
-  .theme-pink .section-header { background: #d63384; }
-  .theme-pink .submit-btn { background: #d63384; }
-  .theme-pink .submit-btn:hover { background: #b5206a; }
-  .theme-pink .choice-btn.selected { background: #d63384; border-color: #d63384; }
-  .theme-pink .q-num { color: #d63384; }
-  .theme-pink .score-box { border-color: #d63384; background: #ffe0ef; }
-  .theme-pink .score-big { color: #d63384; }
-  .theme-pink .reset-btn { color: #d63384; border-color: #d63384; }
-  .theme-pink .name-row input:focus { border-color: #d63384; }
-  .theme-pink .short-input:focus { border-color: #d63384; }
+.score-board { display:none; background:var(--card); border:2px solid var(--border); border-radius:16px; padding:20px; margin-bottom:18px; text-align:center; }
+.score-board.show { display:block; }
+.score-label { font-size:12px; color:var(--sub); margin-bottom:4px; }
+.score-big { font-size:38px; font-weight:900; color:var(--primary); font-family:var(--mono); }
+.score-detail { font-size:12px; color:var(--sub); margin-top:6px; }
+.section-chips { display:flex; justify-content:center; gap:12px; margin-top:14px; flex-wrap:wrap; }
+.chip { background:var(--accent2); border-radius:10px; padding:8px 14px; font-size:12px; color:var(--primary); font-weight:700; }
+.wrong-list { margin-top:16px; background:var(--warn-bg); border:1.5px solid #f5c5c8; border-radius:12px; padding:12px 16px; text-align:left; }
+.wrong-list-title { font-size:12px; font-weight:700; color:var(--warn); margin-bottom:8px; }
+.wrong-list-items { display:flex; flex-wrap:wrap; gap:6px; }
+.wrong-pill { background:#fff; border:1.5px solid #f5c5c8; border-radius:20px; padding:4px 10px; font-size:11px; font-weight:700; color:var(--warn); font-family:var(--mono); }
+.all-correct-msg { margin-top:14px; font-size:13px; font-weight:700; color:var(--primary); }
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <h1>🌸 종촌중 | 중1 영어</h1>
-  <p>비상 황종배 | 섹션을 선택해서 채점하세요</p>
+<div class="header">
+  <div class="badge">봄날 English · 토요보강</div>
+  <h1>종촌중 1학년<br>4월 18일 OMR 채점</h1>
+  <div class="sub">고득점 L01 · 고득점 L02 · 100발100중 L03</div>
 </div>
 
-<!-- Section Tabs -->
-<div class="section-tabs">
-  <button class="tab-btn active" onclick="showSection('s1')">📝 Grammar L01<br><small>실전문제 p.30~31</small></button>
-  <button class="tab-btn" onclick="showSection('s2')">🎯 모의고사 1회<br><small>100발100중 p.56~59</small></button>
-  <button class="tab-btn" onclick="showSection('s3')">📝 Grammar L02<br><small>실전문제 p.88~89</small></button>
-  <button class="tab-btn" onclick="showSection('s4')">📖 Reading L02<br><small>실전문제 p.100~103</small></button>
-  <button class="tab-btn" onclick="showSection('s5')">🔥 Reading 심화<br><small>심화문제 p.104~105</small></button>
-  <button class="tab-btn" onclick="showSection('s6')">🎯 모의고사 2회<br><small>100발100중 p.114~117</small></button>
+<div class="name-box">
+  <label>✏️ 이름</label>
+  <input type="text" id="studentName" placeholder="이름을 입력하세요">
 </div>
 
-<!-- ===== SECTION 1: Grammar 실전문제 L01 ===== -->
-<div id="s1" class="section-panel active theme-blue">
-  <div class="section-header">
-    <h2>📝 Grammar 실전문제 — Lesson 01</h2>
-    <p>p.30~31 | 총 14문제 (객관식 8 + 서술형 6)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row">
-      <label>이름</label>
-      <input type="text" id="s1-name" placeholder="이름을 입력하세요">
+<div class="score-board" id="scoreBoard">
+  <div class="score-label">객관식 정답률</div>
+  <div class="score-big" id="scoreBig">—</div>
+  <div class="score-detail" id="scoreDetail"></div>
+  <div class="section-chips" id="sectionChips"></div>
+  <div id="wrongListWrap"></div>
+</div>
+
+<!-- ═══════════════════════════════
+     PART 1  고득점 pp.60–63  L01
+     ═══════════════════════════════ -->
+<div class="section-card">
+  <div class="section-title">📘 고득점 모의고사 <span class="section-pages">pp.60–63 (Lesson 01)</span></div>
+  <div class="q-grid" id="p1">
+
+    <!-- 01 ② -->
+    <div class="q-row" data-part="1" data-ans="2">
+      <span class="q-num">01</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
     </div>
-    <div class="q-grid" id="s1-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s1')">✅ 채점하기</button>
-    <div class="score-box" id="s1-score"></div>
-    <button class="reset-btn" onclick="resetSection('s1')" style="display:none" id="s1-reset">🔄 다시 풀기</button>
+
+    <!-- 02 ③ -->
+    <div class="q-row" data-part="1" data-ans="3">
+      <span class="q-num">02</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 03 서술형 -->
+    <div class="q-row" data-part="1" data-ans="essay">
+      <span class="q-num">03</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+
+    <!-- 04 ④ -->
+    <div class="q-row" data-part="1" data-ans="4">
+      <span class="q-num">04</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 05 ④ -->
+    <div class="q-row" data-part="1" data-ans="4">
+      <span class="q-num">05</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 06 서술형 -->
+    <div class="q-row" data-part="1" data-ans="essay">
+      <span class="q-num">06</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+
+    <!-- 07 ② -->
+    <div class="q-row" data-part="1" data-ans="2">
+      <span class="q-num">07</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 08 서술형 -->
+    <div class="q-row" data-part="1" data-ans="essay">
+      <span class="q-num">08</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+
+    <!-- 09 서술형 -->
+    <div class="q-row" data-part="1" data-ans="essay">
+      <span class="q-num">09</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+
+    <!-- 10 ③ -->
+    <div class="q-row" data-part="1" data-ans="3">
+      <span class="q-num">10</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 11 ④ -->
+    <div class="q-row" data-part="1" data-ans="4">
+      <span class="q-num">11</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 12 ② -->
+    <div class="q-row" data-part="1" data-ans="2">
+      <span class="q-num">12</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 13 서술형 -->
+    <div class="q-row" data-part="1" data-ans="essay">
+      <span class="q-num">13</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+
+    <!-- 14 ① -->
+    <div class="q-row" data-part="1" data-ans="1">
+      <span class="q-num">14</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 15 ⑤ -->
+    <div class="q-row" data-part="1" data-ans="5">
+      <span class="q-num">15</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 16 ④ -->
+    <div class="q-row" data-part="1" data-ans="4">
+      <span class="q-num">16</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 17 서술형 -->
+    <div class="q-row" data-part="1" data-ans="essay">
+      <span class="q-num">17</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+
+    <!-- 18 ① -->
+    <div class="q-row" data-part="1" data-ans="1">
+      <span class="q-num">18</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 19 ②③ 복수정답 -->
+    <div class="q-row" data-part="1" data-ans="2,3" data-multi="true">
+      <span class="q-num">19</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 20 ② -->
+    <div class="q-row" data-part="1" data-ans="2">
+      <span class="q-num">20</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 21 ② -->
+    <div class="q-row" data-part="1" data-ans="2">
+      <span class="q-num">21</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 22 ⑤ -->
+    <div class="q-row" data-part="1" data-ans="5">
+      <span class="q-num">22</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 23 ③ -->
+    <div class="q-row" data-part="1" data-ans="3">
+      <span class="q-num">23</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 24 ③ -->
+    <div class="q-row" data-part="1" data-ans="3">
+      <span class="q-num">24</span>
+      <div class="choices">
+        <button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button>
+      </div><span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 25 서술형 -->
+    <div class="q-row" data-part="1" data-ans="essay">
+      <span class="q-num">25</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+
   </div>
 </div>
 
-<!-- ===== SECTION 2: 100발100중 모의고사 1회 ===== -->
-<div id="s2" class="section-panel theme-green">
-  <div class="section-header">
-    <h2>🎯 100발100중 모의고사 1회</h2>
-    <p>p.56~59 | 총 25문제 (객관식 19 + 서술형 6)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row">
-      <label>이름</label>
-      <input type="text" id="s2-name" placeholder="이름을 입력하세요">
+<!-- ═══════════════════════════════
+     PART 2  고득점 pp.118–121  L02
+     ═══════════════════════════════ -->
+<div class="section-card">
+  <div class="section-title">📗 고득점 모의고사 <span class="section-pages">pp.118–121 (Lesson 02)</span></div>
+  <div class="q-grid" id="p2">
+
+    <!-- 01 ③ -->
+    <div class="q-row" data-part="2" data-ans="3">
+      <span class="q-num">01</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
     </div>
-    <div class="q-grid" id="s2-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s2')">✅ 채점하기</button>
-    <div class="score-box" id="s2-score"></div>
-    <button class="reset-btn" onclick="resetSection('s2')" style="display:none" id="s2-reset">🔄 다시 풀기</button>
+    <!-- 02 ⑤ -->
+    <div class="q-row" data-part="2" data-ans="5">
+      <span class="q-num">02</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 03 서술형 -->
+    <div class="q-row" data-part="2" data-ans="essay">
+      <span class="q-num">03</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 04 ④ -->
+    <div class="q-row" data-part="2" data-ans="4">
+      <span class="q-num">04</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 05 ④ -->
+    <div class="q-row" data-part="2" data-ans="4">
+      <span class="q-num">05</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 06 ② -->
+    <div class="q-row" data-part="2" data-ans="2">
+      <span class="q-num">06</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 07 서술형 -->
+    <div class="q-row" data-part="2" data-ans="essay">
+      <span class="q-num">07</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 08 ① -->
+    <div class="q-row" data-part="2" data-ans="1">
+      <span class="q-num">08</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 09 ③ -->
+    <div class="q-row" data-part="2" data-ans="3">
+      <span class="q-num">09</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 10 ② -->
+    <div class="q-row" data-part="2" data-ans="2">
+      <span class="q-num">10</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 11 ③ -->
+    <div class="q-row" data-part="2" data-ans="3">
+      <span class="q-num">11</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 12 ② -->
+    <div class="q-row" data-part="2" data-ans="2">
+      <span class="q-num">12</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 13 서술형 -->
+    <div class="q-row" data-part="2" data-ans="essay">
+      <span class="q-num">13</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 14 ① -->
+    <div class="q-row" data-part="2" data-ans="1">
+      <span class="q-num">14</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 15 ② -->
+    <div class="q-row" data-part="2" data-ans="2">
+      <span class="q-num">15</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 16 ①④ 복수정답 -->
+    <div class="q-row" data-part="2" data-ans="1,4" data-multi="true">
+      <span class="q-num">16</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 17 ④ -->
+    <div class="q-row" data-part="2" data-ans="4">
+      <span class="q-num">17</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 18 서술형 -->
+    <div class="q-row" data-part="2" data-ans="essay">
+      <span class="q-num">18</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 19 ④ -->
+    <div class="q-row" data-part="2" data-ans="4">
+      <span class="q-num">19</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 20 ③ -->
+    <div class="q-row" data-part="2" data-ans="3">
+      <span class="q-num">20</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 21 ⑤ -->
+    <div class="q-row" data-part="2" data-ans="5">
+      <span class="q-num">21</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 22 ③ -->
+    <div class="q-row" data-part="2" data-ans="3">
+      <span class="q-num">22</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 23 서술형 -->
+    <div class="q-row" data-part="2" data-ans="essay">
+      <span class="q-num">23</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 24 ② -->
+    <div class="q-row" data-part="2" data-ans="2">
+      <span class="q-num">24</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+
+    <!-- 25 T/F 세트 (1)T (2)T (3)F -->
+    <div class="q-row" data-part="2" data-ans="essay" style="flex-wrap:wrap; align-items:flex-start;">
+      <span class="q-num" style="padding-top:4px;">25</span>
+      <div class="tf-set" id="tf25">
+        <div class="tf-item" data-tf-ans="T" id="tf25_1">
+          <span class="tf-label">(1)</span>
+          <div class="tf-wrap">
+            <button class="tf-btn" data-tf-val="T">T</button>
+            <button class="tf-btn" data-tf-val="F">F</button>
+          </div>
+          <span class="tf-item-result"></span>
+        </div>
+        <div class="tf-item" data-tf-ans="T" id="tf25_2">
+          <span class="tf-label">(2)</span>
+          <div class="tf-wrap">
+            <button class="tf-btn" data-tf-val="T">T</button>
+            <button class="tf-btn" data-tf-val="F">F</button>
+          </div>
+          <span class="tf-item-result"></span>
+        </div>
+        <div class="tf-item" data-tf-ans="F" id="tf25_3">
+          <span class="tf-label">(3)</span>
+          <div class="tf-wrap">
+            <button class="tf-btn" data-tf-val="T">T</button>
+            <button class="tf-btn" data-tf-val="F">F</button>
+          </div>
+          <span class="tf-item-result"></span>
+        </div>
+      </div>
+      <span class="result-icon" style="padding-top:4px;"></span>
+      <span class="wrong-badge" style="padding-top:4px;">틀림</span>
+    </div>
+
   </div>
 </div>
 
-<!-- ===== SECTION 3: Grammar 실전문제 L02 ===== -->
-<div id="s3" class="section-panel theme-purple">
-  <div class="section-header">
-    <h2>📝 Grammar 실전문제 — Lesson 02</h2>
-    <p>p.88~89 | 총 14문제 (객관식 10 + 서술형 4)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row">
-      <label>이름</label>
-      <input type="text" id="s3-name" placeholder="이름을 입력하세요">
+<!-- ═══════════════════════════════
+     PART 3  100발100중 pp.172–175  L03
+     ═══════════════════════════════ -->
+<div class="section-card">
+  <div class="section-title">🏆 100발100중 모의고사 <span class="section-pages">pp.172–175 (Lesson 03)</span></div>
+  <div class="q-grid" id="p3">
+
+    <!-- 01 ④ -->
+    <div class="q-row" data-part="3" data-ans="4">
+      <span class="q-num">01</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
     </div>
-    <div class="q-grid" id="s3-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s3')">✅ 채점하기</button>
-    <div class="score-box" id="s3-score"></div>
-    <button class="reset-btn" onclick="resetSection('s3')" style="display:none" id="s3-reset">🔄 다시 풀기</button>
+    <!-- 02 ④ -->
+    <div class="q-row" data-part="3" data-ans="4">
+      <span class="q-num">02</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 03 서술형 -->
+    <div class="q-row" data-part="3" data-ans="essay">
+      <span class="q-num">03</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 04 ⑤ -->
+    <div class="q-row" data-part="3" data-ans="5">
+      <span class="q-num">04</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 05 ⑤ -->
+    <div class="q-row" data-part="3" data-ans="5">
+      <span class="q-num">05</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 06 ②④ 복수정답 -->
+    <div class="q-row" data-part="3" data-ans="2,4" data-multi="true">
+      <span class="q-num">06</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 07 ⑤ -->
+    <div class="q-row" data-part="3" data-ans="5">
+      <span class="q-num">07</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 08 서술형 -->
+    <div class="q-row" data-part="3" data-ans="essay">
+      <span class="q-num">08</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 09 ② -->
+    <div class="q-row" data-part="3" data-ans="2">
+      <span class="q-num">09</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 10 ④ -->
+    <div class="q-row" data-part="3" data-ans="4">
+      <span class="q-num">10</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 11 ⑤ -->
+    <div class="q-row" data-part="3" data-ans="5">
+      <span class="q-num">11</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 12 ⑤ -->
+    <div class="q-row" data-part="3" data-ans="5">
+      <span class="q-num">12</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 13 서술형 -->
+    <div class="q-row" data-part="3" data-ans="essay">
+      <span class="q-num">13</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 14 ⑤ -->
+    <div class="q-row" data-part="3" data-ans="5">
+      <span class="q-num">14</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 15 ⑤ -->
+    <div class="q-row" data-part="3" data-ans="5">
+      <span class="q-num">15</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 16 ③ -->
+    <div class="q-row" data-part="3" data-ans="3">
+      <span class="q-num">16</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 17 서술형 -->
+    <div class="q-row" data-part="3" data-ans="essay">
+      <span class="q-num">17</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 18 ② -->
+    <div class="q-row" data-part="3" data-ans="2">
+      <span class="q-num">18</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 19 ③ -->
+    <div class="q-row" data-part="3" data-ans="3">
+      <span class="q-num">19</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 20 ③ -->
+    <div class="q-row" data-part="3" data-ans="3">
+      <span class="q-num">20</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 21 서술형 -->
+    <div class="q-row" data-part="3" data-ans="essay">
+      <span class="q-num">21</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 22 서술형 -->
+    <div class="q-row" data-part="3" data-ans="essay">
+      <span class="q-num">22</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+    <!-- 23 ③ -->
+    <div class="q-row" data-part="3" data-ans="3">
+      <span class="q-num">23</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 24 ③ -->
+    <div class="q-row" data-part="3" data-ans="3">
+      <span class="q-num">24</span>
+      <div class="choices"><button class="choice-btn" data-v="1">①</button><button class="choice-btn" data-v="2">②</button><button class="choice-btn" data-v="3">③</button><button class="choice-btn" data-v="4">④</button><button class="choice-btn" data-v="5">⑤</button></div>
+      <span class="result-icon"></span><span class="wrong-badge">틀림</span>
+    </div>
+    <!-- 25 서술형 -->
+    <div class="q-row" data-part="3" data-ans="essay">
+      <span class="q-num">25</span><span class="essay-tag">서술형</span><span class="essay-msg">선생님께 답을 보여주세요! 🙋</span>
+    </div>
+
   </div>
 </div>
 
-<!-- ===== SECTION 4: Reading 실전문제 L02 ===== -->
-<div id="s4" class="section-panel theme-orange">
-  <div class="section-header">
-    <h2>📖 Reading 실전문제 — Lesson 02</h2>
-    <p>p.100~103 | 총 25문제 (객관식 17 + 서술형 8)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row">
-      <label>이름</label>
-      <input type="text" id="s4-name" placeholder="이름을 입력하세요">
-    </div>
-    <div class="q-grid" id="s4-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s4')">✅ 채점하기</button>
-    <div class="score-box" id="s4-score"></div>
-    <button class="reset-btn" onclick="resetSection('s4')" style="display:none" id="s4-reset">🔄 다시 풀기</button>
-  </div>
-</div>
-
-<!-- ===== SECTION 5: Reading 심화문제 L02 ===== -->
-<div id="s5" class="section-panel theme-teal">
-  <div class="section-header">
-    <h2>🔥 Reading 심화문제 — Lesson 02</h2>
-    <p>p.104~105 | 총 15문제 (객관식 7 + 서술형 8)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row">
-      <label>이름</label>
-      <input type="text" id="s5-name" placeholder="이름을 입력하세요">
-    </div>
-    <div class="q-grid" id="s5-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s5')">✅ 채점하기</button>
-    <div class="score-box" id="s5-score"></div>
-    <button class="reset-btn" onclick="resetSection('s5')" style="display:none" id="s5-reset">🔄 다시 풀기</button>
-  </div>
-</div>
-
-<!-- ===== SECTION 6: 100발100중 모의고사 2회 ===== -->
-<div id="s6" class="section-panel theme-pink">
-  <div class="section-header">
-    <h2>🎯 100발100중 모의고사 2회</h2>
-    <p>p.114~117 | 총 25문제 (객관식 18 + 서술형 7)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row">
-      <label>이름</label>
-      <input type="text" id="s6-name" placeholder="이름을 입력하세요">
-    </div>
-    <div class="q-grid" id="s6-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s6')">✅ 채점하기</button>
-    <div class="score-box" id="s6-score"></div>
-    <button class="reset-btn" onclick="resetSection('s6')" style="display:none" id="s6-reset">🔄 다시 풀기</button>
-  </div>
+<div class="submit-wrap">
+  <button class="submit-btn" id="submitBtn" onclick="submitAll()">✅ 채점하기</button>
 </div>
 
 <script>
-// ============================================================
-// DATA: answers per section
-// ============================================================
+// ── choice button interaction ──
+document.querySelectorAll('.q-row').forEach(row => {
+  const isMulti = row.dataset.multi === 'true';
+  const ans = row.dataset.ans;
+  if (ans === 'essay') return;
 
-const SECTIONS = {
-  s1: {
-    // Grammar 실전문제 Lesson 01 p.30~31
-    // 객관식: 1,3,5,6,7,8,9 / 서술형: 2,4,10,11,12,13,14
-    questions: [
-      { n:1,  type:'mc', ans:'2' },   // go-gos 틀림 (goes)
-      { n:2,  type:'sa', ans:'Are the puppies on the sofa?' },
-      { n:3,  type:'mc', ans:'4' },   // Justin (3인칭 단수)
-      { n:4,  type:'sa', ans:'The dog is under the tree. It is very cute.' },
-      { n:5,  type:'mc', ans:'5' },   // don't wave (3인칭단수→doesn't)
-      { n:6,  type:'mc', ans:'2' },   // is
-      { n:7,  type:'mc', ans:'4' },   // Does Teddy make pasta for lunch?
-      { n:8,  type:'mc', ans:'4' },   // This's 틀림
-      { n:9,  type:'mc', ans:'2' },   // ③cries / ⑤doesn't cry
-      { n:10, type:'sa', ans:'Emily studies for the exam.' },
-      { n:11, type:'mc', ans:'2' },   // They're my sister → sisters
-      { n:12, type:'mc', ans:'3' },   // That's not a good idea.
-      { n:13, type:'mc', ans:'2' },   // Do you like beans? / I'm not → I don't
-      { n:14, type:'sa', ans:'Ben eats healthy food every day.' },
-    ]
-  },
-  s2: {
-    // 100발100중 모의고사 1회 p.56~59
-    questions: [
-      { n:1,  type:'mc', ans:'2' },   // tell
-      { n:2,  type:'mc', ans:'4' },   // clothes
-      { n:3,  type:'sa', ans:'walk to school' },
-      { n:4,  type:'sa', ans:'How about you?' },
-      { n:5,  type:'mc', ans:'3' },   // ③④ → 둘 다 맞지만 단답형으로 ③
-      { n:6,  type:'mc', ans:'3' },   // She's / he lives
-      { n:7,  type:'mc', ans:'4' },   // 민현: Toby와 Dylan은 같은 학교에 다녀
-      { n:8,  type:'mc', ans:'4' },   // doesn't start on time
-      { n:9,  type:'mc', ans:'5' },   // doesn't ride / isn't / Does
-      { n:10, type:'mc', ans:'4' },   // does
-      { n:11, type:'mc', ans:'2' },   // Billie doesn't swim
-      { n:12, type:'mc', ans:'5' },   // ⑤ ⓑ,ⓓ,ⓔ
-      { n:13, type:'sa', ans:'My dad works as a software engineer. He works for Google.' },
-      { n:14, type:'mc', ans:'5' },   // ⑤ don't like
-      { n:15, type:'mc', ans:'3' },   // ③
-      { n:16, type:'sa', ans:'We wear' },
-      { n:17, type:'mc', ans:'2' },   // ② 지민이는 엄마의 학창시절 사진
-      { n:18, type:'sa', ans:'지민이는 엄마의 교복이 멋지다고 생각한다.' },
-      { n:19, type:'mc', ans:'3' },   // (B)-(A)-(D)-(C)
-      { n:20, type:'mc', ans:'4' },   // My first class starts at 9:00 a.m.
-      { n:21, type:'mc', ans:'3' },   // Toby는 결국 필통을 찾지 못했다
-      { n:22, type:'mc', ans:'3' },   // finding the pencil case
-      { n:23, type:'mc', ans:'3' },   // rings/calls/is
-      { n:24, type:'mc', ans:'3' },   // ③ 위치
-      { n:25, type:'sa', ans:'He has music class now.' },
-    ]
-  },
-  s3: {
-    // Grammar 실전문제 Lesson 02 p.88~89
-    questions: [
-      { n:1,  type:'mc', ans:'3' },   // cut-cuting (cutting)
-      { n:2,  type:'mc', ans:'3' },   // There is a cup on the table.
-      { n:3,  type:'mc', ans:'3' },   // is having a dog (have는 진행형 불가)
-      { n:4,  type:'mc', ans:'4' },   // Peter (is) drinking
-      { n:5,  type:'sa', ans:'There are five people in the room.' },
-      { n:6,  type:'mc', ans:'4' },   // taking / playing
-      { n:7,  type:'mc', ans:'2' },   // are
-      { n:8,  type:'sa', ans:'Is there a flight to L.A. tomorrow?' },
-      { n:9,  type:'mc', ans:'3' },   // There are snow → There is snow
-      { n:10, type:'mc', ans:'3' },   // is / Is / are
-      { n:11, type:'sa', ans:'Are you doing your homework now?' },
-      { n:12, type:'mc', ans:'3' },   // There aren't any tickets → isn't
-      { n:13, type:'sa', ans:'Are there many people in the pool?' },
-      { n:14, type:'sa', ans:'The children are running fast to the finish line.' },
-    ]
-  },
-  s4: {
-    // Reading 실전문제 Lesson 02 p.100~103
-    questions: [
-      { n:1,  type:'mc', ans:'1' },   // my mom
-      { n:2,  type:'mc', ans:'2' },   // in / on
-      { n:3,  type:'mc', ans:'2' },   // ②위치
-      { n:4,  type:'mc', ans:'4' },   // filming / putting
-      { n:5,  type:'sa', ans:'My dad is holding pink roses.' },
-      { n:6,  type:'mc', ans:'3' },   // But
-      { n:7,  type:'sa', ans:'strange' },
-      { n:8,  type:'mc', ans:'2' },   // two people
-      { n:9,  type:'mc', ans:'1' },   // her age (100세)
-      { n:10, type:'mc', ans:'5' },   // 거기에 ~이 있다
-      { n:11, type:'mc', ans:'2' },   // is / is
-      { n:12, type:'mc', ans:'5' },   // comes
-      { n:13, type:'sa', ans:'guest' },
-      { n:14, type:'mc', ans:'4' },   // 파티에 온 깜짝손님 정체 공개
-      { n:15, type:'mc', ans:'1' },   // What does Jimmy's dad say to Jimmy?
-      { n:16, type:'sa', ans:'slowly' },
-      { n:17, type:'sa', ans:'There is a woman standing there.' },
-      { n:18, type:'mc', ans:'2' },   // is wearing
-      { n:19, type:'mc', ans:'2' },   // 이제 모든 것이 이해되네
-      { n:20, type:'mc', ans:'3' },   // Irene's twin sister
-      { n:21, type:'sa', ans:'My mom and dad are lighting candles.' },
-      { n:22, type:'mc', ans:'3' },   // There are
-      { n:23, type:'mc', ans:'2' },   // our whole family
-      { n:24, type:'mc', ans:'3' },   // ③ 알 수 없는 것
-      { n:25, type:'sa', ans:'There are too many candles.' },
-    ]
-  },
-  s5: {
-    // Reading 심화문제 Lesson 02 p.104~105
-    questions: [
-      { n:1,  type:'mc', ans:'3' },   // the mother of my mom
-      { n:2,  type:'mc', ans:'2' },   // ②preparing
-      { n:3,  type:'mc', ans:'4' },   // I'm filming a video on this special day.
-      { n:4,  type:'mc', ans:'5' },   // strawberries
-      { n:5,  type:'mc', ans:'3' },   // is holding
-      { n:6,  type:'mc', ans:'4' },   // wrong
-      { n:7,  type:'mc', ans:'3' },   // ③세영
-      { n:8,  type:'sa', ans:'preparing' },
-      { n:9,  type:'sa', ans:'She is one hundred years old.' },
-      { n:10, type:'mc', ans:'1' },   // Who / ready / our
-      { n:11, type:'mc', ans:'2' },   // the
-      { n:12, type:'mc', ans:'4' },   // They join us for dinner every Friday.
-      { n:13, type:'sa', ans:'She is with us now.' },   // joins us → be동사 5단어
-      { n:14, type:'mc', ans:'4' },   // a special guest for the party
-      { n:15, type:'mc', ans:'2' },   // Jimmy is curious about the special guest.
-    ]
-  },
-  s6: {
-    // 100발100중 모의고사 2회 p.114~117
-    questions: [
-      { n:1,  type:'mc', ans:'2' },   // candle
-      { n:2,  type:'mc', ans:'5' },   // together
-      { n:3,  type:'sa', ans:'We visit our great-grandmother on weekends.' },
-      { n:4,  type:'mc', ans:'3' },   // looking at / is dancing
-      { n:5,  type:'mc', ans:'4' },   // Dylan doesn't have any brothers or sisters (틀림)
-      { n:6,  type:'mc', ans:'3' },   // Adam이 토요일에 하는 일
-      { n:7,  type:'sa', ans:'He usually plays badminton in the sports center.' },
-      { n:8,  type:'mc', ans:'2' },   // an eraser
-      { n:9,  type:'mc', ans:'4' },   // Brian know → knows
-      { n:10, type:'mc', ans:'3' },   // Does your dad making → Is your dad making
-      { n:11, type:'mc', ans:'1' },   // is
-      { n:12, type:'mc', ans:'4' },   // The men are holding some fish → 그림엔 없음
-      { n:13, type:'sa', ans:'Are there any cars in the parking lot?' },
-      { n:14, type:'mc', ans:'3' },   // ③
-      { n:15, type:'mc', ans:'3' },   // in the garden
-      { n:16, type:'mc', ans:'4' },   // ⓓ: 분홍색이 아니라 노란색
-      { n:17, type:'mc', ans:'3' },   // ③위치
-      { n:18, type:'sa', ans:'My great-grandmother isn\'t liking strawberries. → My great-grandmother doesn\'t like strawberries.' },
-      { n:19, type:'mc', ans:'3' },   // 엄마가 케이크 위에 딸기를 올린 것
-      { n:20, type:'mc', ans:'5' },   // confused and worried
-      { n:21, type:'sa', ans:'guest (a person who is invited to visit or stay in someone\'s home)' },
-      { n:22, type:'mc', ans:'5' },   // ready / joins / surprise
-      { n:23, type:'mc', ans:'2' },   // ⓑ: is standing → 적절하지 않음
-      { n:24, type:'mc', ans:'1' },   // ① 파티 시작 시간 / ⑤ 좋아하는 꽃 → 복수정답이나 ①우선
-      { n:25, type:'sa', ans:'They are lighting candles.' },
-    ]
-  }
-};
-
-// ============================================================
-// BUILD GRIDS
-// ============================================================
-function buildGrid(secId) {
-  const sec = SECTIONS[secId];
-  const grid = document.getElementById(secId + '-grid');
-  grid.innerHTML = '';
-  sec.questions.forEach(q => {
-    const row = document.createElement('div');
-    row.className = 'q-row' + (q.type === 'sa' ? ' essay' : '');
-    row.id = `${secId}-q${q.n}`;
-
-    const numDiv = document.createElement('div');
-    numDiv.className = 'q-num';
-    numDiv.textContent = q.n;
-    row.appendChild(numDiv);
-
-    if (q.type === 'mc') {
-      const choices = document.createElement('div');
-      choices.className = 'choices';
-      [1,2,3,4,5].forEach(i => {
-        const btn = document.createElement('button');
-        btn.className = 'choice-btn';
-        btn.textContent = i;
-        btn.dataset.val = i;
-        btn.onclick = () => selectChoice(secId, q.n, i, btn);
-        choices.appendChild(btn);
-      });
-      row.appendChild(choices);
-      // O/X 결과 표시
-      const resultMark = document.createElement('div');
-      resultMark.className = 'q-result';
-      resultMark.id = `${secId}-mark${q.n}`;
-      row.appendChild(resultMark);
-    } else {
-      const inp = document.createElement('input');
-      inp.type = 'text';
-      inp.className = 'short-input';
-      inp.id = `${secId}-sa${q.n}`;
-      inp.placeholder = `${q.n}번 답 쓰기`;
-      inp.autocomplete = 'off';
-      inp.setAttribute('autocorrect', 'off');
-      inp.setAttribute('autocapitalize', 'off');
-      inp.setAttribute('spellcheck', 'false');
-      row.appendChild(inp);
-    }
-
-    // result area for SA
-    if (q.type === 'sa') {
-      const res = document.createElement('div');
-      res.className = 'result-area';
-      res.id = `${secId}-res${q.n}`;
-      grid.appendChild(row);
-      grid.appendChild(res);
-    } else {
-      grid.appendChild(row);
-    }
+  // regular MC buttons
+  row.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      if (isMulti) {
+        btn.classList.toggle('selected');
+      } else {
+        row.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      }
+    });
   });
-}
+});
 
-function selectChoice(secId, qn, val, btn) {
-  const row = document.getElementById(`${secId}-q${qn}`);
-  row.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-}
+// ── T/F button interaction ──
+document.querySelectorAll('.tf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.disabled) return;
+    const wrap = btn.closest('.tf-wrap');
+    wrap.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  });
+});
 
-// ============================================================
-// GRADE
-// ============================================================
-function gradeSection(secId) {
-  const sec = SECTIONS[secId];
-  const name = document.getElementById(secId + '-name').value.trim() || '학생';
-  let correct = 0, total = sec.questions.length;
+// 파트별 페이지 정보
+const partPages = {1: 'pp.60~63', 2: 'pp.118~121', 3: 'pp.172~175'};
 
-  sec.questions.forEach(q => {
-    const row = document.getElementById(`${secId}-q${q.n}`);
-    if (q.type === 'mc') {
-      const selected = row.querySelector('.choice-btn.selected');
-      const btns = row.querySelectorAll('.choice-btn');
-      btns.forEach(b => {
-        b.disabled = true;
-        b.classList.remove('selected');
-      });
-      if (selected) {
-        const mark = document.getElementById(`${secId}-mark${q.n}`);
-        if (selected.dataset.val === q.ans) {
-          selected.classList.add('correct');
-          if (mark) { mark.textContent = '⭕'; mark.classList.add('show', 'ox-o'); }
+// ── Submit ──
+function submitAll() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+
+  let totalMC = 0, correctMC = 0;
+  const partScores = {1:{tot:0,cor:0}, 2:{tot:0,cor:0}, 3:{tot:0,cor:0}};
+  const wrongItems = []; // {page, qnum}
+
+  document.querySelectorAll('.q-row').forEach(row => {
+    const ans = row.dataset.ans;
+    const part = parseInt(row.dataset.part);
+    if (ans === 'essay') return;
+    const qNum = row.querySelector('.q-num').textContent.trim();
+
+    const isMulti = row.dataset.multi === 'true';
+    const correctSet = new Set(ans.split(',').map(s=>s.trim()));
+    const resultIcon = row.querySelector('.result-icon');
+
+    // T/F set (25번 Part2)
+    const tfSet = row.querySelector('.tf-set');
+    if (tfSet) {
+      totalMC++; partScores[part].tot++;
+      let allCorrect = true;
+      tfSet.querySelectorAll('.tf-item').forEach(item => {
+        const tfAns = item.dataset.tfAns;
+        const selected = item.querySelector('.tf-btn.selected');
+        const selVal = selected ? selected.dataset.tfVal : null;
+        const resultSpan = item.querySelector('.tf-item-result');
+        item.querySelectorAll('.tf-btn').forEach(b => b.disabled = true);
+        if (selVal === tfAns) {
+          item.classList.add('correct');
+          resultSpan.textContent = '✅';
         } else {
-          selected.classList.add('wrong');
-          if (mark) { mark.textContent = '❌'; mark.classList.add('show', 'ox-x'); }
+          item.classList.add('wrong');
+          resultSpan.textContent = '❌';
+          allCorrect = false;
         }
+      });
+      if (allCorrect) {
+        row.classList.add('correct'); correctMC++; partScores[part].cor++;
+        resultIcon.textContent = '✅';
+      } else {
+        row.classList.add('wrong');
+        resultIcon.textContent = '❌';
+        wrongItems.push({page: partPages[part], num: qNum});
       }
+      return;
+    }
+
+    totalMC++; partScores[part].tot++;
+    const buttons = row.querySelectorAll('.choice-btn');
+    const selectedSet = new Set();
+    buttons.forEach(b => { if (b.classList.contains('selected')) selectedSet.add(b.dataset.v); });
+
+    // check correct
+    const isCorrect = correctSet.size === selectedSet.size && [...correctSet].every(v => selectedSet.has(v));
+
+    buttons.forEach(b => {
+      b.disabled = true;
+      if (correctSet.has(b.dataset.v)) {
+        if (selectedSet.has(b.dataset.v)) b.classList.add('correct-mark');
+      } else {
+        if (selectedSet.has(b.dataset.v)) b.classList.add('wrong-mark');
+      }
+      b.classList.remove('selected');
+    });
+
+    if (isCorrect) {
+      row.classList.add('correct'); correctMC++; partScores[part].cor++;
+      resultIcon.textContent = '✅';
     } else {
-      // SA: show model answer
-      const inp = document.getElementById(`${secId}-sa${q.n}`);
-      if (inp) inp.disabled = true;
-      const res = document.getElementById(`${secId}-res${q.n}`);
-      if (res) {
-        res.classList.add('show');
-        res.innerHTML = `✏️ 모범답안: <span class="answer-text">${q.ans}</span><br><small>⚠️ 선생님과 함께 확인하세요!</small>`;
-      }
+      row.classList.add('wrong');
+      resultIcon.textContent = '❌';
+      wrongItems.push({page: partPages[part], num: qNum});
     }
   });
 
-  // Count MC correct answers
-  const mcQs = sec.questions.filter(q => q.type === 'mc');
-  let mcCorrect = 0;
-  mcQs.forEach(q => {
-    const row = document.getElementById(`${secId}-q${q.n}`);
-    const btns = Array.from(row.querySelectorAll('.choice-btn'));
-    const selected = btns.find(b => b.classList.contains('correct') || b.classList.contains('wrong'));
-    // correct = selected and not wrong
-    if (selected && selected.classList.contains('correct')) mcCorrect++;
+  // score board
+  const pct = totalMC > 0 ? Math.round(correctMC/totalMC*100) : 0;
+  document.getElementById('scoreBig').textContent = `${correctMC} / ${totalMC}`;
+  document.getElementById('scoreDetail').textContent = `객관식 정답률 ${pct}%  ·  서술형은 선생님께 확인받으세요`;
+
+  const partNames = {1:'고득점 L01', 2:'고득점 L02', 3:'100발100중 L03'};
+  const chips = document.getElementById('sectionChips');
+  chips.innerHTML = '';
+  [1,2,3].forEach(p => {
+    const {tot, cor} = partScores[p];
+    const d = document.createElement('div');
+    d.className = 'chip';
+    d.textContent = `${partNames[p]}: ${cor}/${tot}`;
+    chips.appendChild(d);
   });
 
-  const saCount = sec.questions.filter(q => q.type === 'sa').length;
-  const scoreBox = document.getElementById(secId + '-score');
-  scoreBox.classList.add('show');
-  scoreBox.innerHTML = `
-    <div class="score-big">🎉 ${name}</div>
-    <div class="score-sub" style="margin-top:8px">
-      객관식 <strong>${mcCorrect} / ${mcQs.length}</strong> 정답
-    </div>
-    <div class="score-sub">
-      서술형 ${saCount}문제는 모범답안을 확인하세요
-    </div>
-    <div class="capture-note">📸 지금 화면을 캡처해서 선생님께 꼭 보여주세요!</div>
-  `;
+  // 오답 목록 렌더링
+  const wrap = document.getElementById('wrongListWrap');
+  if (wrongItems.length === 0) {
+    wrap.innerHTML = '<div class="all-correct-msg">🎉 객관식 전부 정답!</div>';
+  } else {
+    const pills = wrongItems.map(w =>
+      `<span class="wrong-pill">${w.page} ${parseInt(w.num)}번</span>`
+    ).join('');
+    wrap.innerHTML = `
+      <div class="wrong-list">
+        <div class="wrong-list-title">❌ 틀린 문제 (${wrongItems.length}개)</div>
+        <div class="wrong-list-items">${pills}</div>
+      </div>`;
+  }
 
-  document.getElementById(secId + '-reset').style.display = 'block';
-  document.querySelector(`#${secId} .submit-btn`).disabled = true;
+  document.getElementById('scoreBoard').classList.add('show');
+  document.getElementById('scoreBoard').scrollIntoView({behavior:'smooth'});
 }
-
-// ============================================================
-// RESET
-// ============================================================
-function resetSection(secId) {
-  document.getElementById(secId + '-score').classList.remove('show');
-  document.getElementById(secId + '-reset').style.display = 'none';
-  document.querySelector(`#${secId} .submit-btn`).disabled = false;
-  buildGrid(secId);
-}
-
-// ============================================================
-// TABS
-// ============================================================
-function showSection(secId) {
-  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(secId).classList.add('active');
-  const idx = ['s1','s2','s3','s4','s5','s6'].indexOf(secId);
-  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
-}
-
-// ============================================================
-// INIT
-// ============================================================
-['s1','s2','s3','s4','s5','s6'].forEach(id => buildGrid(id));
 </script>
 </body>
 </html>
