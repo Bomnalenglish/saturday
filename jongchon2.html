@@ -3,542 +3,181 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>종촌중·어진중 중2 | 봄날 English</title>
+<title>중2 비상 황종배 1~2과 OMR 자가채점</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans KR', sans-serif; background: #f0f4ff; min-height: 100vh; padding: 20px; }
-
-  .top-bar { text-align: center; padding: 18px 0 10px; }
-  .top-bar h1 { font-size: 1.5rem; color: #3b5bdb; font-weight: 800; letter-spacing: -0.5px; }
-  .top-bar p { font-size: 0.85rem; color: #888; margin-top: 4px; }
-
-  .section-tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0; }
-  .tab-btn {
-    padding: 8px 14px; border-radius: 20px; border: 2px solid #c5cae9;
-    background: #fff; color: #555; font-size: 0.78rem; cursor: pointer;
-    font-weight: 600; transition: all 0.2s;
-  }
-  .tab-btn.active { background: #3b5bdb; color: #fff; border-color: #3b5bdb; }
-  .tab-btn:hover:not(.active) { background: #e8eaf6; }
-
-  .section-panel { display: none; }
-  .section-panel.active { display: block; }
-
-  .section-header {
-    background: #3b5bdb; color: white; border-radius: 14px 14px 0 0;
-    padding: 14px 20px; margin-top: 8px;
-  }
-  .section-header h2 { font-size: 1.1rem; font-weight: 800; }
-  .section-header p { font-size: 0.8rem; opacity: 0.85; margin-top: 2px; }
-
-  .omr-box {
-    background: white; border-radius: 0 0 14px 14px;
-    padding: 20px; box-shadow: 0 4px 18px rgba(59,91,219,0.10);
-  }
-
-  /* Name input */
-  .name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
-  .name-row label { font-size: 0.85rem; color: #555; font-weight: 600; white-space: nowrap; }
-  .name-row input {
-    flex: 1; border: 2px solid #c5cae9; border-radius: 8px;
-    padding: 8px 12px; font-size: 0.95rem; outline: none;
-  }
-  .name-row input:focus { border-color: #3b5bdb; }
-
-  /* Question rows */
-  .q-grid { display: flex; flex-direction: column; gap: 6px; }
-  .q-row {
-    display: flex; align-items: center; gap: 8px;
-    background: #f8f9ff; border-radius: 8px; padding: 8px 12px;
-  }
-  .q-num {
-    font-size: 0.8rem; font-weight: 700; color: #3b5bdb;
-    width: 28px; text-align: center; flex-shrink: 0;
-  }
-  .choices { display: flex; gap: 6px; flex-wrap: wrap; }
-  .choice-btn {
-    width: 34px; height: 34px; border-radius: 50%;
-    border: 2px solid #c5cae9; background: white;
-    font-size: 0.85rem; font-weight: 700; color: #555;
-    cursor: pointer; transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .choice-btn.selected { background: #3b5bdb; color: white; border-color: #3b5bdb; }
-  .choice-btn.correct { background: #2ecc71; color: white; border-color: #2ecc71; }
-  .choice-btn.wrong { background: #e74c3c; color: white; border-color: #e74c3c; }
-
-  /* Short answer */
-  .short-input {
-    flex: 1; border: 2px solid #c5cae9; border-radius: 8px;
-    padding: 6px 10px; font-size: 0.9rem; outline: none; min-width: 0;
-  }
-  .short-input:focus { border-color: #3b5bdb; }
-  .q-row.essay .short-input { font-size: 0.82rem; }
-
-  /* Result area */
-  .result-area {
-    margin-top: 8px; padding: 10px 14px; border-radius: 8px;
-    font-size: 0.82rem; color: #555; background: #f0f4ff;
-    display: none;
-  }
-  .result-area.show { display: block; }
-  .answer-text { color: #3b5bdb; font-weight: 700; }
-
-  /* Submit button */
-  .submit-btn {
-    margin-top: 16px; width: 100%;
-    background: #3b5bdb; color: white;
-    border: none; border-radius: 10px;
-    padding: 14px; font-size: 1rem; font-weight: 800;
-    cursor: pointer; transition: background 0.2s;
-  }
-  .submit-btn:hover { background: #2f4ac7; }
-  .submit-btn:disabled { background: #aaa; cursor: not-allowed; }
-
-  /* Score display */
-  .score-box {
-    margin-top: 16px; padding: 18px; border-radius: 12px;
-    text-align: center; display: none;
-    border: 3px solid #3b5bdb; background: #e8eaf6;
-  }
-  .score-box.show { display: block; }
-  .score-big { font-size: 2.2rem; font-weight: 900; color: #3b5bdb; }
-  .score-sub { font-size: 0.9rem; color: #555; margin-top: 6px; }
-  .capture-note {
-    margin-top: 12px; font-size: 1rem; color: #fff;
-    font-weight: 800; background: #e74c3c;
-    border-radius: 8px; padding: 10px 14px;
-    letter-spacing: -0.3px; animation: pulse 1.2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.75; }
-  }
-
-  /* O / X 결과 표시 */
-  .q-result {
-    font-size: 1.4rem; font-weight: 900;
-    width: 32px; text-align: center; flex-shrink: 0; display: none;
-  }
-  .q-result.show { display: block; }
-  .q-result.ox-o { color: #2ecc71; }
-  .q-result.ox-x { color: #e74c3c; }
-
-  .reset-btn {
-    margin-top: 10px; width: 100%; background: white;
-    color: #3b5bdb; border: 2px solid #3b5bdb;
-    border-radius: 10px; padding: 10px;
-    font-size: 0.9rem; font-weight: 700; cursor: pointer;
-  }
-
-  /* Section color themes */
-  .theme-blue .section-header, .theme-blue .submit-btn, .theme-blue .choice-btn.selected { background: #3b5bdb; }
-  .theme-blue .choice-btn.selected { border-color: #3b5bdb; }
-  .theme-green .section-header { background: #2d9e6b; }
-  .theme-green .submit-btn { background: #2d9e6b; }
-  .theme-green .submit-btn:hover { background: #237a54; }
-  .theme-green .choice-btn.selected { background: #2d9e6b; border-color: #2d9e6b; }
-  .theme-green .q-num { color: #2d9e6b; }
-  .theme-green .score-box { border-color: #2d9e6b; background: #e6f5ee; }
-  .theme-green .score-big { color: #2d9e6b; }
-  .theme-green .reset-btn { color: #2d9e6b; border-color: #2d9e6b; }
-  .theme-green .name-row input:focus { border-color: #2d9e6b; }
-  .theme-green .short-input:focus { border-color: #2d9e6b; }
-  .theme-purple .section-header { background: #7048e8; }
-  .theme-purple .submit-btn { background: #7048e8; }
-  .theme-purple .submit-btn:hover { background: #5e3bc2; }
-  .theme-purple .choice-btn.selected { background: #7048e8; border-color: #7048e8; }
-  .theme-purple .q-num { color: #7048e8; }
-  .theme-purple .score-box { border-color: #7048e8; background: #ede7ff; }
-  .theme-purple .score-big { color: #7048e8; }
-  .theme-purple .reset-btn { color: #7048e8; border-color: #7048e8; }
-  .theme-purple .name-row input:focus { border-color: #7048e8; }
-  .theme-purple .short-input:focus { border-color: #7048e8; }
-  .theme-orange .section-header { background: #e67e22; }
-  .theme-orange .submit-btn { background: #e67e22; }
-  .theme-orange .submit-btn:hover { background: #c96a10; }
-  .theme-orange .choice-btn.selected { background: #e67e22; border-color: #e67e22; }
-  .theme-orange .q-num { color: #e67e22; }
-  .theme-orange .score-box { border-color: #e67e22; background: #fff3e0; }
-  .theme-orange .score-big { color: #e67e22; }
-  .theme-orange .reset-btn { color: #e67e22; border-color: #e67e22; }
-  .theme-orange .name-row input:focus { border-color: #e67e22; }
-  .theme-orange .short-input:focus { border-color: #e67e22; }
-  .theme-teal .section-header { background: #0d9488; }
-  .theme-teal .submit-btn { background: #0d9488; }
-  .theme-teal .submit-btn:hover { background: #0a7a70; }
-  .theme-teal .choice-btn.selected { background: #0d9488; border-color: #0d9488; }
-  .theme-teal .q-num { color: #0d9488; }
-  .theme-teal .score-box { border-color: #0d9488; background: #e0f7f5; }
-  .theme-teal .score-big { color: #0d9488; }
-  .theme-teal .reset-btn { color: #0d9488; border-color: #0d9488; }
-  .theme-teal .name-row input:focus { border-color: #0d9488; }
-  .theme-teal .short-input:focus { border-color: #0d9488; }
-  .theme-pink .section-header { background: #d63384; }
-  .theme-pink .submit-btn { background: #d63384; }
-  .theme-pink .submit-btn:hover { background: #b5206a; }
-  .theme-pink .choice-btn.selected { background: #d63384; border-color: #d63384; }
-  .theme-pink .q-num { color: #d63384; }
-  .theme-pink .score-box { border-color: #d63384; background: #ffe0ef; }
-  .theme-pink .score-big { color: #d63384; }
-  .theme-pink .reset-btn { color: #d63384; border-color: #d63384; }
-  .theme-pink .name-row input:focus { border-color: #d63384; }
-  .theme-pink .short-input:focus { border-color: #d63384; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: #f0f4f8; min-height: 100vh; padding: 16px; }
+  .top-header { background: linear-gradient(135deg, #1a237e, #283593); color: white; text-align: center; padding: 18px 12px; border-radius: 14px; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(26,35,126,0.3); }
+  .top-header h1 { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
+  .top-header p { font-size: 0.82rem; opacity: 0.85; }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tab-btn { flex: 1; min-width: 130px; padding: 10px 8px; border: 2px solid transparent; border-radius: 10px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; background: white; color: #555; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+  .tab-btn.lesson1 { border-color: #7b1fa2; color: #7b1fa2; }
+  .tab-btn.lesson2 { border-color: #1565c0; color: #1565c0; }
+  .tab-btn.active.lesson1 { background: #7b1fa2; color: white; }
+  .tab-btn.active.lesson2 { background: #1565c0; color: white; }
+  .tab-btn small { display: block; font-weight: 400; font-size: 0.72rem; opacity: 0.85; margin-top: 2px; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .section-header { padding: 12px 16px; border-radius: 10px; margin-bottom: 14px; color: white; font-weight: 700; font-size: 0.95rem; }
+  .lesson1-color { background: linear-gradient(135deg, #7b1fa2, #9c27b0); }
+  .lesson2-color { background: linear-gradient(135deg, #1565c0, #1976d2); }
+  .question-card { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .question-label { font-size: 0.8rem; font-weight: 700; margin-bottom: 10px; color: #333; display: flex; align-items: center; gap: 6px; }
+  .num-circle { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; color: white; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; }
+  .lesson1-num { background: #7b1fa2; }
+  .lesson2-num { background: #1565c0; }
+  .choices { display: flex; gap: 8px; flex-wrap: wrap; }
+  .choice-btn { width: 42px; height: 42px; border-radius: 50%; border: 2px solid #ddd; background: white; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #444; }
+  .choice-btn:hover { border-color: #aaa; background: #f5f5f5; }
+  .choice-btn.selected { border-color: #ffa000; background: #ffa000; color: white; }
+  .choice-btn.correct { border-color: #2e7d32; background: #2e7d32; color: white; }
+  .choice-btn.wrong { border-color: #c62828; background: #c62828; color: white; }
+  .subj-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .subj-input { width: 100%; border: 2px solid #ce93d8; border-radius: 8px; padding: 10px 12px; font-size: 0.88rem; font-family: inherit; outline: none; transition: border-color 0.15s; background: #fdf6ff; color: #333; }
+  .subj-input.l2 { border-color: #90caf9; background: #f0f7ff; }
+  .subj-input:focus { border-color: #7b1fa2; }
+  .subj-input.l2:focus { border-color: #1565c0; }
+  .answer-reveal { display: none; font-size: 0.8rem; padding: 8px 11px; border-radius: 7px; line-height: 1.5; }
+  .answer-reveal.show-correct { display: block; background: #e8f5e9; color: #1b5e20; }
+  .answer-reveal.show-wrong { display: block; background: #fce4ec; color: #b71c1c; }
+  .subj-tag { font-size: 0.7rem; background: #ede7f6; color: #6a1b9a; border-radius: 5px; padding: 2px 6px; font-weight: 600; }
+  .subj-tag.l2 { background: #e3f2fd; color: #0d47a1; }
+  .grade-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 6px; margin-bottom: 16px; transition: all 0.2s; color: white; }
+  .grade-btn.lesson1-color { background: linear-gradient(135deg, #7b1fa2, #9c27b0); }
+  .grade-btn.lesson2-color { background: linear-gradient(135deg, #1565c0, #1976d2); }
+  .grade-btn:active { transform: scale(0.97); }
+  .result-box { display: none; background: white; border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+  .result-box.show { display: block; }
+  .score-big { font-size: 2.5rem; font-weight: 900; margin: 8px 0; }
+  .score-detail { font-size: 0.85rem; color: #666; }
+  .result-note { margin-top: 10px; font-size: 0.82rem; background: #fff3e0; border-radius: 8px; padding: 10px 12px; color: #e65100; text-align: left; }
+  .submit-note { text-align: center; font-size: 0.82rem; color: #888; margin-top: 4px; margin-bottom: 12px; }
 </style>
 </head>
 <body>
-
-<div class="top-bar">
-  <h1>🌸 종촌중·어진중 | 중2 영어</h1>
-  <p>비상 황종배 | 섹션을 선택해서 채점하세요</p>
+<div class="top-header">
+  <h1>📝 중2 비상 황종배 OMR 자가채점</h1>
+  <p>1과 · 2과 전체 | 서술형은 직접 쓰고 채점 후 정답 확인!</p>
 </div>
-
-<!-- Section Tabs -->
-<div class="section-tabs">
-  <button class="tab-btn active" onclick="showSection('s1')">📝 단원평가 L1<br><small>p.30~33 · 15문제</small></button>
-  <button class="tab-btn" onclick="showSection('s2')">✏️ 서술형평가 L1<br><small>p.34 · 5문제</small></button>
-  <button class="tab-btn" onclick="showSection('s3')">📝 단원평가 L2<br><small>p.60~63 · 20문제</small></button>
-  <button class="tab-btn" onclick="showSection('s4')">✏️ 서술형평가 L2<br><small>p.64 · 5문제</small></button>
-  <button class="tab-btn" onclick="showSection('s5')">🎯 1학기 중간고사<br><small>p.65~70 · 30문제</small></button>
+<div class="tabs">
+  <button class="tab-btn lesson1 active" onclick="showSection('l1rt')">1과<small>Reading Test</small></button>
+  <button class="tab-btn lesson1" onclick="showSection('l1u1')">1과<small>단원평가 1회</small></button>
+  <button class="tab-btn lesson1" onclick="showSection('l1u2')">1과<small>단원평가 2회</small></button>
+  <button class="tab-btn lesson2" onclick="showSection('l2rt')">2과<small>Reading Test</small></button>
+  <button class="tab-btn lesson2" onclick="showSection('l2u1')">2과<small>단원평가 1회</small></button>
+  <button class="tab-btn lesson2" onclick="showSection('l2u2')">2과<small>단원평가 2회</small></button>
 </div>
-
-<!-- ===== SECTION 1: 단원평가 L1 ===== -->
-<div id="s1" class="section-panel active theme-blue">
-  <div class="section-header">
-    <h2>📝 단원 평가 — Lesson 1</h2>
-    <p>p.30~33 | 총 15문제 (객관식 10 + 서술형 5)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row"><label>이름</label><input type="text" id="s1-name" placeholder="이름을 입력하세요"></div>
-    <div class="q-grid" id="s1-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s1')">✅ 채점하기</button>
-    <div class="score-box" id="s1-score"></div>
-    <button class="reset-btn" onclick="resetSection('s1')" style="display:none" id="s1-reset">🔄 다시 풀기</button>
-  </div>
+<div id="l1rt" class="section active">
+  <div class="section-header lesson1-color">📖 1과 Reading Test &nbsp;<small style="font-weight:400;opacity:0.85;">pp. 23~25</small></div>
+  <div id="l1rt-questions"></div>
+  <button class="grade-btn lesson1-color" onclick="gradeSection('l1rt')">✅ 채점하기</button>
+  <div id="l1rt-result" class="result-box"></div>
+  <p class="submit-note">📸 결과 캡처해서 선생님께 제출!</p>
 </div>
-
-<!-- ===== SECTION 2: 서술형평가 L1 ===== -->
-<div id="s2" class="section-panel theme-green">
-  <div class="section-header">
-    <h2>✏️ 서술형 평가 — Lesson 1</h2>
-    <p>p.34 | 총 5문제 (서술형 전용)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row"><label>이름</label><input type="text" id="s2-name" placeholder="이름을 입력하세요"></div>
-    <div class="q-grid" id="s2-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s2')">✅ 채점하기</button>
-    <div class="score-box" id="s2-score"></div>
-    <button class="reset-btn" onclick="resetSection('s2')" style="display:none" id="s2-reset">🔄 다시 풀기</button>
-  </div>
+<div id="l1u1" class="section">
+  <div class="section-header lesson1-color">📝 1과 단원평가 1회 &nbsp;<small style="font-weight:400;opacity:0.85;">pp. 26~29</small></div>
+  <div id="l1u1-questions"></div>
+  <button class="grade-btn lesson1-color" onclick="gradeSection('l1u1')">✅ 채점하기</button>
+  <div id="l1u1-result" class="result-box"></div>
+  <p class="submit-note">📸 결과 캡처해서 선생님께 제출!</p>
 </div>
-
-<!-- ===== SECTION 3: 단원평가 L2 ===== -->
-<div id="s3" class="section-panel theme-purple">
-  <div class="section-header">
-    <h2>📝 단원 평가 — Lesson 2</h2>
-    <p>p.60~63 | 총 20문제 (객관식 12 + 서술형 8)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row"><label>이름</label><input type="text" id="s3-name" placeholder="이름을 입력하세요"></div>
-    <div class="q-grid" id="s3-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s3')">✅ 채점하기</button>
-    <div class="score-box" id="s3-score"></div>
-    <button class="reset-btn" onclick="resetSection('s3')" style="display:none" id="s3-reset">🔄 다시 풀기</button>
-  </div>
+<div id="l1u2" class="section">
+  <div class="section-header lesson1-color">📝 1과 단원평가 2회 &nbsp;<small style="font-weight:400;opacity:0.85;">pp. 30~33</small></div>
+  <div id="l1u2-questions"></div>
+  <button class="grade-btn lesson1-color" onclick="gradeSection('l1u2')">✅ 채점하기</button>
+  <div id="l1u2-result" class="result-box"></div>
+  <p class="submit-note">📸 결과 캡처해서 선생님께 제출!</p>
 </div>
-
-<!-- ===== SECTION 4: 서술형평가 L2 ===== -->
-<div id="s4" class="section-panel theme-orange">
-  <div class="section-header">
-    <h2>✏️ 서술형 평가 — Lesson 2</h2>
-    <p>p.64 | 총 5문제 (서술형 전용)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row"><label>이름</label><input type="text" id="s4-name" placeholder="이름을 입력하세요"></div>
-    <div class="q-grid" id="s4-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s4')">✅ 채점하기</button>
-    <div class="score-box" id="s4-score"></div>
-    <button class="reset-btn" onclick="resetSection('s4')" style="display:none" id="s4-reset">🔄 다시 풀기</button>
-  </div>
+<div id="l2rt" class="section">
+  <div class="section-header lesson2-color">📖 2과 Reading Test &nbsp;<small style="font-weight:400;opacity:0.85;">pp. 51~53</small></div>
+  <div id="l2rt-questions"></div>
+  <button class="grade-btn lesson2-color" onclick="gradeSection('l2rt')">✅ 채점하기</button>
+  <div id="l2rt-result" class="result-box"></div>
+  <p class="submit-note">📸 결과 캡처해서 선생님께 제출!</p>
 </div>
-
-<!-- ===== SECTION 5: 1학기 중간고사 ===== -->
-<div id="s5" class="section-panel theme-pink">
-  <div class="section-header">
-    <h2>🎯 1학기 중간고사 — Lessons 1~2</h2>
-    <p>p.65~70 | 총 30문제 (객관식 19 + 서술형 11)</p>
-  </div>
-  <div class="omr-box">
-    <div class="name-row"><label>이름</label><input type="text" id="s5-name" placeholder="이름을 입력하세요"></div>
-    <div class="q-grid" id="s5-grid"></div>
-    <button class="submit-btn" onclick="gradeSection('s5')">✅ 채점하기</button>
-    <div class="score-box" id="s5-score"></div>
-    <button class="reset-btn" onclick="resetSection('s5')" style="display:none" id="s5-reset">🔄 다시 풀기</button>
-  </div>
+<div id="l2u1" class="section">
+  <div class="section-header lesson2-color">📝 2과 단원평가 1회 &nbsp;<small style="font-weight:400;opacity:0.85;">pp. 54~57</small></div>
+  <div id="l2u1-questions"></div>
+  <button class="grade-btn lesson2-color" onclick="gradeSection('l2u1')">✅ 채점하기</button>
+  <div id="l2u1-result" class="result-box"></div>
+  <p class="submit-note">📸 결과 캡처해서 선생님께 제출!</p>
 </div>
-
+<div id="l2u2" class="section">
+  <div class="section-header lesson2-color">📝 2과 단원평가 2회 &nbsp;<small style="font-weight:400;opacity:0.85;">pp. 58~61</small></div>
+  <div id="l2u2-questions"></div>
+  <button class="grade-btn lesson2-color" onclick="gradeSection('l2u2')">✅ 채점하기</button>
+  <div id="l2u2-result" class="result-box"></div>
+  <p class="submit-note">📸 결과 캡처해서 선생님께 제출!</p>
+</div>
 <script>
-// ============================================================
-// DATA: answers per section
-// ============================================================
-
-const SECTIONS = {
-  s1: {
-    questions: [
-      { n:1,  type:'mc', ans:'4' },
-      { n:2,  type:'mc', ans:'3' },
-      { n:3,  type:'mc', ans:'5' },
-      { n:4,  type:'mc', ans:'2' },
-      { n:5,  type:'sa', ans:'Which kind of music do you like the most?' },
-      { n:6,  type:'mc', ans:'5' },
-      { n:7,  type:'mc', ans:'4' },
-      { n:8,  type:'mc', ans:'3' },
-      { n:9,  type:'mc', ans:'3' },
-      { n:10, type:'sa', ans:'warmly → warm' },
-      { n:11, type:'mc', ans:'1' },
-      { n:12, type:'mc', ans:'2' },
-      { n:13, type:'sa', ans:'Justin is the slowest of the three runners.' },
-      { n:14, type:'sa', ans:'the most famous' },
-      { n:15, type:'mc', ans:'4' },
-    ]
-  },
-  s2: {
-    questions: [
-      { n:1,  type:'sa', ans:'Which sports club do you like the most?' },
-      { n:2,  type:'sa', ans:'How do you like the cap?' },
-      { n:3,  type:'sa', ans:'Practice will make you confident.' },
-      { n:4,  type:'sa', ans:'(1) Nova is the cheapest of the three.  (2) Romy is the most expensive of the three.' },
-      { n:5,  type:'sa', ans:'He writes about his strong and weak points.' },
-    ]
-  },
-  s3: {
-    questions: [
-      { n:1,  type:'mc', ans:'1' },
-      { n:2,  type:'mc', ans:'1' },
-      { n:3,  type:'mc', ans:'2' },
-      { n:4,  type:'mc', ans:'5' },
-      { n:5,  type:'sa', ans:'I think you should' },
-      { n:6,  type:'mc', ans:'4' },
-      { n:7,  type:'mc', ans:'5' },
-      { n:8,  type:'mc', ans:'3' },
-      { n:9,  type:'mc', ans:'1' },
-      { n:10, type:'mc', ans:'4' },
-      { n:11, type:'mc', ans:'3' },
-      { n:12, type:'sa', ans:'carry → to carry' },
-      { n:13, type:'mc', ans:'1' },
-      { n:14, type:'mc', ans:'4' },
-      { n:15, type:'sa', ans:'ask them to come' },
-      { n:16, type:'mc', ans:'4' },
-      { n:17, type:'sa', ans:'(A) must  (B) may' },
-      { n:18, type:'mc', ans:'5' },
-      { n:19, type:'mc', ans:'4' },
-      { n:20, type:'sa', ans:'ⓐ Larry  ⓑ the banana' },
-    ]
-  },
-  s4: {
-    questions: [
-      { n:1,  type:'sa', ans:'I have a rash on my skin.' },
-      { n:2,  type:'sa', ans:'I think you should set many alarms.' },
-      { n:3,  type:'sa', ans:"I'm looking for a bag which has many pockets." },
-      { n:4,  type:'sa', ans:'(1) The teacher advised the students to review the lessons.  (2) The teacher told the students to do their homework.' },
-      { n:5,  type:'sa', ans:'We find him under the locker which is at the back of the classroom.' },
-    ]
-  },
-  s5: {
-    questions: [
-      { n:1,  type:'mc', ans:'5' },
-      { n:2,  type:'mc', ans:'1' },
-      { n:3,  type:'mc', ans:'5' },
-      { n:4,  type:'mc', ans:'4' },
-      { n:5,  type:'mc', ans:'5' },
-      { n:6,  type:'mc', ans:'3' },
-      { n:7,  type:'mc', ans:'3' },
-      { n:8,  type:'sa', ans:'②④  (②축구→농구, ④다리 못 움직임)' },
-      { n:9,  type:'sa', ans:'ⓐ how  ⓑ like' },
-      { n:10, type:'sa', ans:'①⑤  (가벼워서, 착화감이 편해서)' },
-      { n:11, type:'mc', ans:'1' },
-      { n:12, type:'mc', ans:'4' },
-      { n:13, type:'sa', ans:'who → which' },
-      { n:14, type:'sa', ans:'Mom asked me to clean my room.' },
-      { n:15, type:'mc', ans:'3' },
-      { n:16, type:'sa', ans:'(A) don\'t  (B) happy  (C) most famous' },
-      { n:17, type:'mc', ans:'2' },
-      { n:18, type:'sa', ans:'(A) soccer shoes  (B) extra snacks  (C) teeth' },
-      { n:19, type:'mc', ans:'4' },
-      { n:20, type:'mc', ans:'4' },
-      { n:21, type:'mc', ans:'4' },
-      { n:22, type:'sa', ans:'This place always makes me happy.' },
-      { n:23, type:'sa', ans:'④⑤  (ⓓwhich→who, ⓔcome→to come)' },
-      { n:24, type:'mc', ans:'2' },
-      { n:25, type:'mc', ans:'3' },
-      { n:26, type:'mc', ans:'3' },
-      { n:27, type:'mc', ans:'5' },
-      { n:28, type:'sa', ans:'iguana / banana / cage' },
-      { n:29, type:'mc', ans:'5' },
-      { n:30, type:'mc', ans:'3' },
-    ]
-  }
-};
-
-// ============================================================
-// BUILD GRIDS
-// ============================================================
-function buildGrid(secId) {
-  const sec = SECTIONS[secId];
-  const grid = document.getElementById(secId + '-grid');
-  grid.innerHTML = '';
-  sec.questions.forEach(q => {
-    const row = document.createElement('div');
-    row.className = 'q-row' + (q.type === 'sa' ? ' essay' : '');
-    row.id = `${secId}-q${q.n}`;
-
-    const numDiv = document.createElement('div');
-    numDiv.className = 'q-num';
-    numDiv.textContent = q.n;
-    row.appendChild(numDiv);
-
-    if (q.type === 'mc') {
-      const choices = document.createElement('div');
-      choices.className = 'choices';
-      [1,2,3,4,5].forEach(i => {
-        const btn = document.createElement('button');
-        btn.className = 'choice-btn';
-        btn.textContent = i;
-        btn.dataset.val = i;
-        btn.onclick = () => selectChoice(secId, q.n, i, btn);
-        choices.appendChild(btn);
-      });
-      row.appendChild(choices);
-      // O/X 결과 표시
-      const resultMark = document.createElement('div');
-      resultMark.className = 'q-result';
-      resultMark.id = `${secId}-mark${q.n}`;
-      row.appendChild(resultMark);
+const SECTIONS={l1rt:{lesson:1,questions:[{n:1,type:'mc',answer:3},{n:2,type:'mc',answer:2},{n:3,type:'mc',answer:5},{n:4,type:'mc',answer:5},{n:5,type:'mc',answer:3},{n:6,type:'subj',answer:'diary'},{n:7,type:'subj',answer:'wins, he wears them (his soccer shoes)'},{n:8,type:'mc',answer:4},{n:9,type:'mc',answer:4},{n:10,type:'subj',answer:'the newest'},{n:11,type:'mc',answer:3},{n:12,type:'mc',answer:1},{n:13,type:'subj',answer:'ⓐ pouch  /  ⓑ friends'},{n:14,type:'mc',answer:5},{n:15,type:'subj',answer:'This place always makes me happy.'},{n:16,type:'mc',answer:4},{n:17,type:'mc',answer:5},{n:18,type:'subj',answer:'famousest → most famous'}]},l1u1:{lesson:1,questions:[{n:1,type:'mc',answer:3},{n:2,type:'mc',answer:2},{n:3,type:'mc',answer:5},{n:4,type:'mc',answer:4},{n:5,type:'mc',answer:2},{n:6,type:'mc',answer:1},{n:7,type:'mc',answer:3},{n:8,type:'mc',answer:2},{n:9,type:'mc',answer:5},{n:10,type:'mc',answer:2},{n:11,type:'mc',answer:1},{n:12,type:'mc',answer:5},{n:13,type:'mc',answer:3},{n:14,type:'subj',answer:'We should keep our hands clean.'},{n:15,type:'mc',answer:1},{n:16,type:'mc',answer:1},{n:17,type:'subj',answer:'boringly → boring'},{n:18,type:'subj',answer:'the hottest'},{n:19,type:'mc',answer:5},{n:20,type:'subj',answer:'it makes me happy'},{n:21,type:'mc',answer:2},{n:22,type:'mc',answer:2},{n:23,type:'mc',answer:1},{n:24,type:'mc',answer:5},{n:25,type:'mc',answer:5},{n:26,type:'subj',answer:'the most beautiful place'},{n:27,type:'mc',answer:5}]},l1u2:{lesson:1,questions:[{n:1,type:'mc',answer:2},{n:2,type:'mc',answer:5},{n:3,type:'mc',answer:5},{n:4,type:'mc',answer:1},{n:5,type:'mc',answer:3},{n:6,type:'mc',answer:4},{n:7,type:'mc',answer:2},{n:8,type:'mc',answer:4},{n:9,type:'mc',answer:4},{n:10,type:'mc',answer:3},{n:11,type:'subj',answer:'difficultest → most difficult'},{n:12,type:'mc',answer:3},{n:13,type:'mc',answer:4},{n:14,type:'subj',answer:'The movie made me sad.'},{n:15,type:'subj',answer:'the tallest'},{n:16,type:'mc',answer:2},{n:17,type:'mc',answer:4},{n:18,type:'mc',answer:2},{n:19,type:'mc',answer:2},{n:20,type:'subj',answer:'She is the most famous singer in Korea.'},{n:21,type:'mc',answer:4},{n:22,type:'subj',answer:'clean'},{n:23,type:'mc',answer:4},{n:24,type:'mc',answer:4},{n:25,type:'subj',answer:'toothbrush'},{n:26,type:'mc',answer:2},{n:27,type:'mc',answer:5}]},l2rt:{lesson:2,questions:[{n:1,type:'mc',answer:2},{n:2,type:'mc',answer:1},{n:3,type:'mc',answer:2},{n:4,type:'mc',answer:2},{n:5,type:'mc',answer:1},{n:6,type:'subj',answer:'to come'},{n:7,type:'mc',answer:3},{n:8,type:'mc',answer:5},{n:9,type:'mc',answer:5},{n:10,type:'mc',answer:2},{n:11,type:'subj',answer:'snake'},{n:12,type:'subj',answer:'which (that)'},{n:13,type:'mc',answer:3},{n:14,type:'mc',answer:2},{n:15,type:'mc',answer:1},{n:16,type:'mc',answer:1},{n:17,type:'mc',answer:3},{n:18,type:'mc',answer:5}]},l2u1:{lesson:2,questions:[{n:1,type:'mc',answer:4},{n:2,type:'mc',answer:5},{n:3,type:'subj',answer:'ⓐ breathe  /  ⓑ calm'},{n:4,type:'mc',answer:3},{n:5,type:'mc',answer:2},{n:6,type:'subj',answer:'I think you should use a planner.'},{n:7,type:'mc',answer:3},{n:8,type:'mc',answer:3},{n:9,type:'mc',answer:1},{n:10,type:'mc',answer:1},{n:11,type:'mc',answer:5},{n:12,type:'mc',answer:4},{n:13,type:'subj',answer:'which (that)'},{n:14,type:'mc',answer:3},{n:15,type:'subj',answer:'She buys a flower which (that) smells sweet.'},{n:16,type:'mc',answer:5},{n:17,type:'subj',answer:'me to play outside'},{n:18,type:'subj',answer:'which has a long tail'},{n:19,type:'mc',answer:2},{n:20,type:'mc',answer:5},{n:21,type:'mc',answer:3},{n:22,type:'mc',answer:5},{n:23,type:'mc',answer:5},{n:24,type:'mc',answer:5},{n:25,type:'subj',answer:'② ③'},{n:26,type:'mc',answer:1},{n:27,type:'subj',answer:'We find him under the locker which (that) is at the back of the classroom.'}]},l2u2:{lesson:2,questions:[{n:1,type:'mc',answer:4},{n:2,type:'mc',answer:3},{n:3,type:'mc',answer:4},{n:4,type:'mc',answer:5},{n:5,type:'mc',answer:3},{n:6,type:'mc',answer:2},{n:7,type:'mc',answer:4},{n:8,type:'mc',answer:5},{n:9,type:'subj',answer:'who → which (that)'},{n:10,type:'subj',answer:'ordered the man to leave the building'},{n:11,type:'mc',answer:5},{n:12,type:'mc',answer:4},{n:13,type:'mc',answer:2},{n:14,type:'mc',answer:5},{n:15,type:'mc',answer:3},{n:16,type:'subj',answer:'(1) to take  /  (2) to listen'},{n:17,type:'subj',answer:'(1) told Ted to come home early  /  (2) asked Mom to make spaghetti for dinner'},{n:18,type:'mc',answer:1},{n:19,type:'mc',answer:5},{n:20,type:'mc',answer:4},{n:21,type:'mc',answer:2},{n:22,type:'subj',answer:'breathe'},{n:23,type:'mc',answer:2},{n:24,type:'mc',answer:4},{n:25,type:'mc',answer:4},{n:26,type:'mc',answer:4},{n:27,type:'mc',answer:1}]}};
+const mcState={};
+Object.keys(SECTIONS).forEach(sid=>{mcState[sid]={};});
+function renderAll(){Object.keys(SECTIONS).forEach(sid=>renderSection(sid));}
+function renderSection(sid){
+  const sec=SECTIONS[sid];const isL2=sec.lesson===2;
+  const container=document.getElementById(sid+'-questions');container.innerHTML='';
+  sec.questions.forEach(q=>{
+    const card=document.createElement('div');card.className='question-card';
+    const label=document.createElement('div');label.className='question-label';
+    const numSpan=document.createElement('span');numSpan.className='num-circle '+(isL2?'lesson2-num':'lesson1-num');numSpan.textContent=q.n;label.appendChild(numSpan);
+    if(q.type==='subj'){const tag=document.createElement('span');tag.className='subj-tag'+(isL2?' l2':'');tag.textContent='서술형';label.appendChild(tag);}
+    else{label.appendChild(document.createTextNode('객관식'));}
+    card.appendChild(label);
+    if(q.type==='mc'){
+      const choices=document.createElement('div');choices.className='choices';
+      [1,2,3,4,5].forEach(v=>{const btn=document.createElement('button');btn.className='choice-btn';btn.textContent=v;btn.id=`${sid}_q${q.n}_c${v}`;btn.onclick=()=>selectChoice(sid,q.n,v);choices.appendChild(btn);});
+      card.appendChild(choices);
     } else {
-      const inp = document.createElement('input');
-      inp.type = 'text';
-      inp.className = 'short-input';
-      inp.id = `${secId}-sa${q.n}`;
-      inp.placeholder = `${q.n}번 답 쓰기`;
-      inp.autocomplete = 'off';
-      inp.setAttribute('autocorrect', 'off');
-      inp.setAttribute('autocapitalize', 'off');
-      inp.setAttribute('spellcheck', 'false');
-      row.appendChild(inp);
+      const wrap=document.createElement('div');wrap.className='subj-wrap';
+      const input=document.createElement('input');input.type='text';input.className='subj-input'+(isL2?' l2':'');input.placeholder='여기에 답을 써요 ✏️';input.id=`${sid}_q${q.n}_input`;
+      wrap.appendChild(input);
+      const reveal=document.createElement('div');reveal.className='answer-reveal';reveal.id=`${sid}_q${q.n}_reveal`;
+      wrap.appendChild(reveal);card.appendChild(wrap);
     }
-
-    // result area for SA
-    if (q.type === 'sa') {
-      const res = document.createElement('div');
-      res.className = 'result-area';
-      res.id = `${secId}-res${q.n}`;
-      grid.appendChild(row);
-      grid.appendChild(res);
-    } else {
-      grid.appendChild(row);
-    }
+    container.appendChild(card);
   });
 }
-
-function selectChoice(secId, qn, val, btn) {
-  const row = document.getElementById(`${secId}-q${qn}`);
-  row.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
+function selectChoice(sid,qn,v){
+  mcState[sid][qn]=v;
+  [1,2,3,4,5].forEach(i=>{const btn=document.getElementById(`${sid}_q${qn}_c${i}`);btn.className='choice-btn'+(i===v?' selected':'');});
 }
-
-// ============================================================
-// GRADE
-// ============================================================
-function gradeSection(secId) {
-  const sec = SECTIONS[secId];
-  const name = document.getElementById(secId + '-name').value.trim() || '학생';
-  let correct = 0, total = sec.questions.length;
-
-  sec.questions.forEach(q => {
-    const row = document.getElementById(`${secId}-q${q.n}`);
-    if (q.type === 'mc') {
-      const selected = row.querySelector('.choice-btn.selected');
-      const btns = row.querySelectorAll('.choice-btn');
-      btns.forEach(b => {
-        b.disabled = true;
-        b.classList.remove('selected');
-      });
-      if (selected) {
-        const mark = document.getElementById(`${secId}-mark${q.n}`);
-        if (selected.dataset.val === q.ans) {
-          selected.classList.add('correct');
-          if (mark) { mark.textContent = '⭕'; mark.classList.add('show', 'ox-o'); }
-        } else {
-          selected.classList.add('wrong');
-          if (mark) { mark.textContent = '❌'; mark.classList.add('show', 'ox-x'); }
-        }
-      }
+function gradeSection(sid){
+  const sec=SECTIONS[sid];const isL2=sec.lesson===2;
+  let correct=0;let unansweredMC=[];let wrongNums=[];
+  const mcTotal=sec.questions.filter(q=>q.type==='mc').length;
+  const subjTotal=sec.questions.filter(q=>q.type==='subj').length;
+  sec.questions.forEach(q=>{
+    if(q.type==='mc'){
+      const chosen=mcState[sid][q.n];
+      if(chosen==null){unansweredMC.push(q.n);return;}
+      const ok=chosen===q.answer;
+      [1,2,3,4,5].forEach(i=>{const btn=document.getElementById(`${sid}_q${q.n}_c${i}`);if(!btn)return;if(i===q.answer)btn.className='choice-btn correct';else if(i===chosen&&!ok)btn.className='choice-btn wrong';else btn.className='choice-btn';});
+      if(ok)correct++;else wrongNums.push(q.n);
     } else {
-      // SA: show model answer
-      const inp = document.getElementById(`${secId}-sa${q.n}`);
-      if (inp) inp.disabled = true;
-      const res = document.getElementById(`${secId}-res${q.n}`);
-      if (res) {
-        res.classList.add('show');
-        res.innerHTML = `✏️ 모범답안: <span class="answer-text">${q.ans}</span><br><small>⚠️ 선생님과 함께 확인하세요!</small>`;
-      }
+      const input=document.getElementById(`${sid}_q${q.n}_input`);
+      const reveal=document.getElementById(`${sid}_q${q.n}_reveal`);
+      const val=input?input.value.trim():'';
+      if(!val){reveal.className='answer-reveal show-wrong';reveal.innerHTML=`✏️ 미작성 &nbsp;|&nbsp; 정답: <strong>${q.answer}</strong>`;}
+      else{reveal.className='answer-reveal show-correct';reveal.innerHTML=`📋 정답: <strong>${q.answer}</strong>`;}
     }
   });
-
-  // Count MC correct answers
-  const mcQs = sec.questions.filter(q => q.type === 'mc');
-  let mcCorrect = 0;
-  mcQs.forEach(q => {
-    const row = document.getElementById(`${secId}-q${q.n}`);
-    const btns = Array.from(row.querySelectorAll('.choice-btn'));
-    const selected = btns.find(b => b.classList.contains('correct') || b.classList.contains('wrong'));
-    // correct = selected and not wrong
-    if (selected && selected.classList.contains('correct')) mcCorrect++;
-  });
-
-  const saCount = sec.questions.filter(q => q.type === 'sa').length;
-  const scoreBox = document.getElementById(secId + '-score');
-  scoreBox.classList.add('show');
-  scoreBox.innerHTML = `
-    <div class="score-big">🎉 ${name}</div>
-    <div class="score-sub" style="margin-top:8px">
-      객관식 <strong>${mcCorrect} / ${mcQs.length}</strong> 정답
-    </div>
-    <div class="score-sub">
-      서술형 ${saCount}문제는 모범답안을 확인하세요
-    </div>
-    <div class="capture-note">📸 지금 화면을 캡처해서 선생님께 꼭 보여주세요!</div>
-  `;
-
-  document.getElementById(secId + '-reset').style.display = 'block';
-  document.querySelector(`#${secId} .submit-btn`).disabled = true;
+  const pct=mcTotal>0?Math.round((correct/mcTotal)*100):0;
+  const scoreColor=isL2?'#1565c0':'#7b1fa2';
+  let html=`<p style="color:#888;font-size:0.85rem;">채점 완료!</p><div class="score-big" style="color:${scoreColor}">${correct} / ${mcTotal}</div><div class="score-detail">객관식 정답률 ${pct}% &nbsp;|&nbsp; 서술형 ${subjTotal}문제는 정답과 직접 비교!</div>`;
+  if(unansweredMC.length>0)html+=`<div class="result-note">⚠️ 객관식 미선택: ${unansweredMC.map(n=>'<strong>'+n+'번</strong>').join(', ')}</div>`;
+  if(wrongNums.length>0)html+=`<div class="result-note" style="background:#fce4ec;color:#b71c1c;margin-top:8px;">❌ 틀린 객관식: ${wrongNums.map(n=>'<strong>'+n+'번</strong>').join(', ')}</div>`;
+  if(wrongNums.length===0&&unansweredMC.length===0)html+=`<div class="result-note" style="background:#e8f5e9;color:#1b5e20;margin-top:8px;">🎉 객관식 모두 정답! 서술형도 꼭 확인해요!</div>`;
+  const resultBox=document.getElementById(sid+'-result');resultBox.innerHTML=html;resultBox.classList.add('show');resultBox.scrollIntoView({behavior:'smooth',block:'center'});
 }
-
-// ============================================================
-// RESET
-// ============================================================
-function resetSection(secId) {
-  document.getElementById(secId + '-score').classList.remove('show');
-  document.getElementById(secId + '-reset').style.display = 'none';
-  document.querySelector(`#${secId} .submit-btn`).disabled = false;
-  buildGrid(secId);
+function showSection(sid){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(sid).classList.add('active');
+  const order=['l1rt','l1u1','l1u2','l2rt','l2u1','l2u2'];
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',order[i]===sid));
 }
-
-// ============================================================
-// TABS
-// ============================================================
-function showSection(secId) {
-  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(secId).classList.add('active');
-  const idx = ['s1','s2','s3','s4','s5'].indexOf(secId);
-  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
-}
-
-// ============================================================
-// INIT
-// ============================================================
-['s1','s2','s3','s4','s5'].forEach(id => buildGrid(id));
+renderAll();
 </script>
 </body>
 </html>
