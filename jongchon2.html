@@ -50,8 +50,8 @@
   .ricon.ok{background:var(--okl);color:var(--ok);}
   .ricon.ng{background:var(--ngl);color:var(--ng);}
 
-  .chs{display:flex;gap:3px;flex-wrap:wrap;}
-  .cb{width:28px;height:28px;border-radius:7px;border:1.5px solid var(--border);background:#fafafa;font-size:.72rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;}
+  .chs{display:flex;gap:5px;flex-wrap:wrap;}
+  .cb{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:#fafafa;font-size:.82rem;font-weight:700;color:var(--muted);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;}
   .cb:hover:not(:disabled){border-color:#93c5fd;background:#eff6ff;}
   .cb.sel{border-color:#3b82f6;background:#dbeafe;color:#1d4ed8;}
   .cb.sel.ok{border-color:var(--ok);background:var(--okl);color:var(--ok);}
@@ -71,6 +71,7 @@
 
   .ma{display:flex;flex-direction:column;gap:3px;flex:1;}
   .mr{display:flex;gap:3px;flex-wrap:wrap;}
+  .multi-note{font-size:.65rem;font-weight:700;color:#7c3aed;margin-bottom:3px;}
   .msub{padding:4px 9px;border:none;border-radius:7px;background:var(--c2);color:#fff;font-size:.68rem;font-weight:700;cursor:pointer;width:fit-content;}
   .msub:disabled{background:var(--muted);cursor:default;}
 
@@ -191,7 +192,7 @@ const A = [
  {t:'short',a:['to carry','carry → to carry']},
  {t:'mc',a:2},{t:'mc',a:5},{t:'mc',a:4},{t:'mc',a:5},{t:'mc',a:3},
  {t:'short',a:['i have a skin problem']},
- {t:'short',a:['leg','doctor']},
+ {t:'short2',a1:['leg'],a2:['doctor']},
  {t:'mc',a:2},{t:'mc',a:2},
  {t:'short',a:['toothache']},
  {t:'short',a:["what's wrong","what is wrong"]},
@@ -199,10 +200,10 @@ const A = [
  {t:'mc',a:3},
  {t:'short',a:['you should']},
  {t:'tf',a:'T'},
- {t:'mc',a:2},{t:'mc',a:5},{t:'mc',a:2},{t:'mc',a:3},
+ {t:'ab',a:2},{t:'mc',a:5},{t:'mc',a:2},{t:'mc',a:3},
  {t:'short',a:["what's wrong with your leg"]},
  {t:'mc',a:4},{t:'mc',a:5},
- {t:'short',a:['money','diary']},
+ {t:'short2',a1:['money'],a2:['diary']},
  {t:'mc',a:4},
  {t:'short',a:['snake']},
  {t:'short',a:['who','that','who[that]']},
@@ -349,7 +350,7 @@ function buildOMR(t){
         ia.appendChild(sw);
 
       }else if(q.t==='multi'){
-        const ma=document.createElement('div');ma.className='ma';
+        const note=document.createElement('div');note.className='multi-note';note.textContent='(모두 선택)';const ma=document.createElement('div');ma.className='ma';ma.appendChild(note);
         const mr=document.createElement('div');mr.className='mr';
         msel[`${t}_${i}`]=[];
         '①②③④⑤'.split('').forEach((ch,ni)=>{
