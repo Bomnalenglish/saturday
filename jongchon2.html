@@ -241,6 +241,8 @@ function init(){
     document.getElementById('at'+t).textContent=localStorage.getItem(ATK[t])||'0';
     buildOMR(t);
   });
+  loadState();
+  restoreUI();
   updFloat();
 }
 
@@ -457,6 +459,7 @@ function chkMulti(t,i){
 
 function mark(t,i,ok){
   sub[t][i]=ok;
+  saveState(t);
   const ic=document.getElementById(`ic${t}_${i}`);
   if(ic){ic.textContent=ok?'O':'X';ic.className='ricon '+(ok?'ok':'ng');}
   updFloat();
@@ -507,6 +510,73 @@ function sw(t){
   document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('on',i===t));
   document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('on',i===t));
   updFloat();
+}
+
+
+function saveState(t){
+  localStorage.setItem('ans2_'+t, JSON.stringify(sub[t]));
+  const vals={};
+  A[t].forEach((q,i)=>{
+    if(q.t==='short'||q.t==='short2'){
+      const inp0=document.getElementById('si'+t+'_'+i);
+      if(inp0) vals[i+'_0']=inp0.value;
+      const inp1=document.getElementById('si'+t+'_'+i+'_0');
+      if(inp1) vals[i+'_s0']=inp1.value;
+      const inp2=document.getElementById('si'+t+'_'+i+'_1');
+      if(inp2) vals[i+'_s1']=inp2.value;
+    }
+  });
+  localStorage.setItem('vals2_'+t, JSON.stringify(vals));
+}
+
+function loadState(){
+  [0,1,2].forEach(t=>{
+    const saved=localStorage.getItem('ans2_'+t);
+    if(saved){ try{ sub[t]=JSON.parse(saved); }catch(e){} }
+    const savedVals=localStorage.getItem('vals2_'+t);
+    if(savedVals){
+      try{
+        const vals=JSON.parse(savedVals);
+        A[t].forEach((q,i)=>{
+          if(vals[i+'_0']!==undefined){const inp=document.getElementById('si'+t+'_'+i);if(inp)inp.value=vals[i+'_0'];}
+          if(vals[i+'_s0']!==undefined){const inp=document.getElementById('si'+t+'_'+i+'_0');if(inp)inp.value=vals[i+'_s0'];}
+          if(vals[i+'_s1']!==undefined){const inp=document.getElementById('si'+t+'_'+i+'_1');if(inp)inp.value=vals[i+'_s1'];}
+        });
+      }catch(e){}
+    }
+  });
+}
+
+function restoreUI(){
+  [0,1,2].forEach(t=>{
+    if(!A[t]) return;
+    Object.entries(sub[t]).forEach(([ii,ok])=>{
+      const i=parseInt(ii);
+      const q=A[t][i];if(!q)return;
+      const ic=document.getElementById('ic'+t+'_'+i);
+      if(ic){ic.textContent=ok?'O':'X';ic.className='ricon '+(ok?'ok':'ng');}
+      if(q.t==='mc'){
+        for(let x=1;x<=5;x++){const b=document.getElementById('cb'+t+'_'+i+'_'+x);if(b)b.disabled=true;}
+      }
+      if(q.t==='ab'){
+        for(let x=1;x<=2;x++){const b=document.getElementById('cb'+t+'_'+i+'_'+x);if(b)b.disabled=true;}
+      }
+      if(q.t==='multi'){
+        for(let x=1;x<=5;x++){const b=document.getElementById('mc'+t+'_'+i+'_'+x);if(b)b.disabled=true;}
+        const ms=document.getElementById('ms'+t+'_'+i);if(ms)ms.disabled=true;
+      }
+      if(q.t==='short'||q.t==='short2'){
+        const inp=document.getElementById('si'+t+'_'+i);
+        if(inp){inp.disabled=true;inp.classList.add(ok?'ok':'ng');}
+        ['_0','_1'].forEach(s=>{const inp2=document.getElementById('si'+t+'_'+i+s);if(inp2){inp2.disabled=true;}});
+        const gb=document.getElementById('gb'+t+'_'+i);if(gb)gb.disabled=true;
+      }
+      if(q.t==='tf'){
+        ['T','F'].forEach(v=>{const b=document.getElementById('tf'+t+'_'+i+'_'+v);if(b)b.disabled=true;});
+      }
+    });
+    updScore(t);
+  });
 }
 
 init();
