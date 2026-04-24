@@ -165,17 +165,17 @@ const A = [
  {t:'short',a:['which club do you like the most','which club do you like the most?']},
  {t:'tf',a:'F'},
  {t:'mc',a:4},{t:'mc',a:4},{t:'mc',a:4},{t:'mc',a:3},{t:'mc',a:3},
- {t:'mc',a:1},{t:'mc',a:3},{t:'mc',a:2},{t:'mc',a:5},{t:'mc',a:4},
+ {t:'ab',a:1},{t:'mc',a:3},{t:'mc',a:2},{t:'mc',a:5},{t:'mc',a:4},
  {t:'mc',a:5},{t:'mc',a:1},{t:'mc',a:5},{t:'mc',a:5},{t:'mc',a:1},
  {t:'mc',a:1},
- {t:'short',a:['that are swimming in the pool','which costs $300','that are swimming in the pool / which costs $300']},
+ {t:'short2',a1:['that are swimming in the pool'],a2:['which costs $300','that costs $300']},
  {t:'mc',a:4},{t:'mc',a:2},{t:'mc',a:2},{t:'mc',a:5},{t:'mc',a:5},
  {t:'short',a:["what's wrong","what is wrong"]},
  {t:'mc',a:1},{t:'mc',a:5},
  {t:'short',a:['i think you should use a planner']},
  {t:'mc',a:4},
  {t:'short',a:['you should']},
- {t:'mc',a:1},{t:'mc',a:3},{t:'mc',a:1},{t:'mc',a:5},
+ {t:'ab',a:1},{t:'mc',a:3},{t:'mc',a:1},{t:'mc',a:5},
  {t:'short',a:['which has a long tail']},
  {t:'mc',a:5},{t:'mc',a:3}
 ],
@@ -281,7 +281,40 @@ function buildOMR(t){
       const ia=document.createElement('div');
       ia.style.flex='1';
 
-      if(q.t==='mc'){
+      if(q.t==='ab'){
+        // ⓐ/ⓑ 2버튼
+        const chs=document.createElement('div');chs.className='chs';
+        ['ⓐ','ⓑ'].forEach((ch,ni)=>{
+          const b=document.createElement('button');
+          b.className='cb';b.textContent=ch;b.id=`cb${t}_${i}_${ni+1}`;
+          b.onclick=()=>selMC(t,i,ni+1);
+          chs.appendChild(b);
+        });
+        ia.appendChild(chs);
+
+      }else if(q.t==='short2'){
+        // (1)(2) 두 칸 입력
+        const wrap=document.createElement('div');
+        wrap.style.cssText='display:flex;flex-direction:column;gap:4px;flex:1;';
+        ['(1)','(2)'].forEach((lbl,si)=>{
+          const r2=document.createElement('div');r2.className='sw';
+          const tag=document.createElement('span');
+          tag.style.cssText='font-size:.65rem;font-weight:700;color:var(--muted);white-space:nowrap;';
+          tag.textContent=lbl;
+          const inp=document.createElement('input');
+          inp.className='si';inp.type='text';inp.placeholder='입력';
+          inp.autocomplete='off';inp.spellcheck=false;inp.id=`si${t}_${i}_${si}`;
+          inp.onkeydown=e=>{if(e.key==='Enter')chkShort2(t,i);};
+          r2.appendChild(tag);r2.appendChild(inp);
+          wrap.appendChild(r2);
+        });
+        const gb=document.createElement('button');
+        gb.className='gbtn';gb.textContent='확인';gb.id=`gb${t}_${i}`;
+        gb.onclick=()=>chkShort2(t,i);
+        wrap.appendChild(gb);
+        ia.appendChild(wrap);
+
+      }else if(q.t==='mc'){
         const chs=document.createElement('div');
         chs.className='chs';
         '①②③④⑤'.split('').forEach((ch,ni)=>{
@@ -378,6 +411,23 @@ function chkShort(t,i){
   if(gb)gb.disabled=true;
   mark(t,i,ok);
   updScore(t);
+}
+
+function chkShort2(t,i){
+  if(sub[t][i]!==undefined)return;
+  const v1=(document.getElementById(`si${t}_${i}_0`)||{}).value||'';
+  const v2=(document.getElementById(`si${t}_${i}_1`)||{}).value||'';
+  if(!v1.trim()&&!v2.trim())return;
+  const q=A[t][i];
+  const ok1=!q.a1||q.a1.some(a=>v1.trim().toLowerCase().includes(a.toLowerCase())||a.toLowerCase().includes(v1.trim().toLowerCase()));
+  const ok2=!q.a2||q.a2.some(a=>v2.trim().toLowerCase().includes(a.toLowerCase())||a.toLowerCase().includes(v2.trim().toLowerCase()));
+  const ok=ok1&&ok2;
+  [0,1].forEach(si=>{
+    const inp=document.getElementById(`si${t}_${i}_${si}`);
+    if(inp){inp.disabled=true;inp.classList.add((si===0?ok1:ok2)?'ok':'ng');}
+  });
+  const gb=document.getElementById(`gb${t}_${i}`);if(gb)gb.disabled=true;
+  mark(t,i,ok);updScore(t);
 }
 
 function togMulti(t,i,n){
