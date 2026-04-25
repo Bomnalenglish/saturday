@@ -82,8 +82,11 @@
   .ms.s{color:var(--ok);}.ms.w{color:#d97706;}.ms.d{color:var(--ng);}
   .mb{font-size:.77rem;color:var(--muted);margin-bottom:16px;}
   .mc{padding:10px 28px;border:none;border-radius:11px;background:#0ea5e9;color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;}
-  .attbar{text-align:center;font-size:.68rem;color:var(--muted);margin-bottom:9px;}
+  .attbar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:9px;}
+  .attbar span{font-size:.68rem;color:var(--muted);}
   .attbar strong{color:var(--c1);}
+  .reset-btn{padding:4px 10px;border:1.5px solid #fca5a5;border-radius:20px;background:#fff;color:#dc2626;font-size:.68rem;font-weight:700;cursor:pointer;transition:all .15s;}
+  .reset-btn:hover{background:#fee2e2;}
 </style>
 </head>
 <body>
@@ -98,22 +101,22 @@
   <button class="tab" data-t="3" onclick="sw(3)">25년 기출<br><small>26문항</small></button>
 </div>
 <div class="panel on p0" id="p0">
-  <div class="attbar">도전 횟수: <strong id="at0">0</strong>회</div>
+  <div class="attbar"><span>도전 횟수: <strong id="at0">0</strong>회</span><button class="reset-btn" onclick="resetTab(0)">🔄 초기화</button></div>
   <div class="sbar"><div class="sbar-top"><div class="snum" id="sn0">0 <span>/ 25</span></div><div class="spct" id="sp0">0%</div></div><div class="bout"><div class="bin" id="bn0"></div></div><div class="sdet" id="sd0">답을 입력하고 채점해보세요</div></div>
   <div id="omr0"></div>
 </div>
 <div class="panel p1" id="p1">
-  <div class="attbar">도전 횟수: <strong id="at1">0</strong>회</div>
+  <div class="attbar"><span>도전 횟수: <strong id="at1">0</strong>회</span><button class="reset-btn" onclick="resetTab(1)">🔄 초기화</button></div>
   <div class="sbar"><div class="sbar-top"><div class="snum" id="sn1">0 <span>/ 25</span></div><div class="spct" id="sp1">0%</div></div><div class="bout"><div class="bin" id="bn1"></div></div><div class="sdet" id="sd1">답을 입력하고 채점해보세요</div></div>
   <div id="omr1"></div>
 </div>
 <div class="panel p2" id="p2">
-  <div class="attbar">도전 횟수: <strong id="at2">0</strong>회</div>
+  <div class="attbar"><span>도전 횟수: <strong id="at2">0</strong>회</span><button class="reset-btn" onclick="resetTab(2)">🔄 초기화</button></div>
   <div class="sbar"><div class="sbar-top"><div class="snum" id="sn2">0 <span>/ 25</span></div><div class="spct" id="sp2">0%</div></div><div class="bout"><div class="bin" id="bn2"></div></div><div class="sdet" id="sd2">답을 입력하고 채점해보세요</div></div>
   <div id="omr2"></div>
 </div>
 <div class="panel p3" id="p3">
-  <div class="attbar">도전 횟수: <strong id="at3">0</strong>회</div>
+  <div class="attbar"><span>도전 횟수: <strong id="at3">0</strong>회</span><button class="reset-btn" onclick="resetTab(3)">🔄 초기화</button></div>
   <div class="sbar"><div class="sbar-top"><div class="snum" id="sn3">0 <span>/ 26</span></div><div class="spct" id="sp3">0%</div></div><div class="bout"><div class="bin" id="bn3"></div></div><div class="sdet" id="sd3">답을 입력하고 채점해보세요</div></div>
   <div id="omr3"></div>
 </div>
@@ -325,6 +328,18 @@ function updScore(t){
 function updFloat(){
   const fb=document.getElementById('fb');const done=Object.keys(sub[cur]).length;
   fb.setAttribute('data-ft',cur);fb.textContent=done>0?`📊 결과 보기 (${done}/${TOTAL[cur]}문항 응답)`:'📊 채점 결과 보기';
+}
+
+function resetTab(t){
+  if(!confirm('이 탭의 모든 답을 초기화할까요?')) return;
+  sub[t]={};
+  tf4st[String(t)+'_'+Object.keys(tf4st).filter(k=>k.startsWith(t+'_')).forEach(k=>delete tf4st[k])];
+  Object.keys(tf4st).filter(k=>k.startsWith(t+'_')).forEach(k=>delete tf4st[k]);
+  localStorage.removeItem('ans_'+t);
+  localStorage.removeItem('vals_'+t);
+  buildOMR(t);
+  updScore(t);
+  updFloat();
 }
 
 function showResult(){
