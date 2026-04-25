@@ -170,7 +170,7 @@ const A = [
  {t:'mc',a:5},{t:'mc',a:1},{t:'mc',a:5},{t:'mc',a:5},{t:'mc',a:1},
  {t:'mc',a:1},
  {t:'short2',a1:['that are swimming in the pool'],a2:['which costs $300','that costs $300']},
- {t:'mc',a:4},{t:'mc',a:2},{t:'mc',a:2},{t:'mc',a:5},{t:'mc',a:5},
+ {t:'mc',a:4},{t:'ab',a:2,labels:['cleaning','to clean']},{t:'mc',a:2},{t:'mc',a:5},{t:'mc',a:5},
  {t:'short',a:["what's wrong","what is wrong"]},
  {t:'mc',a:1},{t:'mc',a:5},
  {t:'short',a:['i think you should use a planner']},
@@ -285,11 +285,12 @@ function buildOMR(t){
       ia.style.flex='1';
 
       if(q.t==='ab'){
-        // ⓐ/ⓑ 2버튼
+        // ⓐ/ⓑ 2버튼 (labels 있으면 해당 텍스트 사용)
         const chs=document.createElement('div');chs.className='chs';
-        ['ⓐ','ⓑ'].forEach((ch,ni)=>{
+        const abLabels=q.labels||['ⓐ','ⓑ'];
+        abLabels.forEach((ch,ni)=>{
           const b=document.createElement('button');
-          b.className='cb';b.textContent=ch;b.id=`cb${t}_${i}_${ni+1}`;
+          b.className='cb';b.style.width='auto';b.style.padding='0 10px';b.textContent=ch;b.id=`cb${t}_${i}_${ni+1}`;
           b.onclick=()=>selMC(t,i,ni+1);
           chs.appendChild(b);
         });
