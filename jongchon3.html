@@ -123,34 +123,37 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', s
 </div>
 
 <div class="tabs">
-  <button class="tab-btn w1 active" onclick="switchWeek(1)">1주차</button>
-  <button class="tab-btn w2" onclick="switchWeek(2)">2주차</button>
-  <button class="tab-btn w3" onclick="switchWeek(3)">3주차</button>
+  <button class="tab-btn w1 active" onclick="switchWeek(1)">6/13 (1주차)</button>
+  <button class="tab-btn w2" onclick="switchWeek(2)">6/20 (2주차)</button>
+  <button class="tab-btn w3" onclick="switchWeek(3)">6/27 (3주차)</button>
 </div>
 
 <div class="content active" id="week1">
   <div class="school-selector">
-    <button class="school-btn w1 active" onclick="switchSchool(1,'가림중')">가림중</button>
-    <button class="school-btn w1" onclick="switchSchool(1,'간재울중')">간재울중</button>
-    <button class="school-btn w1" onclick="switchSchool(1,'개운중')">개운중</button>
+    <button class="school-btn w1 active" onclick="switchSchool(1,'고실중')">고실중</button>
+    <button class="school-btn w1" onclick="switchSchool(1,'구남중')">구남중</button>
+    <button class="school-btn w1" onclick="switchSchool(1,'구미인덕중')">구미인덕중</button>
+    <button class="school-btn w1" onclick="switchSchool(1,'다사중')">다사중</button>
   </div>
   <div id="week1-omr"></div>
 </div>
 
 <div class="content" id="week2">
   <div class="school-selector">
-    <button class="school-btn w2 active" onclick="switchSchool(2,'고실중')">고실중</button>
-    <button class="school-btn w2" onclick="switchSchool(2,'교문중')">교문중</button>
-    <button class="school-btn w2" onclick="switchSchool(2,'구남중')">구남중</button>
+    <button class="school-btn w2 active" onclick="switchSchool(2,'대방중')">대방중</button>
+    <button class="school-btn w2" onclick="switchSchool(2,'대전글꽃중')">대전글꽃중</button>
+    <button class="school-btn w2" onclick="switchSchool(2,'동화중')">동화중</button>
+    <button class="school-btn w2" onclick="switchSchool(2,'모동중')">모동중</button>
   </div>
   <div id="week2-omr"></div>
 </div>
 
 <div class="content" id="week3">
   <div class="school-selector">
-    <button class="school-btn w3 active" onclick="switchSchool(3,'구월중')">구월중</button>
-    <button class="school-btn w3" onclick="switchSchool(3,'김포신곡중')">김포신곡중</button>
-    <button class="school-btn w3" onclick="switchSchool(3,'나래중')">나래중</button>
+    <button class="school-btn w3 active" onclick="switchSchool(3,'모산중')">모산중</button>
+    <button class="school-btn w3" onclick="switchSchool(3,'백운중')">백운중</button>
+    <button class="school-btn w3" onclick="switchSchool(3,'봉황중')">봉황중</button>
+    <button class="school-btn w3" onclick="switchSchool(3,'산남중')">산남중</button>
   </div>
   <div id="week3-omr"></div>
 </div>
@@ -162,99 +165,133 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', s
 // essay: 서술형 [{q: "문제번호표시", a: "정답"}]
 // ═══════════════════════════════════════════════════════
 const SCHOOLS = {
-  '가림중': {
-    week: 1, total: 22,
-    mc: [5,2,3,3,2, 1,4,2,4,5, 1,1,5,2,5, 1,1,5,4,3, 4,5],
-    essay: []
-  },
-  '간재울중': {
-    week: 1, total: 25,
-    mc: [1,4,5,3,2, 2,5,4,4,2, 4,4,1,3,2, 4,3,1,5,3, 5,4,1,5,3],
-    essay: []
-  },
-  '개운중': {
-    week: 1, total: 23,
-    mc: [4,3,1,2,2, 5,3,3,1,2, 3,3,3,4,2, 1,2,5,4,2, 5,3,5],
-    essay: [
-      {q:'24번', a:'If(whether) Jimin goes to the gym after school.'},
-      {q:'25번', a:'made me clean the house.'},
-      {q:'26번', a:'I need something cold to drink. 또는 I need to drink something cold.'},
-      {q:'27번', a:'I need a chair to sit on.'},
-      {q:'28번', a:'so that you can finish your project by Monday. 또는 so that you can finish your project.'}
-    ]
-  },
   '고실중': {
-    week: 2, total: 17,
-    mc: [1,5,4,1,3, 2,5,2,4,3, 2,5,3,4,1, 4,3],
-    essayMode: 'show', // 정답 바로 보여주고 셀프채점
+    week: 1, total: 30,
+    mc: [5, 2, 2, 5, 2,  4, 5, 3, 5, 4,  2, 4, 5, 3, 4,  2, 1, 4, 4, 1,  2, 5, 3, 2, 1,  3, 3],
+    essayMode: 'show',
     essay: [
-      {q:'18번(A)', a:'Making cookies for someone who lives alone'},
-      {q:'18번(B)', a:'Putting dirty dishes in the sink'},
-      {q:'18번(C)', a:'throwing away a wrapper or recycling a bottle'},
-      {q:'18번(D)', a:'using people\'s names'},
-      {q:'18번(E)', a:'Teaching someone something I\'m good at'},
-      {q:'18번(F)', a:'Sticking up for someone when other kids aren\'t kind'},
-      {q:'19번(1)', a:'He goes slowly downstairs, counting every step(sixteen)'},
-      {q:'19번(2)', a:'He washes his hands and face very thoroughly'},
-      {q:'19번(3)', a:'He brushes his teeth for exactly four minutes'},
-      {q:'19번(4)', a:'He puts on his pajamas'},
-      {q:'19번(5)', a:'He uses the toilet'},
-      {q:'19번(6)', a:'He drives into bed'},
-      {q:'20번(A)', a:'so pleased that he ran all the way home'},
-      {q:'20번(B)', a:'too excited to sleep'},
-      {q:'21번(A)', a:'Camilla turned all purple polka-dotty'},
-      {q:'21번(B)', a:'Someone else shouted "Checkerboard!"'},
-      {q:'21번(C)', a:'Everyone was calling out different shapes and colors'},
-      {q:'21번(D)', a:'The school principal asked Camilla\'s mom to keep her home from school'},
-      {q:'21번(E)', a:'Camilla was embarrassed'},
-      {q:'22번', a:'I should love myself as I am'},
-      {q:'23번(A)', a:'I was covered with stripes'},
-      {q:'23번(B)', a:'there was a giant, multi-colored pill'},
-      {q:'23번(C)', a:'my nose was a dresser, and two paintings were my eyes'},
-      {q:'23번(D)', a:'I was cured'}
+      {q:'3번(복수정답)', a:'정답: ①, ③'},
+      {q:'29번', a:'(1) who (2) eating meat between two slices of bread (3) it was a great idea (4) call such food a sandwich'},
+      {q:'30번', a:'I have been studying English for six years.'}
     ]
-  },
-  '교문중': {
-    week: 2, total: 25,
-    mc: [3,5,4,1,1, 5,4,1,4,1, 5,3,2,2,1, 2,3,4,4,2, 2,2,4,3,5],
-    essay: []
   },
   '구남중': {
-    week: 2, total: 22,
-    mc: [5,1,5,4,1, 5,3,4,3,3, 2,2,2,2,2, 2,1,3,5,4, 2,2],
+    week: 1, total: 27,
+    mc: [2, 3, 5, 4, 1,  5, 3, 2, 1, 4,  3, 5, 1, 4, 3,  5, 2, 2, 3, 1],
+    essayMode: 'show',
     essay: [
-      {q:'11번', a:'He entered a photo contest with the pictures he took in Iceland.'},
-      {q:'12번(1)', a:'what you like to do'},
-      {q:'12번(2)', a:'what makes you happy'},
-      {q:'15번', a:'the crisp sound of eating chips made her feel better.'},
-      {q:'21번', a:'They enjoy madeleines as an afternoon snack.'},
-      {q:'22번', a:'I need a pencil to write with.'},
-      {q:'23번', a:'Tom hurried in the morning so that he could catch the train. (또는 I save money so that I can buy what I want.)'},
-      {q:'24번', a:'예시) My teacher made me study hard.'},
-      {q:'25번(1)', a:'whether/if she has her passport with her.'},
-      {q:'25번(2)', a:'whether/if she can help him.'}
+      {q:'21번', a:'(1) , which I visited two years ago. (2) , which has about four hundred thousand works of art. (3) , which Gustave Eiffel designed and built.'},
+      {q:'22번', a:'(1) Tom Cruise has been acting in films since 1981. (2) I have been reading Hamlet for 2 hours.'},
+      {q:'23번', a:'hamburger'},
+      {q:'24번', a:'Hamburg style steak between two slices of bread'},
+      {q:'25번', a:'Germany‘s second largest city'},
+      {q:'26번', a:'(1) The juice is on me - I’ll pay for the juice (2) Don’t make a long face - Don’t be sad (3) I’ll keep my fingers crossed for you - I wish you good luck'},
+      {q:'27번', a:'(A) Can you say that again? (B) What does that mean? (C) It means I’ll pay for the juice.'}
     ]
   },
-  '구월중': {
-    week: 3, total: 26,
-    mc: [4,5,3,5,2, 5,2,5,4,4, 3,3,1,3,3, 4,1,1,5,1, 2,5,2,2,2,1],
+  '구미인덕중': {
+    week: 1, total: 25,
+    mc: [1, 5, 1, 3, 2,  5, 4, 3, 5, 3,  2, 4, 4, 2, 3,  5, 3, 2, 1, 3,  1, 2, 2, 4, 4],
     essay: []
   },
-  '김포신곡중': {
-    week: 3, total: 23,
-    mc: [1,3,3,2,3, 3,4,4,3,4, 2,1,3,5,4, 2,4,5,3,5, 1,2,5],
+  '다사중': {
+    week: 1, total: 26,
+    mc: [3, 4, 5, 2, 2,  2, 5, 1, 5, 1,  4, 1, 3, 1, 3,  1, 5, 4, 4, 3],
+    essayMode: 'show',
+    essay: [
+      {q:'10번', a:'(A) a bath with a head massage (B) the work shampoo (C) shampoo got its present          meaning    of “washing the hair”'},
+      {q:'13번', a:'Managing money is not easy, and becoming a smart spender takes effort'},
+      {q:'18번', a:'I don’t know how I shold solve this problem'},
+      {q:'24번', a:'(1) It’s strange that butterflies taste with their feet. (2) It’s thought that koalas sleep at least 19 hours a day. (3) It’s surprise that dolphins have names for each other.'},
+      {q:'25번', a:'(1) which was painted by Marc Chagall (2) who helped many poor people in the world (3) which was written by Shakespeare'},
+      {q:'26번', a:'I’m in trouble'}
+    ]
+  },
+  '대방중': {
+    week: 2, total: 25,
+    mc: [2, 3, 4, 5, 2,  2, 5, 1],
+    essayMode: 'show',
+    essay: [
+      {q:'3번', a:'(1) I\'ll pay for it / (2) I don\'t like something'},
+      {q:'6번', a:'She got first prize, which made her parents glad.'},
+      {q:'7번', a:'This man, who saved me from the fire, is my hero.'},
+      {q:'8번', a:'(1) She married a handsome doctor, who she met on a bus. (2) He bought me a scarf, which I never wore.'},
+      {q:'9번', a:'(1) I did see Jimin at the concert last weekend. (2) It was Jimin that I saw at the concert last weekend. (3) It was at the concert that I saw Jimin last weekend. (4) It was last weekend that I saw Jimin at the concert.'},
+      {q:'10번', a:'(1) ⓒ → I stayed at Green Hotel, which a friend of mine recommended. (2) ⓗ → Our new car, which we bought last month, seats five people.'},
+      {q:'11번', a:'get a refund'},
+      {q:'12번', a:'exchange'},
+      {q:'13번', a:'(A) Managing/To manage (B) becoming/to become (C) takes'},
+      {q:'14번', a:'(가) effort (나) result'},
+      {q:'15번', a:'제이, 루나'},
+      {q:'19번', a:'(1) have been saving (2) have been spending'},
+      {q:'21번', a:'어떤 물건이 할인 판매를 하면 그것이 필요하지 않아도 산다.'},
+      {q:'22번', a:'weekly allowance'},
+      {q:'23번', a:'(A) advised (B) divide (C) days (D) carry'},
+      {q:'24번', a:'It has been raining since last night.'},
+      {q:'25번', a:'I can\'t decide when to go.'}
+    ]
+  },
+  '대전글꽃중': {
+    week: 2, total: 26,
+    mc: [5, 1, 3, 5, 3,  1, 3, 4, 4, 1,  4, 4, 3, 4, 2,  2, 2, 5, 2, 1,  1, 4, 4, 5, 5,  3],
     essay: []
   },
-  '나래중': {
+  '동화중': {
+    week: 2, total: 30,
+    mc: [4, 3, 5, 2, 4,  1, 5, 3, 4, 1,  5, 1, 3, 5, 2,  5, 1, 3, 4, 5,  2, 1, 2, 4, 2,  2, 3, 5, 4, 4],
+    essay: []
+  },
+  '모동중': {
+    week: 2, total: 28,
+    mc: [3, 4, 2, 1, 4,  1, 1, 3, 2, 5,  3, 5, 3, 1, 5,  2, 5, 4, 4, 2],
+    essayMode: 'show',
+    essay: [
+      {q:'5번', a:'Can you help me with this milk?'},
+      {q:'14번', a:'(1) enough to (2) I’m focused enough to leave all my worries behind.'},
+      {q:'15번', a:'Ex) When I feel stressed, I buy beautiful clothes. I feel better when I look at myself in the mirror in beautiful clothes.'},
+      {q:'21번', a:'(1) Turkey is a country where East meets West. (2) Turkey is a country in which East meets West.'},
+      {q:'22번', a:'It is the largest flower market in the world.'},
+      {q:'23번', a:'Ex) Grand Bazaar, Turkey, I want to eat lokum, a traditional Turkish candy.'},
+      {q:'27번', a:'(1) Ex) we plan to go on a picnic. (2) Ex) I can’t wait that restaurant'},
+      {q:'28번', a:'(1) Ex) Busan Simin Park, I can take a walk with my friends. (2) Ex) Christmas, when our family have a party together.'}
+    ]
+  },
+  '모산중': {
     week: 3, total: 25,
-    mc: [3,5,3,2,4, 1,3,3,2,1, 4,2,4,5,4, 5,1,1,4,5, 4,5,2,2,3],
+    mc: [4, 4, 5, 4, 3,  1, 4, 3, 1, 2,  2, 5, 3, 3, 4,  1, 4, 2, 5, 1,  5, 5, 3, 2, 5],
+    essay: []
+  },
+  '백운중': {
+    week: 3, total: 28,
+    mc: [3, 3, 4, 3, 5,  1, 3, 3, 4, 2,  2, 2, 4, 3, 2,  4, 4, 5, 1, 2,  2, 5, 2, 3, 3],
+    essayMode: 'show',
+    essay: [
+      {q:'6번(복수정답)', a:'정답: ①, ⑤'},
+      {q:'21번(복수정답)', a:'정답: ④, ⑤'},
+      {q:'28번(복수정답)', a:'정답: ①, ③'}
+    ]
+  },
+  '봉황중': {
+    week: 3, total: 20,
+    mc: [2, 4, 2, 3, 1,  4, 4, 5, 3, 5,  2, 5, 2, 1, 3,  2],
+    essayMode: 'show',
+    essay: [
+      {q:'6번(복수정답)', a:'정답: ⓑ, ⓒ'},
+      {q:'11번(복수정답)', a:'정답: ⓒ, ⓔ'},
+      {q:'14번', a:'suggested'},
+      {q:'20번', a:'is strange that Nancy does not remember me.'}
+    ]
+  },
+  '산남중': {
+    week: 3, total: 24,
+    mc: [3, 1, 2, 4, 1,  5, 3, 2, 3, 4,  5, 5, 5, 2, 4,  1, 5, 1, 2, 5,  2, 1, 3, 4],
     essay: []
   }
 };
 
 const state = {
   week: 1,
-  school: { 1: '가림중', 2: '고실중', 3: '구월중' },
+  school: { 1: '고실중', 2: '대방중', 3: '모산중' },
   picks: {},
   essayInputs: {},
   essaySelf: {},
@@ -299,7 +336,7 @@ function renderOMR(week, school) {
   const essaySelf = getEssaySelf(school);
   const submitted = isSubmitted(school);
   const answers = data.mc;
-  const weekNames = {1:'1주차',2:'2주차',3:'3주차'};
+  const weekNames = {1:'6/13 (1주차)',2:'6/20 (2주차)',3:'6/27 (3주차)'};
 
   // 객관식
   let mcRows = '';
@@ -475,9 +512,9 @@ function resetSchool(school, week) {
 }
 
 // 초기 렌더
-renderOMR(1, '가림중');
-renderOMR(2, '고실중');
-renderOMR(3, '구월중');
+renderOMR(1, '고실중');
+renderOMR(2, '대방중');
+renderOMR(3, '모산중');
 </script>
 </body>
 </html>
