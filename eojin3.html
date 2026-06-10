@@ -359,14 +359,14 @@
 
 <div class="header">
   <h1>📝 어진중3 OMR 채점</h1>
-  <p>2024년 중3 영어 1학기 중간기출 · 천재(이재영)</p>
+  <p>2025년 중3 영어 1학기 기말기출 · 천재(이재영)</p>
 </div>
 
 <!-- Week Tabs -->
 <div class="week-tabs">
-  <button class="week-btn active" onclick="showWeek(1)">📅 1주차</button>
-  <button class="week-btn" onclick="showWeek(2)">📅 2주차</button>
-  <button class="week-btn" onclick="showWeek(3)">📅 3주차</button>
+  <button class="week-btn active" onclick="showWeek(1)">📅 1주차 (6/13)</button>
+  <button class="week-btn" onclick="showWeek(2)">📅 2주차 (6/20)</button>
+  <button class="week-btn" onclick="showWeek(3)">📅 3주차 (6/27)</button>
 </div>
 
 <!-- ==================== 1주차 ==================== -->
@@ -374,15 +374,14 @@
   <div class="school-tabs">
     <button class="school-btn active" onclick="showSchool('w1','gosan')">고산중</button>
     <button class="school-btn" onclick="showSchool('w1','gwangju')">광주진흥중</button>
-    <button class="school-btn" onclick="showSchool('w1','guam')">구암중</button>
+    <button class="school-btn" onclick="showSchool('w1','gupo')">구포중</button>
   </div>
 
-  <!-- 고산중 -->
   <div class="school-content active" id="w1-gosan">
-    <div class="school-title">🏫 고산중학교 · 25문항</div>
+    <div class="school-title">🏫 고산중학교 · 27문항</div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="prog-w1-gosan"></div></div>
-      <div class="progress-text" id="prog-text-w1-gosan">0 / 25 완료</div>
+      <div class="progress-text" id="prog-text-w1-gosan">0 / 27 완료</div>
     </div>
     <div class="questions-grid" id="qgrid-w1-gosan"></div>
     <div class="score-section">
@@ -392,12 +391,11 @@
     </div>
   </div>
 
-  <!-- 광주진흥중 -->
   <div class="school-content" id="w1-gwangju">
-    <div class="school-title">🏫 광주진흥중학교 · 30문항</div>
+    <div class="school-title">🏫 광주진흥중학교 · 29문항</div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="prog-w1-gwangju"></div></div>
-      <div class="progress-text" id="prog-text-w1-gwangju">0 / 30 완료</div>
+      <div class="progress-text" id="prog-text-w1-gwangju">0 / 29 완료</div>
     </div>
     <div class="questions-grid" id="qgrid-w1-gwangju"></div>
     <div class="score-section">
@@ -407,18 +405,17 @@
     </div>
   </div>
 
-  <!-- 구암중 -->
-  <div class="school-content" id="w1-guam">
-    <div class="school-title">🏫 구암중학교 · 25문항</div>
+  <div class="school-content" id="w1-gupo">
+    <div class="school-title">🏫 구포중학교 · 23문항</div>
     <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w1-guam"></div></div>
-      <div class="progress-text" id="prog-text-w1-guam">0 / 25 완료</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-gupo"></div></div>
+      <div class="progress-text" id="prog-text-w1-gupo">0 / 23 완료</div>
     </div>
-    <div class="questions-grid" id="qgrid-w1-guam"></div>
+    <div class="questions-grid" id="qgrid-w1-gupo"></div>
     <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w1-guam')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w1-guam"></div>
-      <button class="reset-btn" onclick="resetSchool('w1-guam')">🔄 다시 풀기</button>
+      <button class="score-btn" onclick="calcScore('w1-gupo')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-gupo"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-gupo')">🔄 다시 풀기</button>
     </div>
   </div>
 </div>
@@ -426,50 +423,50 @@
 <!-- ==================== 2주차 ==================== -->
 <div class="section" id="week2">
   <div class="school-tabs">
-    <button class="school-btn active" onclick="showSchool('w2','gupo')">구포중</button>
-    <button class="school-btn" onclick="showSchool('w2','geumpa')">금파중</button>
-    <button class="school-btn" onclick="showSchool('w2','baekseok')">백석중</button>
+    <button class="school-btn active" onclick="showSchool('w2','seryu')">세류중</button>
+    <button class="school-btn" onclick="showSchool('w2','oesol')">외솔중</button>
+    <button class="school-btn" onclick="showSchool('w2','yonghyeon')">용현중</button>
   </div>
 
-  <div class="school-content active" id="w2-gupo">
-    <div class="school-title">🏫 구포중학교 · 25문항</div>
+  <div class="school-content active" id="w2-seryu">
+    <div class="school-title">🏫 세류중학교 · 20문항</div>
     <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-gupo"></div></div>
-      <div class="progress-text" id="prog-text-w2-gupo">0 / 25 완료</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-w2-seryu"></div></div>
+      <div class="progress-text" id="prog-text-w2-seryu">0 / 20 완료</div>
     </div>
-    <div class="questions-grid" id="qgrid-w2-gupo"></div>
+    <div class="questions-grid" id="qgrid-w2-seryu"></div>
     <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-gupo')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-gupo"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-gupo')">🔄 다시 풀기</button>
-    </div>
-  </div>
-
-  <div class="school-content" id="w2-geumpa">
-    <div class="school-title">🏫 금파중학교 · 24문항</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-geumpa"></div></div>
-      <div class="progress-text" id="prog-text-w2-geumpa">0 / 24 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w2-geumpa"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-geumpa')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-geumpa"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-geumpa')">🔄 다시 풀기</button>
+      <button class="score-btn" onclick="calcScore('w2-seryu')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w2-seryu"></div>
+      <button class="reset-btn" onclick="resetSchool('w2-seryu')">🔄 다시 풀기</button>
     </div>
   </div>
 
-  <div class="school-content" id="w2-baekseok">
-    <div class="school-title">🏫 백석중학교 · 23문항</div>
+  <div class="school-content" id="w2-oesol">
+    <div class="school-title">🏫 외솔중학교 · 26문항</div>
     <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-baekseok"></div></div>
-      <div class="progress-text" id="prog-text-w2-baekseok">0 / 23 완료</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-w2-oesol"></div></div>
+      <div class="progress-text" id="prog-text-w2-oesol">0 / 26 완료</div>
     </div>
-    <div class="questions-grid" id="qgrid-w2-baekseok"></div>
+    <div class="questions-grid" id="qgrid-w2-oesol"></div>
     <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-baekseok')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-baekseok"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-baekseok')">🔄 다시 풀기</button>
+      <button class="score-btn" onclick="calcScore('w2-oesol')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w2-oesol"></div>
+      <button class="reset-btn" onclick="resetSchool('w2-oesol')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="school-content" id="w2-yonghyeon">
+    <div class="school-title">🏫 용현중학교 · 27문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w2-yonghyeon"></div></div>
+      <div class="progress-text" id="prog-text-w2-yonghyeon">0 / 27 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w2-yonghyeon"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w2-yonghyeon')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w2-yonghyeon"></div>
+      <button class="reset-btn" onclick="resetSchool('w2-yonghyeon')">🔄 다시 풀기</button>
     </div>
   </div>
 </div>
@@ -477,50 +474,50 @@
 <!-- ==================== 3주차 ==================== -->
 <div class="section" id="week3">
   <div class="school-tabs">
-    <button class="school-btn active" onclick="showSchool('w3','salesio')">살레시오중</button>
-    <button class="school-btn" onclick="showSchool('w3','seryu')">세류중</button>
-    <button class="school-btn" onclick="showSchool('w3','yeonsu')">연수중</button>
+    <button class="school-btn active" onclick="showSchool('w3','ilsin')">일신여중</button>
+    <button class="school-btn" onclick="showSchool('w3','cheongjudong')">청주동중</button>
+    <button class="school-btn" onclick="showSchool('w3','cheongjujungang')">청주중앙중</button>
   </div>
 
-  <div class="school-content active" id="w3-salesio">
-    <div class="school-title">🏫 살레시오중학교 · 24문항</div>
+  <div class="school-content active" id="w3-ilsin">
+    <div class="school-title">🏫 일신여자중학교 · 26문항</div>
     <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w3-salesio"></div></div>
-      <div class="progress-text" id="prog-text-w3-salesio">0 / 24 완료</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-w3-ilsin"></div></div>
+      <div class="progress-text" id="prog-text-w3-ilsin">0 / 26 완료</div>
     </div>
-    <div class="questions-grid" id="qgrid-w3-salesio"></div>
+    <div class="questions-grid" id="qgrid-w3-ilsin"></div>
     <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w3-salesio')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w3-salesio"></div>
-      <button class="reset-btn" onclick="resetSchool('w3-salesio')">🔄 다시 풀기</button>
-    </div>
-  </div>
-
-  <div class="school-content" id="w3-seryu">
-    <div class="school-title">🏫 세류중학교 · 20문항</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w3-seryu"></div></div>
-      <div class="progress-text" id="prog-text-w3-seryu">0 / 20 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w3-seryu"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w3-seryu')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w3-seryu"></div>
-      <button class="reset-btn" onclick="resetSchool('w3-seryu')">🔄 다시 풀기</button>
+      <button class="score-btn" onclick="calcScore('w3-ilsin')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w3-ilsin"></div>
+      <button class="reset-btn" onclick="resetSchool('w3-ilsin')">🔄 다시 풀기</button>
     </div>
   </div>
 
-  <div class="school-content" id="w3-yeonsu">
-    <div class="school-title">🏫 연수중학교 · 25문항</div>
+  <div class="school-content" id="w3-cheongjudong">
+    <div class="school-title">🏫 청주동중학교 · 28문항</div>
     <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w3-yeonsu"></div></div>
-      <div class="progress-text" id="prog-text-w3-yeonsu">0 / 25 완료</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-w3-cheongjudong"></div></div>
+      <div class="progress-text" id="prog-text-w3-cheongjudong">0 / 28 완료</div>
     </div>
-    <div class="questions-grid" id="qgrid-w3-yeonsu"></div>
+    <div class="questions-grid" id="qgrid-w3-cheongjudong"></div>
     <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w3-yeonsu')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w3-yeonsu"></div>
-      <button class="reset-btn" onclick="resetSchool('w3-yeonsu')">🔄 다시 풀기</button>
+      <button class="score-btn" onclick="calcScore('w3-cheongjudong')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w3-cheongjudong"></div>
+      <button class="reset-btn" onclick="resetSchool('w3-cheongjudong')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="school-content" id="w3-cheongjujungang">
+    <div class="school-title">🏫 청주중앙중학교 · 24문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w3-cheongjujungang"></div></div>
+      <div class="progress-text" id="prog-text-w3-cheongjujungang">0 / 24 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w3-cheongjujungang"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w3-cheongjujungang')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w3-cheongjujungang"></div>
+      <button class="reset-btn" onclick="resetSchool('w3-cheongjujungang')">🔄 다시 풀기</button>
     </div>
   </div>
 </div>
@@ -530,144 +527,1199 @@
 // DATA
 // =============================================
 const SCHOOLS = {
-  'w1-gosan': {
-    name: '고산중',
-    questions: [
-      {n:1,type:'mc',ans:3},{n:2,type:'mc',ans:1},{n:3,type:'mc',ans:2},{n:4,type:'mc',ans:4},
-      {n:5,type:'sub',ans:'the straw is what Omar treasures most for her health.\n/ the straw is what is most treasured for her health.'},
-      {n:6,type:'mc',ans:5},{n:7,type:'mc',ans:3},
-      {n:8,type:'sub',ans:'Which do you think is better, dancing or hiking?'},
-      {n:9,type:'mc',ans:4},
-      {n:10,type:'sub',ans:'(A) Despite their nonstop movement, worker ants make time to rest.\n(B) They take about 250 short naps lasting about a minute each day.'},
-      {n:11,type:'mc',ans:3},{n:12,type:'mc',ans:2},
-      {n:13,type:'sub',ans:'I saw a man creeping into an empty store and stealing some cash.'},
-      {n:14,type:'mc',ans:4},{n:15,type:'mc',ans:2},{n:16,type:'mc',ans:5},{n:17,type:'mc',ans:1},
-      {n:18,type:'mc',ans:4},{n:19,type:'mc',ans:5},
-      {n:20,type:'sub',ans:'(A) the queen presented the chest filled with jewels to him.\n(B) he presented the queen gifts.'},
-      {n:21,type:'mc',ans:3},{n:22,type:'mc',ans:1},
-      {n:23,type:'sub',ans:'Since an ant has very sensitive hairs on its legs, it can sense even the smallest rub.'},
-      {n:24,type:'mc',ans:2},
-      {n:25,type:'sub',ans:'What she does her entire life is lay eggs.'}
+  "w1-gosan": {
+    "name": "고산중",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 5,
+        "type": "sub",
+        "ans": "(A) How many ants are on Earth? (B) How do ants communicate?"
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 8,
+        "type": "sub",
+        "ans": "Thai people traded goods on rivers."
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 14,
+        "type": "sub",
+        "ans": "Do you want me to give you the recipe for gondrebap?"
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 17,
+        "type": "sub",
+        "ans": "(A) The day when I go to the Maple Town Library is every Friday. (B) The place where I study and borrow books for the weekend is the Maple Town Library."
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 19,
+        "type": "sub",
+        "ans": "(1) Though using a phone can be fun, you should try spending time with people face to face. (2) Since too much screen time can harm your health and relationships, it’s important to take regular breaks from your phone."
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 22,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 24,
+        "type": "sub",
+        "ans": "(A) He has a garden filled with beautiful flowers. (B) His granddaughter is drawing ants moving a leaf together."
+      },
+      {
+        "n": 25,
+        "type": "sub",
+        "ans": "(1) Which do you prefer, the bus or the subway? (2) I wonder where the bakery is."
+      },
+      {
+        "n": 26,
+        "type": "sub",
+        "ans": "(A) A man sent me a brochure containing the information I needed. (B) That was the man arrested for stealing two cars."
+      },
+      {
+        "n": 27,
+        "type": "sub",
+        "ans": "The ABC gas station is between the IM bank and the Gosan post office."
+      }
     ]
   },
-  'w1-gwangju': {
-    name: '광주진흥중',
-    questions: [
-      {n:1,type:'mc',ans:1},{n:2,type:'mc',ans:5},{n:3,type:'mc',ans:4},{n:4,type:'mc',ans:4},
-      {n:5,type:'mc',ans:1},{n:6,type:'mc',ans:2},{n:7,type:'mc',ans:3},{n:8,type:'mc',ans:3},
-      {n:9,type:'mc',ans:2},{n:10,type:'sub',ans:'정답 3개: ① ② ④\n(ⓐ he was filled his ship → filled, ⓑ chased away them → chased them away, ⓓ let them to run → let them run)'},
-      {n:11,type:'mc',ans:1},
-      {n:12,type:'sub',ans:'When the queen saw cats chase the rats.'},
-      {n:13,type:'mc',ans:5},{n:14,type:'mc',ans:3},
-      {n:15,type:'sub',ans:'What the queen thinks most valuable is the kittens.'},
-      {n:16,type:'mc',ans:4},{n:17,type:'mc',ans:4},{n:18,type:'mc',ans:1},{n:19,type:'mc',ans:3},
-      {n:20,type:'mc',ans:2},{n:21,type:'mc',ans:5},{n:22,type:'mc',ans:4},{n:23,type:'mc',ans:2},
-      {n:24,type:'mc',ans:2},{n:25,type:'mc',ans:5},{n:26,type:'mc',ans:2},{n:27,type:'mc',ans:3},
-      {n:28,type:'mc',ans:4},
-      {n:29,type:'sub',ans:'예시: (1) Since Tom didn\'t want to be scolded, he ran away.\n(2) After that, Mr. Lee tried to find him but he couldn\'t.'},
-      {n:30,type:'sub',ans:'예시: (1) The boys riding a seesaw were happy.\n(2) The man taking care of the flowers is Tom.'}
+  "w1-gwangju": {
+    "name": "광주진흥중",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 22,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 24,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 25,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 26,
+        "type": "sub",
+        "ans": "I have been studying English for 10 years. (어법에 맞으면 모든 문장 가능)"
+      },
+      {
+        "n": 27,
+        "type": "sub",
+        "ans": "I like to go to the city where he was born. (어법에 맞으면 모든 문장 가능)"
+      },
+      {
+        "n": 28,
+        "type": "sub",
+        "ans": "He is so fast that he can win the race. (어법에 맞으면 모든 문장 가능)"
+      },
+      {
+        "n": 29,
+        "type": "sub",
+        "ans": "I wonder if he will like it or not. (어법에 맞으면 모든 문장 가능)"
+      }
     ]
   },
-  'w1-guam': {
-    name: '구암중',
-    questions: [
-      {n:1,type:'mc',ans:2},{n:2,type:'mc',ans:4},{n:3,type:'mc',ans:5},{n:4,type:'mc',ans:2},
-      {n:5,type:'sub',ans:'What is most valuable to Isabel'},
-      {n:6,type:'mc',ans:3},{n:7,type:'mc',ans:4},{n:8,type:'mc',ans:5},
-      {n:9,type:'sub',ans:'he filled his ship with goods'},
-      {n:10,type:'sub',ans:'what they needed'},
-      {n:11,type:'mc',ans:1},{n:12,type:'mc',ans:3},{n:13,type:'mc',ans:1},
-      {n:14,type:'sub',ans:'which do you think is better'},
-      {n:15,type:'mc',ans:5},{n:16,type:'mc',ans:4},
-      {n:17,type:'sub',ans:'covered with very sensitive hairs'},
-      {n:18,type:'mc',ans:5},{n:19,type:'mc',ans:1},{n:20,type:'mc',ans:2},
-      {n:21,type:'sub',ans:'what you told me'},
-      {n:22,type:'sub',ans:'A farmer watched a bird fly away suddenly'},
-      {n:23,type:'sub',ans:'The boy wearing sunglasses is my brother'},
-      {n:24,type:'sub',ans:'Since I had a cold, I was absent.'},
-      {n:25,type:'sub',ans:'It is a cute animal with small ears that can climb trees.'}
+  "w1-gupo": {
+    "name": "구포중",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 4,
+        "type": "sub",
+        "ans": "I would like to talk to you about teen stress."
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 9,
+        "type": "sub",
+        "ans": "Horror movies are so scary that I scream a lot."
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 17,
+        "type": "sub",
+        "ans": "I can buy local foods and traditional gifts items."
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 20,
+        "type": "sub",
+        "ans": "My cousin was so strong that she could carry the boxes by herself."
+      },
+      {
+        "n": 21,
+        "type": "sub",
+        "ans": "(1) We have been telling people to save water. (2) Sue has been volunteering at the library since February."
+      },
+      {
+        "n": 22,
+        "type": "sub",
+        "ans": "My dad doesn’t like the restaurant where the service is very slow."
+      },
+      {
+        "n": 23,
+        "type": "sub",
+        "ans": "Whether it will rain soon is important to farmers."
+      }
     ]
   },
-  'w2-gupo': {
-    name: '구포중',
-    questions: [
-      {n:1,type:'mc',ans:3},
-      {n:2,type:'sub',ans:'The islanders could get what they needed.'},
-      {n:3,type:'mc',ans:5},{n:4,type:'mc',ans:5},{n:5,type:'mc',ans:5},
-      {n:6,type:'mc',ans:2},{n:7,type:'mc',ans:4},{n:8,type:'mc',ans:1},{n:9,type:'mc',ans:2},
-      {n:10,type:'sub',ans:'정답 2개: ① ④\n① We waved at the woman watering the plants.\n④ My brother bought a watch made in Switzerland.'},{n:11,type:'mc',ans:3},
-      {n:12,type:'sub',ans:'Which picture do you think is better?'},
-      {n:13,type:'mc',ans:4},{n:14,type:'mc',ans:4},{n:15,type:'mc',ans:1},{n:16,type:'mc',ans:5},
-      {n:17,type:'mc',ans:4},
-      {n:18,type:'sub',ans:'They rest by taking very short naps about 250 times a day'},
-      {n:19,type:'mc',ans:5},
-      {n:20,type:'sub',ans:'What worries my parents is my personality'},
-      {n:21,type:'sub',ans:'watched the comedian fall on stage.'},
-      {n:22,type:'sub',ans:'heard the singer sing a popular song'},
-      {n:23,type:'sub',ans:'has many novels written in English.'},
-      {n:24,type:'sub',ans:'Though I was tired, I did my best to finish my homework.'},
-      {n:25,type:'sub',ans:'Since it stopped raining, he went out for a walk.'}
+  "w2-seryu": {
+    "name": "세류중",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 5
+      }
     ]
   },
-  'w2-geumpa': {
-    name: '금파중',
-    questions: [
-      {n:1,type:'mc',ans:3},{n:2,type:'mc',ans:1},{n:3,type:'mc',ans:5},{n:4,type:'mc',ans:5},
-      {n:5,type:'mc',ans:1},{n:6,type:'mc',ans:3},{n:7,type:'mc',ans:2},{n:8,type:'mc',ans:3},
-      {n:9,type:'mc',ans:5},{n:10,type:'mc',ans:1},{n:11,type:'mc',ans:3},{n:12,type:'mc',ans:4},
-      {n:13,type:'mc',ans:2},{n:14,type:'mc',ans:2},{n:15,type:'mc',ans:5},{n:16,type:'mc',ans:5},
-      {n:17,type:'mc',ans:3},{n:18,type:'mc',ans:3},{n:19,type:'mc',ans:1},{n:20,type:'mc',ans:4},
-      {n:21,type:'mc',ans:4},{n:22,type:'mc',ans:4},{n:23,type:'mc',ans:2},{n:24,type:'mc',ans:4}
+  "w2-oesol": {
+    "name": "외솔중",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 22,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 24,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 25,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 26,
+        "type": "mc",
+        "ans": 2
+      }
     ]
   },
-  'w2-baekseok': {
-    name: '백석중',
-    questions: [
-      {n:1,type:'mc',ans:4},{n:2,type:'mc',ans:2},{n:3,type:'mc',ans:4},{n:4,type:'mc',ans:5},
-      {n:5,type:'mc',ans:4},{n:6,type:'mc',ans:2},{n:7,type:'mc',ans:5},{n:8,type:'mc',ans:1},
-      {n:9,type:'mc',ans:4},{n:10,type:'mc',ans:3},{n:11,type:'mc',ans:3},{n:12,type:'mc',ans:4},
-      {n:13,type:'mc',ans:5},{n:14,type:'mc',ans:5},{n:15,type:'mc',ans:2},{n:16,type:'mc',ans:1},
-      {n:17,type:'mc',ans:1},{n:18,type:'mc',ans:1},{n:19,type:'mc',ans:2},{n:20,type:'mc',ans:1},
-      {n:21,type:'mc',ans:4},{n:22,type:'mc',ans:4},{n:23,type:'mc',ans:1}
+  "w2-yonghyeon": {
+    "name": "용현중",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 22,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 24,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 25,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 26,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 27,
+        "type": "mc",
+        "ans": 5
+      }
     ]
   },
-  'w3-salesio': {
-    name: '살레시오중',
-    questions: [
-      {n:1,type:'mc',ans:4},
-      {n:2,type:'sub',ans:'What I need most is a bike.'},
-      {n:3,type:'mc',ans:3},{n:4,type:'mc',ans:2},{n:5,type:'mc',ans:5},{n:6,type:'mc',ans:5},
-      {n:7,type:'mc',ans:2},{n:8,type:'mc',ans:5},
-      {n:9,type:'sub',ans:'He was a good friend of Antonio\'s.'},
-      {n:10,type:'mc',ans:3},{n:11,type:'mc',ans:2},{n:12,type:'mc',ans:1},{n:13,type:'mc',ans:4},
-      {n:14,type:'mc',ans:4},{n:15,type:'mc',ans:2},{n:16,type:'mc',ans:2},{n:17,type:'mc',ans:2},
-      {n:18,type:'mc',ans:4},
-      {n:19,type:'sub',ans:'(1) nothing → anything\n(2) hardly는 "거의~않다"라는 부정의 뜻이므로 nothing을 anything으로 고쳐야 한다.'},
-      {n:20,type:'mc',ans:1},
-      {n:21,type:'sub',ans:'What she does her entire life is lay eggs.'},
-      {n:22,type:'mc',ans:4},{n:23,type:'mc',ans:3},{n:24,type:'mc',ans:1}
+  "w3-ilsin": {
+    "name": "일신여중",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 22,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 24,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 25,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 26,
+        "type": "mc",
+        "ans": 4
+      }
     ]
   },
-  'w3-seryu': {
-    name: '세류중',
-    questions: [
-      {n:1,type:'mc',ans:2},{n:2,type:'mc',ans:3},{n:3,type:'mc',ans:5},{n:4,type:'mc',ans:2},
-      {n:5,type:'mc',ans:3},{n:6,type:'mc',ans:1},{n:7,type:'mc',ans:4},{n:8,type:'mc',ans:2},
-      {n:9,type:'mc',ans:3},{n:10,type:'mc',ans:5},{n:11,type:'mc',ans:4},{n:12,type:'mc',ans:2},
-      {n:13,type:'mc',ans:5},{n:14,type:'mc',ans:5},{n:15,type:'mc',ans:1},{n:16,type:'mc',ans:4},
-      {n:17,type:'mc',ans:1},{n:18,type:'mc',ans:4},{n:19,type:'mc',ans:1},{n:20,type:'mc',ans:2}
+  "w3-cheongjudong": {
+    "name": "청주동중",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 22,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 24,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 25,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 26,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 27,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 28,
+        "type": "mc",
+        "ans": 1
+      }
     ]
   },
-  'w3-yeonsu': {
-    name: '연수중',
-    questions: [
-      {n:1,type:'mc',ans:5},{n:2,type:'mc',ans:4},{n:3,type:'mc',ans:3},{n:4,type:'mc',ans:5},
-      {n:5,type:'mc',ans:2},{n:6,type:'mc',ans:2},{n:7,type:'mc',ans:1},{n:8,type:'mc',ans:5},
-      {n:9,type:'mc',ans:4},{n:10,type:'mc',ans:2},{n:11,type:'mc',ans:4},{n:12,type:'mc',ans:1},
-      {n:13,type:'mc',ans:1},{n:14,type:'mc',ans:1},{n:15,type:'mc',ans:3},{n:16,type:'mc',ans:4},
-      {n:17,type:'mc',ans:3},{n:18,type:'mc',ans:2},{n:19,type:'mc',ans:1},{n:20,type:'mc',ans:3},
-      {n:21,type:'mc',ans:5},{n:22,type:'mc',ans:1},{n:23,type:'mc',ans:3},{n:24,type:'mc',ans:2},
-      {n:25,type:'mc',ans:4}
+  "w3-cheongjujungang": {
+    "name": "청주중앙중",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 22,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 24,
+        "type": "mc",
+        "ans": 2
+      }
     ]
   }
 };
@@ -733,36 +1785,24 @@ function buildSchool(schoolId) {
   });
 }
 
+// 채점 완료된 학교 잠금 표시
+const locked = {};
+
 function selectChoice(schoolId, qNum, choice) {
-  const data = SCHOOLS[schoolId];
-  const q = data.questions.find(x => x.n === qNum);
+  // 채점 후에는 변경 불가
+  if (locked[schoolId]) return;
 
-  // Already answered
-  if (userAnswers[schoolId][qNum] !== null) return;
-
+  // 선택만 하고 채점은 하지 않음 (오클릭해도 다른 보기로 자유롭게 변경 가능)
   userAnswers[schoolId][qNum] = choice;
 
-  const correct = Array.isArray(q.ans) ? q.ans.includes(choice) : q.ans === choice;
-  const correctAns = Array.isArray(q.ans) ? q.ans : [q.ans];
-
-  // Update button styles
   for (let i = 1; i <= 5; i++) {
     const btn = document.getElementById(`cb-${schoolId}-${qNum}-${i}`);
     if (!btn) continue;
-    btn.style.pointerEvents = 'none';
-    if (i === choice) {
-      btn.classList.add(correct ? 'correct-ans' : 'wrong-ans');
-    }
-    if (!correct && correctAns.includes(i)) {
-      btn.classList.add('correct-ans');
-    }
+    btn.classList.toggle('selected', i === choice);
   }
 
-  const card = document.getElementById(`qcard-${schoolId}-${qNum}`);
-  card.classList.add(correct ? 'correct' : 'wrong');
-
   const status = document.getElementById(`qs-${schoolId}-${qNum}`);
-  status.textContent = correct ? '✅' : '❌';
+  if (status) status.textContent = '✏️';
 
   updateProgress(schoolId);
 }
@@ -810,14 +1850,40 @@ function calcScore(schoolId) {
   const data = SCHOOLS[schoolId];
   let correct = 0, total = 0, unanswered = 0;
 
+  // 채점 시점에 객관식 정답/오답 공개 + 잠금
+  locked[schoolId] = true;
+
   data.questions.forEach(q => {
     total++;
     const ua = userAnswers[schoolId][q.n];
-    if (ua === null) { unanswered++; return; }
+
     if (q.type === 'mc') {
-      const isCorrect = Array.isArray(q.ans) ? q.ans.includes(ua) : q.ans === ua;
+      const correctAns = Array.isArray(q.ans) ? q.ans : [q.ans];
+      // 모든 보기 잠금
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`cb-${schoolId}-${q.n}-${i}`);
+        if (!btn) continue;
+        btn.classList.remove('selected');
+        btn.style.pointerEvents = 'none';
+      }
+      const card = document.getElementById(`qcard-${schoolId}-${q.n}`);
+      const status = document.getElementById(`qs-${schoolId}-${q.n}`);
+      if (ua === null) {
+        unanswered++;
+        // 미응답이어도 정답 표시
+        correctAns.forEach(c => { const cb = document.getElementById(`cb-${schoolId}-${q.n}-${c}`); if (cb) cb.classList.add('correct-ans'); });
+        if (status) status.textContent = '⬜';
+        return;
+      }
+      const isCorrect = correctAns.includes(ua);
+      const chosen = document.getElementById(`cb-${schoolId}-${q.n}-${ua}`);
+      if (chosen) chosen.classList.add(isCorrect ? 'correct-ans' : 'wrong-ans');
+      if (!isCorrect) correctAns.forEach(c => { const cb = document.getElementById(`cb-${schoolId}-${q.n}-${c}`); if (cb) cb.classList.add('correct-ans'); });
+      if (card) card.classList.add(isCorrect ? 'correct' : 'wrong');
+      if (status) status.textContent = isCorrect ? '✅' : '❌';
       if (isCorrect) correct++;
     } else {
+      if (ua === null) { unanswered++; return; }
       if (ua === 'o') correct++;
     }
   });
@@ -842,6 +1908,7 @@ function calcScore(schoolId) {
 function resetSchool(schoolId) {
   const data = SCHOOLS[schoolId];
   userAnswers[schoolId] = {};
+  locked[schoolId] = false;
   data.questions.forEach(q => { userAnswers[schoolId][q.n] = null; });
 
   // Rebuild
@@ -881,9 +1948,9 @@ function showSchool(weekPrefix, schoolKey) {
   // find the button that matches
   const btns = weekEl.querySelectorAll('.school-btn');
   const keys = {
-    w1: ['gosan','gwangju','guam'],
-    w2: ['gupo','geumpa','baekseok'],
-    w3: ['salesio','seryu','yeonsu']
+    w1: ['gosan','gwangju','gupo'],
+    w2: ['seryu','oesol','yonghyeon'],
+    w3: ['ilsin','cheongjudong','cheongjujungang']
   };
   const wk = 'w' + weekPrefix.replace('w','');
   const idx = keys[wk].indexOf(schoolKey);
@@ -896,8 +1963,8 @@ function showSchool(weekPrefix, schoolKey) {
 (function init() {
   // Build first visible school in each week
   buildSchool('w1-gosan');
-  buildSchool('w2-gupo');
-  buildSchool('w3-salesio');
+  buildSchool('w2-seryu');
+  buildSchool('w3-ilsin');
 })();
 </script>
 
