@@ -372,13 +372,14 @@
 <!-- ==================== 1주차 ==================== -->
 <div class="section active" id="week1">
   <div class="school-tabs">
-    <button class="school-btn active" onclick="showSchool('w1','gosan')">고산중</button>
-    <button class="school-btn" onclick="showSchool('w1','gwangju')">광주진흥중</button>
-    <button class="school-btn" onclick="showSchool('w1','gupo')">구포중</button>
+    <button class="school-btn active" onclick="showSchool('w1','gosan')">고산중(25)</button>
+    <button class="school-btn" onclick="showSchool('w1','gwangju')">광주진흥중(25)</button>
+    <button class="school-btn" onclick="showSchool('w1','gupo')">구포중(25)</button>
+    <button class="school-btn" onclick="showSchool('w1','seryu')">세류중(25)</button>
   </div>
 
   <div class="school-content active" id="w1-gosan">
-    <div class="school-title">🏫 고산중학교 · 27문항</div>
+    <div class="school-title">🏫 고산중학교 (2025) · 27문항</div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="prog-w1-gosan"></div></div>
       <div class="progress-text" id="prog-text-w1-gosan">0 / 27 완료</div>
@@ -392,7 +393,7 @@
   </div>
 
   <div class="school-content" id="w1-gwangju">
-    <div class="school-title">🏫 광주진흥중학교 · 29문항</div>
+    <div class="school-title">🏫 광주진흥중학교 (2025) · 29문항</div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="prog-w1-gwangju"></div></div>
       <div class="progress-text" id="prog-text-w1-gwangju">0 / 29 완료</div>
@@ -406,7 +407,7 @@
   </div>
 
   <div class="school-content" id="w1-gupo">
-    <div class="school-title">🏫 구포중학교 · 23문항</div>
+    <div class="school-title">🏫 구포중학교 (2025) · 23문항</div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="prog-w1-gupo"></div></div>
       <div class="progress-text" id="prog-text-w1-gupo">0 / 23 완료</div>
@@ -418,32 +419,33 @@
       <button class="reset-btn" onclick="resetSchool('w1-gupo')">🔄 다시 풀기</button>
     </div>
   </div>
+
+  <div class="school-content" id="w1-seryu">
+    <div class="school-title">🏫 세류중학교 (2025) · 20문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-seryu"></div></div>
+      <div class="progress-text" id="prog-text-w1-seryu">0 / 20 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-seryu"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-seryu')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-seryu"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-seryu')">🔄 다시 풀기</button>
+    </div>
+  </div>
 </div>
 
 <!-- ==================== 2주차 ==================== -->
 <div class="section" id="week2">
   <div class="school-tabs">
-    <button class="school-btn active" onclick="showSchool('w2','seryu')">세류중</button>
-    <button class="school-btn" onclick="showSchool('w2','oesol')">외솔중</button>
-    <button class="school-btn" onclick="showSchool('w2','yonghyeon')">용현중</button>
+    <button class="school-btn active" onclick="showSchool('w2','oesol')">외솔중(25)</button>
+    <button class="school-btn" onclick="showSchool('w2','yonghyeon')">용현중(25)</button>
+    <button class="school-btn" onclick="showSchool('w2','ilsin')">일신여중(25)</button>
+    <button class="school-btn" onclick="showSchool('w2','cheongjudong')">청주동중(25)</button>
   </div>
 
-  <div class="school-content active" id="w2-seryu">
-    <div class="school-title">🏫 세류중학교 · 20문항</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-seryu"></div></div>
-      <div class="progress-text" id="prog-text-w2-seryu">0 / 20 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w2-seryu"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-seryu')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-seryu"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-seryu')">🔄 다시 풀기</button>
-    </div>
-  </div>
-
-  <div class="school-content" id="w2-oesol">
-    <div class="school-title">🏫 외솔중학교 · 26문항</div>
+  <div class="school-content active" id="w2-oesol">
+    <div class="school-title">🏫 외솔중학교 (2025) · 26문항</div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="prog-w2-oesol"></div></div>
       <div class="progress-text" id="prog-text-w2-oesol">0 / 26 완료</div>
@@ -457,7 +459,7 @@
   </div>
 
   <div class="school-content" id="w2-yonghyeon">
-    <div class="school-title">🏫 용현중학교 · 27문항</div>
+    <div class="school-title">🏫 용현중학교 (2025) · 27문항</div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="prog-w2-yonghyeon"></div></div>
       <div class="progress-text" id="prog-text-w2-yonghyeon">0 / 27 완료</div>
@@ -469,46 +471,47 @@
       <button class="reset-btn" onclick="resetSchool('w2-yonghyeon')">🔄 다시 풀기</button>
     </div>
   </div>
+
+  <div class="school-content" id="w2-ilsin">
+    <div class="school-title">🏫 일신여자중학교 (2025) · 26문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w2-ilsin"></div></div>
+      <div class="progress-text" id="prog-text-w2-ilsin">0 / 26 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w2-ilsin"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w2-ilsin')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w2-ilsin"></div>
+      <button class="reset-btn" onclick="resetSchool('w2-ilsin')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="school-content" id="w2-cheongjudong">
+    <div class="school-title">🏫 청주동중학교 (2025) · 28문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w2-cheongjudong"></div></div>
+      <div class="progress-text" id="prog-text-w2-cheongjudong">0 / 28 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w2-cheongjudong"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w2-cheongjudong')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w2-cheongjudong"></div>
+      <button class="reset-btn" onclick="resetSchool('w2-cheongjudong')">🔄 다시 풀기</button>
+    </div>
+  </div>
 </div>
 
 <!-- ==================== 3주차 ==================== -->
 <div class="section" id="week3">
   <div class="school-tabs">
-    <button class="school-btn active" onclick="showSchool('w3','ilsin')">일신여중</button>
-    <button class="school-btn" onclick="showSchool('w3','cheongjudong')">청주동중</button>
-    <button class="school-btn" onclick="showSchool('w3','cheongjujungang')">청주중앙중</button>
+    <button class="school-btn active" onclick="showSchool('w3','cheongjujungang')">청주중앙중(25)</button>
+    <button class="school-btn" onclick="showSchool('w3','gosan')">고산중(24)</button>
+    <button class="school-btn" onclick="showSchool('w3','gongju')">공주사범대부설(24)</button>
+    <button class="school-btn" onclick="showSchool('w3','guam')">구암중(24)</button>
   </div>
 
-  <div class="school-content active" id="w3-ilsin">
-    <div class="school-title">🏫 일신여자중학교 · 26문항</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w3-ilsin"></div></div>
-      <div class="progress-text" id="prog-text-w3-ilsin">0 / 26 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w3-ilsin"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w3-ilsin')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w3-ilsin"></div>
-      <button class="reset-btn" onclick="resetSchool('w3-ilsin')">🔄 다시 풀기</button>
-    </div>
-  </div>
-
-  <div class="school-content" id="w3-cheongjudong">
-    <div class="school-title">🏫 청주동중학교 · 28문항</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w3-cheongjudong"></div></div>
-      <div class="progress-text" id="prog-text-w3-cheongjudong">0 / 28 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w3-cheongjudong"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w3-cheongjudong')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w3-cheongjudong"></div>
-      <button class="reset-btn" onclick="resetSchool('w3-cheongjudong')">🔄 다시 풀기</button>
-    </div>
-  </div>
-
-  <div class="school-content" id="w3-cheongjujungang">
-    <div class="school-title">🏫 청주중앙중학교 · 24문항</div>
+  <div class="school-content active" id="w3-cheongjujungang">
+    <div class="school-title">🏫 청주중앙중학교 (2025) · 24문항</div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="prog-w3-cheongjujungang"></div></div>
       <div class="progress-text" id="prog-text-w3-cheongjujungang">0 / 24 완료</div>
@@ -520,6 +523,48 @@
       <button class="reset-btn" onclick="resetSchool('w3-cheongjujungang')">🔄 다시 풀기</button>
     </div>
   </div>
+
+  <div class="school-content" id="w3-gosan">
+    <div class="school-title">🏫 고산중학교 (2024) · 25문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w3-gosan"></div></div>
+      <div class="progress-text" id="prog-text-w3-gosan">0 / 25 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w3-gosan"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w3-gosan')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w3-gosan"></div>
+      <button class="reset-btn" onclick="resetSchool('w3-gosan')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="school-content" id="w3-gongju">
+    <div class="school-title">🏫 공주사범대부설중 (2024) · 26문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w3-gongju"></div></div>
+      <div class="progress-text" id="prog-text-w3-gongju">0 / 26 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w3-gongju"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w3-gongju')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w3-gongju"></div>
+      <button class="reset-btn" onclick="resetSchool('w3-gongju')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="school-content" id="w3-guam">
+    <div class="school-title">🏫 구암중학교 (2024) · 26문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w3-guam"></div></div>
+      <div class="progress-text" id="prog-text-w3-guam">0 / 26 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w3-guam"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w3-guam')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w3-guam"></div>
+      <button class="reset-btn" onclick="resetSchool('w3-guam')">🔄 다시 풀기</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -528,7 +573,7 @@
 // =============================================
 const SCHOOLS = {
   "w1-gosan": {
-    "name": "고산중",
+    "name": "고산중(25)",
     "questions": [
       {
         "n": 1,
@@ -668,7 +713,7 @@ const SCHOOLS = {
     ]
   },
   "w1-gwangju": {
-    "name": "광주진흥중",
+    "name": "광주진흥중(25)",
     "questions": [
       {
         "n": 1,
@@ -818,7 +863,7 @@ const SCHOOLS = {
     ]
   },
   "w1-gupo": {
-    "name": "구포중",
+    "name": "구포중(25)",
     "questions": [
       {
         "n": 1,
@@ -937,8 +982,8 @@ const SCHOOLS = {
       }
     ]
   },
-  "w2-seryu": {
-    "name": "세류중",
+  "w1-seryu": {
+    "name": "세류중(25)",
     "questions": [
       {
         "n": 1,
@@ -1043,7 +1088,7 @@ const SCHOOLS = {
     ]
   },
   "w2-oesol": {
-    "name": "외솔중",
+    "name": "외솔중(25)",
     "questions": [
       {
         "n": 1,
@@ -1178,7 +1223,7 @@ const SCHOOLS = {
     ]
   },
   "w2-yonghyeon": {
-    "name": "용현중",
+    "name": "용현중(25)",
     "questions": [
       {
         "n": 1,
@@ -1317,8 +1362,8 @@ const SCHOOLS = {
       }
     ]
   },
-  "w3-ilsin": {
-    "name": "일신여중",
+  "w2-ilsin": {
+    "name": "일신여중(25)",
     "questions": [
       {
         "n": 1,
@@ -1452,8 +1497,8 @@ const SCHOOLS = {
       }
     ]
   },
-  "w3-cheongjudong": {
-    "name": "청주동중",
+  "w2-cheongjudong": {
+    "name": "청주동중(25)",
     "questions": [
       {
         "n": 1,
@@ -1598,7 +1643,7 @@ const SCHOOLS = {
     ]
   },
   "w3-cheongjujungang": {
-    "name": "청주중앙중",
+    "name": "청주중앙중(25)",
     "questions": [
       {
         "n": 1,
@@ -1719,6 +1764,406 @@ const SCHOOLS = {
         "n": 24,
         "type": "mc",
         "ans": 2
+      }
+    ]
+  },
+  "w3-gosan": {
+    "name": "고산중(24)",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 7,
+        "type": "sub",
+        "ans": "I’d like to talk about ways to reduce phone usage."
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 9,
+        "type": "sub",
+        "ans": "The local farmers are so kind that they share gardening tips and recipes with visitors."
+      },
+      {
+        "n": 10,
+        "type": "sub",
+        "ans": "Every Saturday is the days when he goes to Oakville Farmers’s Market."
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 13,
+        "type": "sub",
+        "ans": "(A) markets are places where you can meet people, learn history, and take local food. (B) wonders whether there is any better way to experience another cultures."
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 17,
+        "type": "sub",
+        "ans": "(1) Junho’s uncle has been looking for a job since he graduated from college. (2) Mina has been using the method of relieving stress for several months."
+      },
+      {
+        "n": 18,
+        "type": "sub",
+        "ans": "she's so stressed that her life looks gloomy"
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 22,
+        "type": "sub",
+        "ans": "has been learning Korean for three years"
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 24,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 25,
+        "type": "mc",
+        "ans": 5
+      }
+    ]
+  },
+  "w3-gongju": {
+    "name": "공주사범대부설(24)",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 22,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 24,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 25,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 26,
+        "type": "mc",
+        "ans": 1
+      }
+    ]
+  },
+  "w3-guam": {
+    "name": "구암중(24)",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 10,
+        "type": "sub",
+        "ans": "I’m so focused that I can leave all my worries behind"
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 18,
+        "type": "sub",
+        "ans": "in which we can meet people"
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 21,
+        "type": "sub",
+        "ans": "whether you can buy flowers"
+      },
+      {
+        "n": 22,
+        "type": "sub",
+        "ans": "is some good news for you"
+      },
+      {
+        "n": 23,
+        "type": "sub",
+        "ans": "The phone has been ringing for one minute."
+      },
+      {
+        "n": 24,
+        "type": "sub",
+        "ans": "It was too dark to see anything"
+      },
+      {
+        "n": 25,
+        "type": "sub",
+        "ans": "That is the park where I jog in the morning"
+      },
+      {
+        "n": 26,
+        "type": "sub",
+        "ans": "The question is whether the plan will work or not."
       }
     ]
   }
@@ -1948,9 +2393,9 @@ function showSchool(weekPrefix, schoolKey) {
   // find the button that matches
   const btns = weekEl.querySelectorAll('.school-btn');
   const keys = {
-    w1: ['gosan','gwangju','gupo'],
-    w2: ['seryu','oesol','yonghyeon'],
-    w3: ['ilsin','cheongjudong','cheongjujungang']
+    w1: ['gosan','gwangju','gupo','seryu'],
+    w2: ['oesol','yonghyeon','ilsin','cheongjudong'],
+    w3: ['cheongjujungang','gosan','gongju','guam']
   };
   const wk = 'w' + weekPrefix.replace('w','');
   const idx = keys[wk].indexOf(schoolKey);
@@ -1963,8 +2408,8 @@ function showSchool(weekPrefix, schoolKey) {
 (function init() {
   // Build first visible school in each week
   buildSchool('w1-gosan');
-  buildSchool('w2-seryu');
-  buildSchool('w3-ilsin');
+  buildSchool('w2-oesol');
+  buildSchool('w3-cheongjujungang');
 })();
 </script>
 
