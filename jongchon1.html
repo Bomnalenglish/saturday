@@ -104,13 +104,13 @@
   <p>천재(이재영) 백발백중 · 6/13 1주차 | 풀어온 답을 입력하세요</p>
 </div>
 <div class="tabs">
-  <button class="tab on" data-t="0" onclick="sw(0)">어휘 실전<br><small>7문항</small></button>
-  <button class="tab" data-t="1" onclick="sw(1)">어휘 심화<br><small>13문항</small></button>
-  <button class="tab" data-t="2" onclick="sw(2)">Dialog<br><small>14문항</small></button>
-  <button class="tab" data-t="3" onclick="sw(3)">Grammar<br><small>14문항</small></button>
-  <button class="tab" data-t="4" onclick="sw(4)">Reading<br><small>25문항</small></button>
-  <button class="tab" data-t="5" onclick="sw(5)">모의고사①<br><small>25문항</small></button>
-  <button class="tab" data-t="6" onclick="sw(6)">모의고사②<br><small>25문항</small></button>
+  <button class="tab on" data-t="0" onclick="sw(0)">어휘 실전<br><small>7문항·p.185</small></button>
+  <button class="tab" data-t="1" onclick="sw(1)">어휘 심화<br><small>13문항·pp.186-187</small></button>
+  <button class="tab" data-t="2" onclick="sw(2)">Dialog<br><small>14문항·pp.196-197</small></button>
+  <button class="tab" data-t="3" onclick="sw(3)">Grammar<br><small>14문항·pp.204-205</small></button>
+  <button class="tab" data-t="4" onclick="sw(4)">Reading<br><small>25문항·pp.216-219</small></button>
+  <button class="tab" data-t="5" onclick="sw(5)">모의고사①<br><small>25문항·pp.230-233</small></button>
+  <button class="tab" data-t="6" onclick="sw(6)">모의고사②<br><small>25문항·pp.288-291</small></button>
 </div>
 <div class="panel on p0" id="p0">
   <div class="attbar"><span>도전 횟수: <strong id="at0">0</strong>회</span><button class="reset-btn" onclick="resetTab(0)">🔄 초기화</button></div>
@@ -147,7 +147,7 @@
   <div class="sbar"><div class="sbar-top"><div class="snum" id="sn6">0 <span>/ 25</span></div><div class="spct" id="sp6">0%</div></div><div class="bout"><div class="bin" id="bn6"></div></div><div class="sdet" id="sd6">답을 입력하고 채점해보세요</div></div>
   <div id="omr6"></div>
 </div>
-<div class="fw"><button class="fb" data-ft="0" id="fb" onclick="showResult()">📊 채점 결과 보기</button></div>
+<div class="fw"><button class="fb" data-ft="0" id="fb" onclick="submitTab()">✅ 제출하고 채점</button></div>
 <div class="ov" id="ov">
   <div class="mod"><div class="me" id="me">🎉</div><div class="mt" id="mt">결과</div><div class="ms" id="msc"></div><div class="mb" id="mb"></div><button class="mc" onclick="closeOv()">확인</button></div>
 </div>
@@ -156,186 +156,145 @@ const A=[[{"t": "mc", "a": 2}, {"t": "short", "a": ["shadow"]}, {"t": "mc", "a":
 
 const TOTAL=[7,13,14,14,25,25,25];
 const ATK=['jc1s0','jc1s1','jc1s2','jc1s3','jc1s4','jc1s5','jc1s6'];
+const SKEY=['jc1d0','jc1d1','jc1d2','jc1d3','jc1d4','jc1d5','jc1d6'];
+const LABELS=["📘 Vocabulary 실전문제 (7문항 · p.185)","📗 Vocabulary 심화문제 (13문항 · pp.186-187)","📙 Dialog 실전문제 (14문항 · pp.196-197)","📕 Grammar 실전문제 (14문항 · pp.204-205)","📖 Reading 실전문제 (25문항 · pp.216-219)","📝 100발100중 모의고사 ① (25문항 · pp.230-233)","📝 100발100중 모의고사 ② (25문항 · pp.288-291)"];
 let cur=0;
-const sub=[{},{},{},{},{},{},{}];
+const picks=A.map(()=>({}));
 const msel={};
-const tf4st={};
+const submitted=A.map(()=>false);
+const sub=A.map(()=>({}));
 
 function init(){
-  [0,1,2,3,4,5,6].forEach(t=>{
-    document.getElementById('at'+t).textContent=localStorage.getItem(ATK[t])||'0';
-    buildOMR(t);
-  });
+  A.forEach((_,t)=>{ document.getElementById('at'+t).textContent=localStorage.getItem(ATK[t])||'0'; buildOMR(t); });
   loadState();
-  restoreUI();
+  A.forEach((_,t)=>{ if(submitted[t]) gradeTab(t); updScore(t); });
   updFloat();
 }
 
 function buildOMR(t){
-  const data=A[t];
-  const el=document.getElementById('omr'+t);
-  el.innerHTML='';
-  const box=document.createElement('div');box.className='omrbox';
-  const labels=["📘 Vocabulary 실전문제 (7문항)", "📗 Vocabulary 심화문제 (13문항)", "📙 Dialog 실전문제 (14문항)", "📕 Grammar 실전문제 (14문항)", "📖 Reading 실전문제 (25문항)", "📝 100발100중 모의고사 ① (25문항)", "📝 100발100중 모의고사 ② (25문항)"];
-  box.innerHTML=`<h3>${labels[t]}</h3>`;
+  const data=A[t]; const el=document.getElementById('omr'+t); el.innerHTML='';
+  const box=document.createElement('div'); box.className='omrbox';
+  box.innerHTML=`<h3>${LABELS[t]}</h3>`;
   data.forEach((q,i)=>{
-    const row=document.createElement('div');row.className='orow';row.id=`r${t}_${i}`;
-    const lbl=document.createElement('div');lbl.className='qlbl';lbl.textContent=i+1;row.appendChild(lbl);
-    const ic=document.createElement('div');ic.className='ricon';ic.id=`ic${t}_${i}`;ic.textContent='?';row.appendChild(ic);
-    const ia=document.createElement('div');ia.style.flex='1';
-
+    const row=document.createElement('div'); row.className='orow'; row.id=`r${t}_${i}`;
+    const lbl=document.createElement('div'); lbl.className='qlbl'; lbl.textContent=i+1; row.appendChild(lbl);
+    const ic=document.createElement('div'); ic.className='ricon'; ic.id=`ic${t}_${i}`; ic.textContent='?'; row.appendChild(ic);
+    const ia=document.createElement('div'); ia.style.flex='1';
     if(q.t==='mc'){
-      const chs=document.createElement('div');chs.className='chs';
-      '①②③④⑤'.split('').forEach((ch,ni)=>{
-        const b=document.createElement('button');b.className='cb';b.textContent=ch;b.id=`cb${t}_${i}_${ni+1}`;b.onclick=()=>selMC(t,i,ni+1);chs.appendChild(b);
-      });ia.appendChild(chs);
-    }else if(q.t==='multi'){
-      const note=document.createElement('div');note.className='multi-note';note.textContent='(모두 선택)';const ma=document.createElement('div');ma.className='ma';ma.appendChild(note);
-      const mr=document.createElement('div');mr.className='mr';msel[`${t}_${i}`]=[];
-      '①②③④⑤'.split('').forEach((ch,ni)=>{
-        const b=document.createElement('button');b.className='cb';b.textContent=ch;b.id=`mc${t}_${i}_${ni+1}`;b.onclick=()=>togMulti(t,i,ni+1);mr.appendChild(b);
-      });
-      const ms=document.createElement('button');ms.className='msub';ms.textContent='선택 완료';ms.id=`ms${t}_${i}`;ms.onclick=()=>chkMulti(t,i);
-      ma.appendChild(mr);ma.appendChild(ms);ia.appendChild(ma);
-    }else if(q.t==='short'){
-      const sw=document.createElement('div');sw.className='sw';
-      const inp=document.createElement('input');inp.className='si';inp.type='text';inp.placeholder='정답 입력';inp.autocomplete='off';inp.spellcheck=false;inp.id=`si${t}_${i}`;inp.onkeydown=e=>{if(e.key==='Enter')chkShort(t,i);};
-      const gb=document.createElement('button');gb.className='gbtn';gb.textContent='확인';gb.id=`gb${t}_${i}`;gb.onclick=()=>chkShort(t,i);
-      sw.appendChild(inp);sw.appendChild(gb);ia.appendChild(sw);
-    }else if(q.t==='short_multi'){
-      const wrap=document.createElement('div');wrap.className='smwrap';
-      q.rows.forEach((lbl2,si)=>{
-        const r2=document.createElement('div');r2.className='smrow';
-        const tag=document.createElement('span');tag.className='smlbl';tag.textContent=lbl2;
-        const inp=document.createElement('input');inp.className='si';inp.type='text';inp.placeholder='입력';inp.autocomplete='off';inp.spellcheck=false;inp.id=`si${t}_${i}_${si}`;inp.onkeydown=e=>{if(e.key==='Enter')chkShortMulti(t,i);};
-        r2.appendChild(tag);r2.appendChild(inp);wrap.appendChild(r2);
-      });
-      const gb=document.createElement('button');gb.className='gbtn';gb.textContent='확인';gb.id=`gb${t}_${i}`;gb.onclick=()=>chkShortMulti(t,i);
-      wrap.appendChild(gb);ia.appendChild(wrap);
-    }else if(q.t==='tf4'){
-      const wrap=document.createElement('div');wrap.className='tf4wrap';
-      tf4st[`${t}_${i}`]={};
-      q.a.forEach((_,si)=>{
-        const r2=document.createElement('div');r2.className='tf4row';
-        const tag=document.createElement('span');tag.className='tf4lbl';tag.textContent='('+String(si+1)+')';
-        const btns=document.createElement('div');btns.className='tf4btns';
-        ['T','F'].forEach(v=>{
-          const b=document.createElement('button');b.className='cb';b.textContent=v;b.style.width='32px';b.id=`tf4${t}_${i}_${si}_${v}`;b.onclick=()=>selTF4(t,i,si,v);btns.appendChild(b);
-        });
-        r2.appendChild(tag);r2.appendChild(btns);wrap.appendChild(r2);
-      });
-      ia.appendChild(wrap);
+      const chs=document.createElement('div'); chs.className='chs';
+      '①②③④⑤'.split('').forEach((ch,ni)=>{ const b=document.createElement('button'); b.className='cb'; b.textContent=ch; b.id=`cb${t}_${i}_${ni+1}`; b.onclick=()=>selMC(t,i,ni+1); chs.appendChild(b); });
+      ia.appendChild(chs);
+    } else if(q.t==='multi'){
+      const note=document.createElement('div'); note.className='multi-note'; note.textContent='(모두 선택)';
+      const ma=document.createElement('div'); ma.className='ma'; ma.appendChild(note);
+      const mr=document.createElement('div'); mr.className='mr'; msel[`${t}_${i}`]=[];
+      '①②③④⑤'.split('').forEach((ch,ni)=>{ const b=document.createElement('button'); b.className='cb'; b.textContent=ch; b.id=`mc${t}_${i}_${ni+1}`; b.onclick=()=>togMulti(t,i,ni+1); mr.appendChild(b); });
+      ma.appendChild(mr); ia.appendChild(ma);
+    } else if(q.t==='short'){
+      const sw2=document.createElement('div'); sw2.className='sw';
+      const inp=document.createElement('input'); inp.className='si'; inp.type='text'; inp.placeholder='정답 입력'; inp.autocomplete='off'; inp.spellcheck=false; inp.id=`si${t}_${i}`;
+      inp.oninput=()=>{ updScore(t); updFloat(); saveState(t); };
+      sw2.appendChild(inp); ia.appendChild(sw2);
     }
-    row.appendChild(ia);box.appendChild(row);
+    row.appendChild(ia); box.appendChild(row);
   });
   el.appendChild(box);
 }
 
 function selMC(t,i,n){
-  if(sub[t][i]!==undefined)return;
-  '①②③④⑤'.split('').forEach((_,x)=>{const b=document.getElementById(`cb${t}_${i}_${x+1}`);if(b)b.classList.toggle('sel',x+1===n);});
-  const ok=(n===A[t][i].a);
-  mark(t,i,ok);
-  const btn=document.getElementById(`cb${t}_${i}_${n}`);if(btn)btn.classList.add(ok?'ok':'ng');
-  '①②③④⑤'.split('').forEach((_,x)=>{const b=document.getElementById(`cb${t}_${i}_${x+1}`);if(b)b.disabled=true;});
-  updScore(t);
+  if(submitted[t])return;
+  picks[t][i]=n;
+  '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`cb${t}_${i}_${x+1}`); if(b)b.classList.toggle('sel',x+1===n); });
+  saveState(t); updScore(t); updFloat();
 }
 
 function togMulti(t,i,n){
-  if(sub[t][i]!==undefined)return;
-  const k=`${t}_${i}`;const arr=msel[k];const b=document.getElementById(`mc${t}_${i}_${n}`);
-  if(arr.includes(n)){msel[k]=arr.filter(x=>x!==n);if(b)b.classList.remove('sel');}else{arr.push(n);if(b)b.classList.add('sel');}
+  if(submitted[t])return;
+  const k=`${t}_${i}`; const arr=msel[k]||[]; msel[k]=arr;
+  const b=document.getElementById(`mc${t}_${i}_${n}`);
+  if(arr.includes(n)){ msel[k]=arr.filter(x=>x!==n); if(b)b.classList.remove('sel'); }
+  else { arr.push(n); if(b)b.classList.add('sel'); }
+  saveState(t); updScore(t); updFloat();
 }
 
-function chkMulti(t,i){
-  if(sub[t][i]!==undefined)return;
-  const sel=[...msel[`${t}_${i}`]].sort((a,b)=>a-b);const ans=[...A[t][i].a].sort((a,b)=>a-b);
-  const ok=JSON.stringify(sel)===JSON.stringify(ans);
-  '①②③④⑤'.split('').forEach((_,x)=>{const b=document.getElementById(`mc${t}_${i}_${x+1}`);if(b){b.disabled=true;if(sel.includes(x+1))b.classList.add(ok?'ok':'ng');}});
-  const ms=document.getElementById(`ms${t}_${i}`);if(ms)ms.disabled=true;
-  mark(t,i,ok);updScore(t);
-}
-
-function chkShort(t,i){
-  if(sub[t][i]!==undefined)return;
-  const inp=document.getElementById(`si${t}_${i}`);const val=inp.value.trim().toLowerCase();if(!val)return;
-  const ans=A[t][i].a;
-  const ok=ans.some(a=>val===a.toLowerCase()||val.includes(a.toLowerCase())||a.toLowerCase().includes(val));
-  inp.disabled=true;inp.classList.add(ok?'ok':'ng');
-  const gb=document.getElementById(`gb${t}_${i}`);if(gb)gb.disabled=true;
-  mark(t,i,ok);updScore(t);
-}
-
-function chkShortMulti(t,i){
-  if(sub[t][i]!==undefined)return;
+function isAnswered(t,i){
   const q=A[t][i];
-  const results=q.a.map((ans,si)=>{
-    const inp=document.getElementById(`si${t}_${i}_${si}`);const val=(inp?inp.value.trim().toLowerCase():'');
-    const ok=ans.some(a=>val===a.toLowerCase()||val.includes(a.toLowerCase())||a.toLowerCase().includes(val));
-    if(inp){inp.disabled=true;inp.classList.add(ok?'ok':'ng');}return ok;
+  if(q.t==='mc') return picks[t][i]!==undefined;
+  if(q.t==='multi') return (msel[`${t}_${i}`]||[]).length>0;
+  if(q.t==='short'){ const inp=document.getElementById(`si${t}_${i}`); return !!(inp&&inp.value.trim()); }
+  return false;
+}
+function countAnswered(t){ let c=0; A[t].forEach((q,i)=>{ if(isAnswered(t,i))c++; }); return c; }
+
+function gradeTab(t){
+  A[t].forEach((q,i)=>{
+    const ic=document.getElementById(`ic${t}_${i}`);
+    if(q.t==='mc'){
+      const n=picks[t][i], cor=q.a;
+      '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`cb${t}_${i}_${x+1}`); if(!b)return; b.disabled=true; b.classList.remove('sel'); if(x+1===cor)b.classList.add('ok'); if(n!==undefined&&x+1===n&&n!==cor)b.classList.add('ng'); });
+      if(n!==undefined){ const ok=n===cor; sub[t][i]=ok; if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }
+      else if(ic){ ic.textContent='-'; ic.className='ricon'; }
+    } else if(q.t==='multi'){
+      const sel=[...(msel[`${t}_${i}`]||[])].sort((a,b)=>a-b); const ans=[...q.a].sort((a,b)=>a-b); const has=sel.length>0; const ok=has&&JSON.stringify(sel)===JSON.stringify(ans);
+      '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`mc${t}_${i}_${x+1}`); if(!b)return; b.disabled=true; b.classList.remove('sel'); if(ans.includes(x+1))b.classList.add('ok'); if(sel.includes(x+1)&&!ans.includes(x+1))b.classList.add('ng'); });
+      if(has){ sub[t][i]=ok; if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }
+      else if(ic){ ic.textContent='-'; ic.className='ricon'; }
+    } else if(q.t==='short'){
+      const inp=document.getElementById(`si${t}_${i}`); const val=inp?inp.value.trim().toLowerCase():'';
+      if(inp)inp.disabled=true;
+      if(val){ const ok=q.a.some(a=>val===a.toLowerCase()||val.includes(a.toLowerCase())||a.toLowerCase().includes(val)); sub[t][i]=ok; if(inp)inp.classList.add(ok?'ok':'ng'); if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }
+      else if(ic){ ic.textContent='-'; ic.className='ricon'; }
+    }
   });
-  const gb=document.getElementById(`gb${t}_${i}`);if(gb)gb.disabled=true;
-  mark(t,i,results.every(v=>v));updScore(t);
 }
 
-function selTF4(t,i,si,v){
-  const key=`${t}_${i}`;
-  if(tf4st[key][si]!==undefined)return;
-  tf4st[key][si]=v;
-  const correct=(v===A[t][i].a[si]);
-  ['T','F'].forEach(x=>{const b=document.getElementById(`tf4${t}_${i}_${si}_${x}`);if(b){b.disabled=true;if(x===v){b.classList.add('sel');b.classList.add(correct?'ok':'ng');}}});
-  if(Object.keys(tf4st[key]).length===A[t][i].a.length){
-    const allOk=A[t][i].a.every((_,idx)=>tf4st[key][idx]===A[t][i].a[idx]);
-    mark(t,i,allOk);updScore(t);
-  }
-}
-
-function mark(t,i,ok){
-  sub[t][i]=ok;
-  saveState(t);
-  const ic=document.getElementById(`ic${t}_${i}`);if(ic){ic.textContent=ok?'O':'X';ic.className='ricon '+(ok?'ok':'ng');}
-  updFloat();
+function submitTab(){
+  const t=cur;
+  if(submitted[t]){ showResult(); return; }
+  const ans=countAnswered(t);
+  if(ans===0){ alert('먼저 답을 입력해주세요!'); return; }
+  if(ans<TOTAL[t] && !confirm('아직 '+(TOTAL[t]-ans)+'문항이 비어 있어요. 제출하고 채점할까요?')) return;
+  submitted[t]=true;
+  gradeTab(t);
+  const att=parseInt(localStorage.getItem(ATK[t])||'0')+1; localStorage.setItem(ATK[t],att); document.getElementById('at'+t).textContent=att;
+  saveState(t); updScore(t); updFloat(); showResult();
 }
 
 function updScore(t){
-  const total=TOTAL[t];const done=Object.keys(sub[t]).length;const correct=Object.values(sub[t]).filter(v=>v).length;const pct=done>0?Math.round(correct/done*100):0;
-  document.getElementById('sn'+t).innerHTML=`${correct} <span>/ ${total}</span>`;
-  document.getElementById('sp'+t).textContent=pct+'%';
-  document.getElementById('bn'+t).style.width=(done/total*100)+'%';
-  document.getElementById('sd'+t).textContent=`응답 ${done}/${total} · 정답 ${correct}개 · 오답 ${done-correct}개`;
+  const total=TOTAL[t]; const ans=countAnswered(t); const correct=Object.values(sub[t]).filter(v=>v).length; const g=submitted[t];
+  document.getElementById('sn'+t).innerHTML=`${g?correct:ans} <span>/ ${total}</span>`;
+  document.getElementById('sp'+t).textContent=(g?(ans>0?Math.round(correct/ans*100):0):Math.round(ans/total*100))+'%';
+  document.getElementById('bn'+t).style.width=(ans/total*100)+'%';
+  document.getElementById('sd'+t).textContent= g?`정답 ${correct}개 · 오답 ${ans-correct}개 · 미응답 ${total-ans}개`:`입력 ${ans}/${total}문항`;
 }
 
 function updFloat(){
-  const fb=document.getElementById('fb');const done=Object.keys(sub[cur]).length;
-  fb.setAttribute('data-ft',cur);fb.textContent=done>0?`📊 결과 보기 (${done}/${TOTAL[cur]}문항 응답)`:'📊 채점 결과 보기';
+  const fb=document.getElementById('fb'); fb.setAttribute('data-ft',cur);
+  if(submitted[cur]){ fb.textContent='📊 결과 다시 보기'; }
+  else { const ans=countAnswered(cur); fb.textContent=ans>0?`✅ 제출하고 채점 (${ans}/${TOTAL[cur]})`:'✅ 제출하고 채점'; }
 }
 
 function resetTab(t){
   if(!confirm('이 탭의 모든 답을 초기화할까요?')) return;
-  sub[t]={};
-  tf4st[String(t)+'_'+Object.keys(tf4st).filter(k=>k.startsWith(t+'_')).forEach(k=>delete tf4st[k])];
-  Object.keys(tf4st).filter(k=>k.startsWith(t+'_')).forEach(k=>delete tf4st[k]);
-  localStorage.removeItem('ans_'+t);
-  localStorage.removeItem('vals_'+t);
-  buildOMR(t);
-  updScore(t);
-  updFloat();
+  picks[t]={}; submitted[t]=false; sub[t]={};
+  Object.keys(msel).filter(k=>k.startsWith(t+'_')).forEach(k=>msel[k]=[]);
+  localStorage.removeItem(SKEY[t]);
+  buildOMR(t); updScore(t); updFloat();
 }
 
 function showResult(){
-  const t=cur;const done=Object.keys(sub[t]).length;if(done===0){alert('먼저 답을 입력해주세요!');return;}
-  const correct=Object.values(sub[t]).filter(v=>v).length;const pct=Math.round(correct/done*100);
-  const att=(parseInt(localStorage.getItem(ATK[t])||'0')+1);localStorage.setItem(ATK[t],att);document.getElementById('at'+t).textContent=att;
+  const t=cur; if(!submitted[t]){ submitTab(); return; }
+  const done=Object.keys(sub[t]).length;
+  const correct=Object.values(sub[t]).filter(v=>v).length; const pct=done>0?Math.round(correct/done*100):0;
   const emoji=pct>=90?'🏆':pct>=70?'😊':pct>=50?'🤔':'😅';
   const title=pct>=90?'훌륭해요!':pct>=70?'잘했어요!':pct>=50?'조금 더 노력해요!':'다시 도전해봐요!';
   const cls=pct>=70?'s':pct>=50?'w':'d';
-  document.getElementById('me').textContent=emoji;document.getElementById('mt').textContent=title;
-  document.getElementById('msc').className='ms '+cls;document.getElementById('msc').textContent=`${correct} / ${done}`;
+  document.getElementById('me').textContent=emoji; document.getElementById('mt').textContent=title;
+  document.getElementById('msc').className='ms '+cls; document.getElementById('msc').textContent=`${correct} / ${done}`;
   document.getElementById('mb').textContent=`정답률 ${pct}% · 미응답 ${TOTAL[t]-done}문항`;
   document.getElementById('ov').classList.add('on');
 }
-
-function closeOv(){document.getElementById('ov').classList.remove('on');}
+function closeOv(){ document.getElementById('ov').classList.remove('on'); }
 
 function sw(t){
   cur=t;
@@ -344,97 +303,26 @@ function sw(t){
   updFloat();
 }
 
-
 function saveState(t){
-  localStorage.setItem('ans_'+t, JSON.stringify(sub[t]));
-  // 단답형 입력값도 저장
-  const vals={};
-  A[t].forEach((q,i)=>{
-    if(q.t==='short'||q.t==='tf'){
-      const el=document.getElementById('si'+t+'_'+i)||document.getElementById('tf'+t+'_'+i+'_T')||null;
-      // 값은 sub에서 복원 가능, 별도 저장 필요 없음
-    }
-    if(q.t==='short'||q.t==='short2'||q.t==='short_multi'){
-      const inp0=document.getElementById('si'+t+'_'+i);
-      if(inp0) vals[i+'_0']=inp0.value;
-      const inp1=document.getElementById('si'+t+'_'+i+'_0');
-      if(inp1) vals[i+'_s0']=inp1.value;
-      const inp2=document.getElementById('si'+t+'_'+i+'_1');
-      if(inp2) vals[i+'_s1']=inp2.value;
-    }
-  });
-  localStorage.setItem('vals_'+t, JSON.stringify(vals));
+  const shorts={};
+  A[t].forEach((q,i)=>{ if(q.t==='short'){ const inp=document.getElementById(`si${t}_${i}`); if(inp)shorts[i]=inp.value; } });
+  const multi={}; Object.keys(msel).filter(k=>k.startsWith(t+'_')).forEach(k=>multi[k]=msel[k]);
+  localStorage.setItem(SKEY[t], JSON.stringify({picks:picks[t], multi, shorts, submitted:submitted[t]}));
 }
 
 function loadState(){
-  [0,1,2,3,4,5,6].forEach(t=>{
-    const saved=localStorage.getItem('ans_'+t);
-    if(saved){
-      try{ sub[t]=JSON.parse(saved); }catch(e){}
-    }
-    const savedVals=localStorage.getItem('vals_'+t);
-    if(savedVals){
-      try{
-        const vals=JSON.parse(savedVals);
-        A[t].forEach((q,i)=>{
-          if(vals[i+'_0']!==undefined){
-            const inp=document.getElementById('si'+t+'_'+i);
-            if(inp) inp.value=vals[i+'_0'];
-          }
-          if(vals[i+'_s0']!==undefined){
-            const inp=document.getElementById('si'+t+'_'+i+'_0');
-            if(inp) inp.value=vals[i+'_s0'];
-          }
-          if(vals[i+'_s1']!==undefined){
-            const inp=document.getElementById('si'+t+'_'+i+'_1');
-            if(inp) inp.value=vals[i+'_s1'];
-          }
-        });
-      }catch(e){}
-    }
-  });
-}
-
-function restoreUI(){
-  [0,1,2,3,4,5,6].forEach(t=>{
-    if(!A[t]) return;
-    Object.entries(sub[t]).forEach(([ii,ok])=>{
-      const i=parseInt(ii);
-      const q=A[t][i];if(!q)return;
-      const ic=document.getElementById('ic'+t+'_'+i);
-      if(ic){ic.textContent=ok?'O':'X';ic.className='ricon '+(ok?'ok':'ng');}
-      if(q.t==='mc'||q.t==='ab'){
-        const max=q.t==='ab'?2:5;
-        const pfx=q.t==='ab'?'cb':'cb';
-        for(let x=1;x<=max;x++){const b=document.getElementById(pfx+t+'_'+i+'_'+x);if(b)b.disabled=true;}
-      }
-      if(q.t==='multi'){
-        for(let x=1;x<=5;x++){const b=document.getElementById('mc'+t+'_'+i+'_'+x);if(b)b.disabled=true;}
-        const ms=document.getElementById('ms'+t+'_'+i);if(ms)ms.disabled=true;
-      }
-      if(q.t==='short'||q.t==='short2'||q.t==='short_multi'){
-        const inp=document.getElementById('si'+t+'_'+i);
-        if(inp){inp.disabled=true;inp.classList.add(ok?'ok':'ng');}
-        ['_0','_1'].forEach(s=>{
-          const inp2=document.getElementById('si'+t+'_'+i+s);
-          if(inp2){inp2.disabled=true;}
-        });
-        const gb=document.getElementById('gb'+t+'_'+i);if(gb)gb.disabled=true;
-      }
-      if(q.t==='tf'){
-        ['T','F'].forEach(v=>{const b=document.getElementById('tf'+t+'_'+i+'_'+v);if(b)b.disabled=true;});
-      }
-      if(q.t==='tf4'){
-        q.a.forEach((_,si)=>{
-          ['T','F'].forEach(v=>{const b=document.getElementById('tf4'+t+'_'+i+'_'+si+'_'+v);if(b)b.disabled=true;});
-        });
-      }
-    });
-    updScore(t);
+  A.forEach((_,t)=>{
+    const raw=localStorage.getItem(SKEY[t]); if(!raw)return;
+    let st; try{ st=JSON.parse(raw); }catch(e){ return; }
+    if(st.picks){ picks[t]=st.picks; Object.entries(st.picks).forEach(([i,n])=>{ const b=document.getElementById(`cb${t}_${i}_${n}`); if(b)b.classList.add('sel'); }); }
+    if(st.multi){ Object.entries(st.multi).forEach(([k,arr])=>{ msel[k]=arr.slice(); arr.forEach(n=>{ const b=document.getElementById(`mc${k}_${n}`); if(b)b.classList.add('sel'); }); }); }
+    if(st.shorts){ Object.entries(st.shorts).forEach(([i,v])=>{ const inp=document.getElementById(`si${t}_${i}`); if(inp)inp.value=v; }); }
+    submitted[t]=!!st.submitted;
   });
 }
 
 init();
+
 </script>
 </body>
 </html>
