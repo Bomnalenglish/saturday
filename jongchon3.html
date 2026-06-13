@@ -338,6 +338,15 @@ function renderOMR(week, school) {
   const answers = data.mc;
   const weekNames = {1:'6/13 (1주차)',2:'6/20 (2주차)',3:'6/27 (3주차)'};
 
+  // 객관식 행에 표시할 "실제 문제 번호" 계산
+  // (서술형·복수정답이 차지한 번호를 1..total에서 제외하고 남은 번호를 순서대로 매김)
+  const taken = new Set();
+  (data.essay || []).forEach(item => { const m = String(item.q).match(/\d+/); if (m) taken.add(parseInt(m[0])); });
+  const totalQ = data.total || (answers.length + (data.essay ? data.essay.length : 0));
+  const mcNums = [];
+  for (let n = 1; n <= totalQ && mcNums.length < answers.length; n++) { if (!taken.has(n)) mcNums.push(n); }
+  while (mcNums.length < answers.length) mcNums.push(mcNums.length + 1); // 안전장치
+
   // 객관식
   let mcRows = '';
   for (let i = 0; i < answers.length; i++) {
@@ -355,7 +364,7 @@ function renderOMR(week, school) {
     }
     let icon = '';
     if (submitted) icon = picks[i] === answers[i] ? '<span class="result-icon">✅</span>' : '<span class="result-icon">❌</span>';
-    mcRows += `<div class="answer-row"><span class="q-num">${i+1}</span><div class="choices">${choices}</div>${icon}</div>`;
+    mcRows += `<div class="answer-row"><span class="q-num">${mcNums[i]}</span><div class="choices">${choices}</div>${icon}</div>`;
   }
 
   // 서술형
