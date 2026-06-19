@@ -744,7 +744,7 @@ const SCHOOLS = {
       },
       {
         "n": 4,
-        "type": "mc",
+        "type": "multi",
         "ans": [
           2,
           4
@@ -1140,7 +1140,7 @@ const SCHOOLS = {
       },
       {
         "n": 7,
-        "type": "mc",
+        "type": "multi",
         "ans": [
           3,
           5
@@ -1263,18 +1263,21 @@ function buildSchool(schoolId) {
     const card = document.createElement('div');
     card.className = 'q-card';
     card.id = 'qcard-' + schoolId + '-' + q.n;
-    if (q.type === 'mc') {
-      const isMulti = Array.isArray(q.ans);
+    if (q.type === 'mc' || q.type === 'multi') {
+      const isMulti = (q.type === 'multi');
       let choicesHTML = '';
       for (let i = 1; i <= 5; i++) {
-        choicesHTML += `<button class="choice-btn" id="cb-${schoolId}-${q.n}-${i}" onclick="selectChoice('${schoolId}',${q.n},${i})">${i}</button>`;
+        const _fn = isMulti ? `selectMulti('${schoolId}',${q.n},${i})` : `selectChoice('${schoolId}',${q.n},${i})`;
+        choicesHTML += `<button class="choice-btn" id="cb-${schoolId}-${q.n}-${i}" onclick="${_fn}">${i}</button>`;
       }
+      const _hint = isMulti ? `<div style="font-size:0.75rem;color:var(--accent2);font-weight:700;margin-bottom:6px;">✔️ 복수정답 · 정답 2개를 모두 선택해야 맞음</div>` : '';
       card.innerHTML = `
         <div class="q-top">
           <span class="q-num">Q${q.n}</span>
-          <span class="q-type-badge">${isMulti?'객관식·복수정답':'객관식'}</span>
+          <span class="q-type-badge">${isMulti?'복수정답·2개선택':'객관식'}</span>
           <span class="q-status" id="qs-${schoolId}-${q.n}">⬜</span>
         </div>
+        ${_hint}
         <div class="choices">${choicesHTML}</div>
       `;
     } else {
@@ -1314,6 +1317,21 @@ function selectChoice(schoolId, qNum, choice) {
   }
   const status = document.getElementById(`qs-${schoolId}-${qNum}`);
   if (status) status.textContent = '✏️';
+  updateProgress(schoolId);
+}
+
+function selectMulti(schoolId, qNum, choice) {
+  if (locked[schoolId]) return;
+  let arr = Array.isArray(userAnswers[schoolId][qNum]) ? userAnswers[schoolId][qNum].slice() : [];
+  if (arr.includes(choice)) arr = arr.filter(x => x !== choice);
+  else arr.push(choice);
+  userAnswers[schoolId][qNum] = arr.length ? arr : null;
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.getElementById(`cb-${schoolId}-${qNum}-${i}`);
+    if (btn) btn.classList.toggle('selected', arr.includes(i));
+  }
+  const status = document.getElementById(`qs-${schoolId}-${qNum}`);
+  if (status) status.textContent = arr.length ? '✏️' : '⬜';
   updateProgress(schoolId);
 }
 
@@ -1359,6 +1377,26 @@ function calcScore(schoolId) {
   data.questions.forEach(q => {
     total++;
     const ua = userAnswers[schoolId][q.n];
+    if (q.type === 'multi') {
+      const ansSet = [...q.ans].sort((a,b)=>a-b);
+      const uaArr = Array.isArray(ua) ? [...ua].sort((a,b)=>a-b) : null;
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`cb-${schoolId}-${q.n}-${i}`);
+        if (!btn) continue;
+        btn.classList.remove('selected');
+        btn.style.pointerEvents = 'none';
+      }
+      const card = document.getElementById(`qcard-${schoolId}-${q.n}`);
+      const status = document.getElementById(`qs-${schoolId}-${q.n}`);
+      ansSet.forEach(c => { const cb = document.getElementById(`cb-${schoolId}-${q.n}-${c}`); if (cb) cb.classList.add('correct-ans'); });
+      if (uaArr === null) { unanswered++; if (status) status.textContent = '⬜'; return; }
+      uaArr.forEach(c => { if (!ansSet.includes(c)) { const cb = document.getElementById(`cb-${schoolId}-${q.n}-${c}`); if (cb) { cb.classList.remove('correct-ans'); cb.classList.add('wrong-ans'); } } });
+      const ok = JSON.stringify(uaArr) === JSON.stringify(ansSet);
+      if (card) card.classList.add(ok ? 'correct' : 'wrong');
+      if (status) status.textContent = ok ? '✅' : '❌';
+      if (ok) correct++;
+      return;
+    }
     if (q.type === 'mc') {
       const correctAns = Array.isArray(q.ans) ? q.ans : [q.ans];
       for (let i = 1; i <= 5; i++) {
