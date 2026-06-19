@@ -359,7 +359,7 @@
 
 <div class="header">
   <h1>📝 어진중2 OMR 채점</h1>
-  <p>2025년 중2 영어 1학기 기말 · 동아(윤정미) 백발백중 · 8섹션 140문항</p>
+  <p>2025년 중2 영어 1학기 기말 · 동아(윤정미) 백발백중 · 9섹션 155문항(문법 포함)</p>
 </div>
 
 <div class="week-tabs">
@@ -368,7 +368,8 @@
 
 <div class="section active" id="week1">
   <div class="school-tabs">
-    <button class="school-btn active" onclick="showSchool('w1','s1')">Functions①</button>
+    <button class="school-btn active" onclick="showSchool('w1','gram')">문법</button>
+    <button class="school-btn" onclick="showSchool('w1','s1')">Functions①</button>
     <button class="school-btn" onclick="showSchool('w1','s2')">Grammar①</button>
     <button class="school-btn" onclick="showSchool('w1','s3')">Reading①</button>
     <button class="school-btn" onclick="showSchool('w1','s4')">단원평가①</button>
@@ -378,7 +379,21 @@
     <button class="school-btn" onclick="showSchool('w1','s8')">단원평가②</button>
   </div>
 
-  <div class="school-content active" id="w1-s1">
+  <div class="school-content active" id="w1-gram">
+    <div class="school-title">📖 문법 (직전보강) · 15문항</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-gram"></div></div>
+      <div class="progress-text" id="prog-text-w1-gram">0 / 15 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-gram"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-gram')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-gram"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-gram')">🔄 다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="school-content" id="w1-s1">
     <div class="school-title">📖 Functions Test ① · 10문항 · pp.67-69</div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="prog-w1-s1"></div></div>
@@ -486,6 +501,88 @@
 
 <script>
 const SCHOOLS = {
+  "w1-gram": {
+    "name": "문법",
+    "pp": "직전보강",
+    "title": "문법 (직전보강)",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 1
+      }
+    ]
+  },
   "w1-s1": {
     "name": "Functions①",
     "pp": "pp.67-69",
@@ -1472,7 +1569,7 @@ function showSchool(weekPrefix, schoolKey) {
   const target = document.getElementById(schoolId);
   if (target) target.classList.add('active');
   const btns = weekEl.querySelectorAll('.school-btn');
-  const keys = { w1: ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"] };
+  const keys = { w1: ["gram", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"] };
   const wk = 'w' + weekPrefix.replace('w','');
   const idx = keys[wk].indexOf(schoolKey);
   if (idx >= 0) btns[idx].classList.add('active');
@@ -1480,7 +1577,7 @@ function showSchool(weekPrefix, schoolKey) {
 }
 
 (function init() {
-  buildSchool('w1-s1');
+  buildSchool('w1-gram');
 })();
 </script>
 
