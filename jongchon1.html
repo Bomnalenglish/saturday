@@ -11,8 +11,8 @@
   .hdr{background:linear-gradient(135deg,#0c4a6e,#0ea5e9,#10b981);color:#fff;padding:16px 16px 12px;text-align:center;box-shadow:0 4px 16px rgba(14,165,233,.3);}
   .hdr h1{font-size:1.1rem;font-weight:800;}
   .hdr p{font-size:.73rem;opacity:.8;margin-top:3px;}
-  .tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07);}
-  .tab{flex:1;padding:9px 3px;border:none;background:#fff;font-size:.64rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;line-height:1.3;text-align:center;transition:all .15s;}
+  .tabs{display:flex;flex-wrap:wrap;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+  .tab{flex:1 1 70px;min-width:60px;padding:9px 3px;border:none;background:#fff;font-size:.64rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;line-height:1.3;text-align:center;transition:all .15s;}
   .tab.on[data-t="0"]{color:var(--c1);border-bottom-color:var(--c1);background:var(--c1l);}
   .tab.on[data-t="1"]{color:var(--c2);border-bottom-color:var(--c2);background:var(--c2l);}
   .tab.on[data-t="2"]{color:var(--c3);border-bottom-color:var(--c3);background:var(--c3l);}
@@ -96,79 +96,65 @@
   .fb[data-ft="4"]{background:linear-gradient(135deg,var(--c1),#38bdf8);}
   .fb[data-ft="5"]{background:linear-gradient(135deg,var(--c2),#34d399);}
   .fb[data-ft="6"]{background:linear-gradient(135deg,var(--c3),#fbbf24);}
+
+  .weeks{display:flex;justify-content:center;gap:8px;padding:10px 10px 8px;background:#fff;border-bottom:1px solid var(--border);}
+  .wtab{background:#fff;border:2px solid var(--border);color:var(--muted);padding:7px 20px;border-radius:20px;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;}
+  .wtab.on{border-color:var(--c1);color:var(--c1);background:var(--c1l);box-shadow:0 2px 8px rgba(14,165,233,.18);}
+  .tab.on.k0{color:var(--c1);border-bottom-color:var(--c1);background:var(--c1l);}
+  .tab.on.k1{color:var(--c2);border-bottom-color:var(--c2);background:var(--c2l);}
+  .tab.on.k2{color:var(--c3);border-bottom-color:var(--c3);background:var(--c3l);}
+  .tab.on.k3{color:var(--c4);border-bottom-color:var(--c4);background:var(--c4l);}
+  .bin.k0{background:linear-gradient(90deg,var(--c1),#38bdf8);}
+  .bin.k1{background:linear-gradient(90deg,var(--c2),#34d399);}
+  .bin.k2{background:linear-gradient(90deg,var(--c3),#fbbf24);}
+  .bin.k3{background:linear-gradient(90deg,var(--c4),#f87171);}
+  .fb.k0{background:linear-gradient(135deg,var(--c1),#38bdf8);}
+  .fb.k1{background:linear-gradient(135deg,var(--c2),#34d399);}
+  .fb.k2{background:linear-gradient(135deg,var(--c3),#fbbf24);}
+  .fb.k3{background:linear-gradient(135deg,var(--c4),#f87171);}
 </style>
 </head>
 <body>
 <div class="hdr">
   <h1>📋 종촌중 1학년 OMR 채점</h1>
-  <p>천재(이재영) 백발백중 · 6/13 1주차 | 풀어온 답을 입력하세요</p>
+  <p id="wdesc"></p>
 </div>
-<div class="tabs">
-  <button class="tab on" data-t="0" onclick="sw(0)">어휘 실전<br><small>7문항·p.185</small></button>
-  <button class="tab" data-t="1" onclick="sw(1)">어휘 심화<br><small>13문항·pp.186-187</small></button>
-  <button class="tab" data-t="2" onclick="sw(2)">Dialog<br><small>14문항·pp.196-197</small></button>
-  <button class="tab" data-t="3" onclick="sw(3)">Grammar<br><small>14문항·pp.204-205</small></button>
-  <button class="tab" data-t="4" onclick="sw(4)">Reading<br><small>25문항·pp.216-219</small></button>
-  <button class="tab" data-t="5" onclick="sw(5)">모의고사①<br><small>25문항·pp.230-233</small></button>
-  <button class="tab" data-t="6" onclick="sw(6)">모의고사②<br><small>25문항·pp.288-291</small></button>
+<div class="weeks" id="weeks">
+  <button class="wtab on" onclick="renderWeek(0)">📅 6/13 (1주차)</button>
+  <button class="wtab" onclick="renderWeek(1)">📅 6/20 (2주차)</button>
 </div>
-<div class="panel on p0" id="p0">
-  <div class="attbar"><span>도전 횟수: <strong id="at0">0</strong>회</span><button class="reset-btn" onclick="resetTab(0)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn0">0 <span>/ 7</span></div><div class="spct" id="sp0">0%</div></div><div class="bout"><div class="bin" id="bn0"></div></div><div class="sdet" id="sd0">답을 입력하고 채점해보세요</div></div>
-  <div id="omr0"></div>
-</div>
-<div class="panel p1" id="p1">
-  <div class="attbar"><span>도전 횟수: <strong id="at1">0</strong>회</span><button class="reset-btn" onclick="resetTab(1)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn1">0 <span>/ 13</span></div><div class="spct" id="sp1">0%</div></div><div class="bout"><div class="bin" id="bn1"></div></div><div class="sdet" id="sd1">답을 입력하고 채점해보세요</div></div>
-  <div id="omr1"></div>
-</div>
-<div class="panel p2" id="p2">
-  <div class="attbar"><span>도전 횟수: <strong id="at2">0</strong>회</span><button class="reset-btn" onclick="resetTab(2)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn2">0 <span>/ 14</span></div><div class="spct" id="sp2">0%</div></div><div class="bout"><div class="bin" id="bn2"></div></div><div class="sdet" id="sd2">답을 입력하고 채점해보세요</div></div>
-  <div id="omr2"></div>
-</div>
-<div class="panel p3" id="p3">
-  <div class="attbar"><span>도전 횟수: <strong id="at3">0</strong>회</span><button class="reset-btn" onclick="resetTab(3)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn3">0 <span>/ 14</span></div><div class="spct" id="sp3">0%</div></div><div class="bout"><div class="bin" id="bn3"></div></div><div class="sdet" id="sd3">답을 입력하고 채점해보세요</div></div>
-  <div id="omr3"></div>
-</div>
-<div class="panel p4" id="p4">
-  <div class="attbar"><span>도전 횟수: <strong id="at4">0</strong>회</span><button class="reset-btn" onclick="resetTab(4)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn4">0 <span>/ 25</span></div><div class="spct" id="sp4">0%</div></div><div class="bout"><div class="bin" id="bn4"></div></div><div class="sdet" id="sd4">답을 입력하고 채점해보세요</div></div>
-  <div id="omr4"></div>
-</div>
-<div class="panel p5" id="p5">
-  <div class="attbar"><span>도전 횟수: <strong id="at5">0</strong>회</span><button class="reset-btn" onclick="resetTab(5)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn5">0 <span>/ 25</span></div><div class="spct" id="sp5">0%</div></div><div class="bout"><div class="bin" id="bn5"></div></div><div class="sdet" id="sd5">답을 입력하고 채점해보세요</div></div>
-  <div id="omr5"></div>
-</div>
-<div class="panel p6" id="p6">
-  <div class="attbar"><span>도전 횟수: <strong id="at6">0</strong>회</span><button class="reset-btn" onclick="resetTab(6)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn6">0 <span>/ 25</span></div><div class="spct" id="sp6">0%</div></div><div class="bout"><div class="bin" id="bn6"></div></div><div class="sdet" id="sd6">답을 입력하고 채점해보세요</div></div>
-  <div id="omr6"></div>
-</div>
-<div class="fw"><button class="fb" data-ft="0" id="fb" onclick="submitTab()">✅ 제출하고 채점</button></div>
+<div class="tabs" id="tabs"></div>
+<div id="panels"></div>
+<div class="fw"><button class="fb k0" id="fb" onclick="submitTab()">✅ 제출하고 채점</button></div>
 <div class="ov" id="ov">
   <div class="mod"><div class="me" id="me">🎉</div><div class="mt" id="mt">결과</div><div class="ms" id="msc"></div><div class="mb" id="mb"></div><button class="mc" onclick="closeOv()">확인</button></div>
 </div>
 <script>
-const A=[[{"t": "mc", "a": 2}, {"t": "short", "a": ["shadow"]}, {"t": "mc", "a": 3}, {"t": "short", "a": ["in this way", "this way"]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "short", "a": ["guide"]}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "short", "a": ["add, another", "add another"]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "short", "a": ["turn"]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "short", "a": ["sensor"]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "short", "a": ["helmet, gave, a, try", "helmet gave a try"]}], [{"t": "mc", "a": 3}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "short", "a": ["blue, T-shirt, 70, dollars", "blue T-shirt 70 dollars"]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "short", "a": ["will see", "will"]}, {"t": "mc", "a": 3}, {"t": "short", "a": ["Do you have any questions?"]}, {"t": "mc", "a": 1}, {"t": "short", "a": ["quiet, run, Don't, drinks", "quiet run Don't drinks"]}], [{"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "short", "a": ["will go", "are going to go"]}, {"t": "short", "a": ["Sam told a scary story to us."]}, {"t": "multi", "a": [1, 2]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "short", "a": ["The delivery worker won't bring us the package today."]}], [{"t": "mc", "a": 2}, {"t": "short", "a": ["Look around you."]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "short", "a": ["Can a shadow become an artwork?"]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 3}, {"t": "short", "a": ["It makes an elephant."]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}, {"t": "multi", "a": [2, 5]}, {"t": "mc", "a": 2}, {"t": "short", "a": ["There is no end to art."]}, {"t": "mc", "a": 1}, {"t": "short", "a": ["a different art style to you"]}, {"t": "short", "a": ["Just try new things."]}], [{"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "short", "a": ["sunset, changed", "sunset changed"]}, {"t": "multi", "a": [1, 3]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "short", "a": ["will, buy, will, pay", "will buy will pay"]}, {"t": "multi", "a": [3, 4]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "short", "a": ["I'll show you some pictures of her.", "ill show you some pictures of her"]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "short", "a": ["I'll give some examples to you.", "ill give some examples to you"]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "short", "a": ["Yes, it can.", "yes it can"]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "short", "a": ["can't make, each other", "cant make each other"]}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "short", "a": ["item"]}, {"t": "short", "a": ["robots, VR games", "robots vr games", "ⓐ robots ⓑ vr games"]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "short", "a": ["She is interested in games."]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "multi", "a": [2, 5]}, {"t": "mc", "a": 4}, {"t": "short", "a": ["Do you mind taking"]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "short", "a": ["Choose five items and get off the island."]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "short", "a": ["Making a game was hard"]}, {"t": "short", "a": ["They published the game on the app market."]}]];
+const WEEKS=[{"label": "📅 6/13 (1주차)", "desc": "천재(이재영) 백발백중 · 6/13 1주차 | 풀어온 답을 입력하세요", "tab": [["어휘 실전", "7문항·p.185"], ["어휘 심화", "13문항·pp.186-187"], ["Dialog", "14문항·pp.196-197"], ["Grammar", "14문항·pp.204-205"], ["Reading", "25문항·pp.216-219"], ["모의고사①", "25문항·pp.230-233"], ["모의고사②", "25문항·pp.288-291"]], "full": ["📘 Vocabulary 실전문제 (7문항 · p.185)", "📗 Vocabulary 심화문제 (13문항 · pp.186-187)", "📙 Dialog 실전문제 (14문항 · pp.196-197)", "📕 Grammar 실전문제 (14문항 · pp.204-205)", "📖 Reading 실전문제 (25문항 · pp.216-219)", "📝 100발100중 모의고사 ① (25문항 · pp.230-233)", "📝 100발100중 모의고사 ② (25문항 · pp.288-291)"], "data": [[{"t": "mc", "a": 2}, {"t": "short", "a": ["shadow"]}, {"t": "mc", "a": 3}, {"t": "short", "a": ["in this way", "this way"]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "short", "a": ["guide"]}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "short", "a": ["add, another", "add another"]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "short", "a": ["turn"]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "short", "a": ["sensor"]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "short", "a": ["helmet, gave, a, try", "helmet gave a try"]}], [{"t": "mc", "a": 3}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "short", "a": ["blue, T-shirt, 70, dollars", "blue T-shirt 70 dollars"]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "short", "a": ["will see", "will"]}, {"t": "mc", "a": 3}, {"t": "short", "a": ["Do you have any questions?"]}, {"t": "mc", "a": 1}, {"t": "short", "a": ["quiet, run, Don't, drinks", "quiet run Don't drinks"]}], [{"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "short", "a": ["will go", "are going to go"]}, {"t": "short", "a": ["Sam told a scary story to us."]}, {"t": "multi", "a": [1, 2]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "short", "a": ["The delivery worker won't bring us the package today."]}], [{"t": "mc", "a": 2}, {"t": "short", "a": ["Look around you."]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "short", "a": ["Can a shadow become an artwork?"]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 3}, {"t": "short", "a": ["It makes an elephant."]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}, {"t": "multi", "a": [2, 5]}, {"t": "mc", "a": 2}, {"t": "short", "a": ["There is no end to art."]}, {"t": "mc", "a": 1}, {"t": "short", "a": ["a different art style to you"]}, {"t": "short", "a": ["Just try new things."]}], [{"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "short", "a": ["sunset, changed", "sunset changed"]}, {"t": "multi", "a": [1, 3]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "short", "a": ["will, buy, will, pay", "will buy will pay"]}, {"t": "multi", "a": [3, 4]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "short", "a": ["I'll show you some pictures of her.", "ill show you some pictures of her"]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "short", "a": ["I'll give some examples to you.", "ill give some examples to you"]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "short", "a": ["Yes, it can.", "yes it can"]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "short", "a": ["can't make, each other", "cant make each other"]}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "short", "a": ["item"]}, {"t": "short", "a": ["robots, VR games", "robots vr games", "ⓐ robots ⓑ vr games"]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "short", "a": ["She is interested in games."]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "multi", "a": [2, 5]}, {"t": "mc", "a": 4}, {"t": "short", "a": ["Do you mind taking"]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "short", "a": ["Choose five items and get off the island."]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "short", "a": ["Making a game was hard"]}, {"t": "short", "a": ["They published the game on the app market."]}]]}, {"label": "📅 6/20 (2주차)", "desc": "천재(이재영) 백발백중 4섹션 · 6/20 2주차 | 풀어온 답을 입력하세요", "tab": [["모의고사①", "25문항·pp.234-237"], ["Grammar", "14문항·pp.262-263"], ["Reading", "25문항·pp.274-277"], ["모의고사②", "25문항·pp.292-295"]], "full": ["📝 고득점 모의고사 ① (25문항 · pp.234-237)", "📕 Grammar 실전문제 (14문항 · pp.262-263)", "📖 Reading 실전문제 (25문항 · pp.274-277)", "📝 고득점 모의고사 ② (25문항 · pp.292-295)"], "data": [[{"t": "mc", "a": 1}, {"t": "mc", "a": 4}, {"t": "short", "a": ["(1) theater (2) pulse (3) artworks", "theater pulse artworks", "theater, pulse, artworks"]}, {"t": "multi", "a": [2, 5]}, {"t": "multi", "a": [1, 3]}, {"t": "mc", "a": 1}, {"t": "short", "a": ["She is going to buy a small flower key ring."]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "short", "a": ["Can I have, I'll make, for, Can you wait, I'll wash", "Can I have I will make for Can you wait I will wash"]}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "mc", "a": 1}, {"t": "short", "a": ["(1) an artwork with a shadow (2) an artwork with box tape", "an artwork using a shadow", "an artwork using box tape"]}, {"t": "mc", "a": 1}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "short", "a": ["Create, Artwork, Everyday", "Create Artwork Everyday"]}, {"t": "mc", "a": 4}, {"t": "short", "a": ["There is no end to art."]}, {"t": "short", "a": ["(1) can turn your heartbeat into lights (2) Yes, can see their heartbeats, different lights"]}], [{"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 3}, {"t": "short", "a": ["is, at, playing", "is at playing"]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 1}, {"t": "short", "a": ["Eating too much sugar can be harmful to your health."]}, {"t": "mc", "a": 4}, {"t": "short", "a": ["She was upset about not passing the exam."]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "short", "a": ["Having good friends is"]}, {"t": "short", "a": ["The soup tasted terrible."]}], [{"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "short", "a": ["One day you wake up on an island."]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "multi", "a": [2, 3]}, {"t": "short", "a": ["Hyunsu, wrote", "Hyunsu wrote"]}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "short", "a": ["He put all the parts together."]}, {"t": "mc", "a": 4}, {"t": "short", "a": ["were"]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "short", "a": ["more items like a life jacket"]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "short", "a": ["Sumin tested the game."]}, {"t": "short", "a": ["ended too soon"]}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "short", "a": ["Get off"]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "short", "a": ["is Dr. Bien, Zeungnam, robot scientist, made the factory robot", "is Dr. Bien Zeungnam robot scientist made the factory robot"]}, {"t": "multi", "a": [1, 4]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "short", "a": ["(1) stopped doing (2) enjoyed riding", "stopped doing enjoyed riding", "stopped[quit] doing enjoyed riding"]}, {"t": "mc", "a": 5}, {"t": "short", "a": ["(1) eating a snack late at night, losing weight (2) Brushing your teeth well"]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "short", "a": ["Our game looked and sounded good."]}, {"t": "mc", "a": 4}, {"t": "short", "a": ["write a story, make the background music and monster sounds, draw the main character and NPCs, code the game"]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}, {"t": "short", "a": ["adventure, game, has, four, choose, items", "adventure game has four choose items"]}]]}];
+let cw=0, A=[], LABELS=[], TOTAL=[], cur=0;
+let picks=[], msel={}, submitted=[], sub=[];
+function keyD(t){return 'jc1_w'+cw+'_d'+t;}
+function keyS(t){return 'jc1_w'+cw+'_s'+t;}
 
-const TOTAL=[7,13,14,14,25,25,25];
-const ATK=['jc1s0','jc1s1','jc1s2','jc1s3','jc1s4','jc1s5','jc1s6'];
-const SKEY=['jc1d0','jc1d1','jc1d2','jc1d3','jc1d4','jc1d5','jc1d6'];
-const LABELS=["📘 Vocabulary 실전문제 (7문항 · p.185)","📗 Vocabulary 심화문제 (13문항 · pp.186-187)","📙 Dialog 실전문제 (14문항 · pp.196-197)","📕 Grammar 실전문제 (14문항 · pp.204-205)","📖 Reading 실전문제 (25문항 · pp.216-219)","📝 100발100중 모의고사 ① (25문항 · pp.230-233)","📝 100발100중 모의고사 ② (25문항 · pp.288-291)"];
-let cur=0;
-const picks=A.map(()=>({}));
-const msel={};
-const submitted=A.map(()=>false);
-const sub=A.map(()=>({}));
-
-function init(){
-  A.forEach((_,t)=>{ document.getElementById('at'+t).textContent=localStorage.getItem(ATK[t])||'0'; buildOMR(t); });
+function renderWeek(w){
+  cw=w; A=WEEKS[w].data; LABELS=WEEKS[w].full; TOTAL=A.map(s=>s.length);
+  picks=A.map(()=>({})); msel={}; submitted=A.map(()=>false); sub=A.map(()=>({}));
+  document.querySelectorAll('.wtab').forEach((b,i)=>b.classList.toggle('on',i===w));
+  document.getElementById('wdesc').textContent=WEEKS[w].desc;
+  const tabsEl=document.getElementById('tabs'); tabsEl.innerHTML='';
+  WEEKS[w].tab.forEach((tb,i)=>{ const b=document.createElement('button'); b.className='tab k'+(i%4); b.innerHTML=tb[0]+'<br><small>'+tb[1]+'</small>'; b.onclick=()=>sw(i); tabsEl.appendChild(b); });
+  const panelsEl=document.getElementById('panels'); panelsEl.innerHTML='';
+  A.forEach((_,t)=>{
+    const p=document.createElement('div'); p.className='panel'; p.id='p'+t;
+    p.innerHTML=`<div class="attbar"><span>도전 횟수: <strong id="at${t}">0</strong>회</span><button class="reset-btn" onclick="resetTab(${t})">🔄 초기화</button></div>`
+      +`<div class="sbar"><div class="sbar-top"><div class="snum" id="sn${t}">0 <span>/ ${TOTAL[t]}</span></div><div class="spct" id="sp${t}">0%</div></div><div class="bout"><div class="bin k${t%4}" id="bn${t}"></div></div><div class="sdet" id="sd${t}">답을 입력하고 채점해보세요</div></div>`
+      +`<div id="omr${t}"></div>`;
+    panelsEl.appendChild(p);
+  });
+  A.forEach((_,t)=>{ document.getElementById('at'+t).textContent=localStorage.getItem(keyS(t))||'0'; buildOMR(t); });
   loadState();
   A.forEach((_,t)=>{ if(submitted[t]) gradeTab(t); updScore(t); });
-  updFloat();
+  cur=0; sw(0);
 }
 
 function buildOMR(t){
@@ -185,7 +171,7 @@ function buildOMR(t){
       '①②③④⑤'.split('').forEach((ch,ni)=>{ const b=document.createElement('button'); b.className='cb'; b.textContent=ch; b.id=`cb${t}_${i}_${ni+1}`; b.onclick=()=>selMC(t,i,ni+1); chs.appendChild(b); });
       ia.appendChild(chs);
     } else if(q.t==='multi'){
-      const note=document.createElement('div'); note.className='multi-note'; note.textContent='(모두 선택)';
+      const note=document.createElement('div'); note.className='multi-note'; note.textContent='✔️ 복수정답 · 모두 선택해야 정답';
       const ma=document.createElement('div'); ma.className='ma'; ma.appendChild(note);
       const mr=document.createElement('div'); mr.className='mr'; msel[`${t}_${i}`]=[];
       '①②③④⑤'.split('').forEach((ch,ni)=>{ const b=document.createElement('button'); b.className='cb'; b.textContent=ch; b.id=`mc${t}_${i}_${ni+1}`; b.onclick=()=>togMulti(t,i,ni+1); mr.appendChild(b); });
@@ -207,7 +193,6 @@ function selMC(t,i,n){
   '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`cb${t}_${i}_${x+1}`); if(b)b.classList.toggle('sel',x+1===n); });
   saveState(t); updScore(t); updFloat();
 }
-
 function togMulti(t,i,n){
   if(submitted[t])return;
   const k=`${t}_${i}`; const arr=msel[k]||[]; msel[k]=arr;
@@ -256,7 +241,7 @@ function submitTab(){
   if(ans<TOTAL[t] && !confirm('아직 '+(TOTAL[t]-ans)+'문항이 비어 있어요. 제출하고 채점할까요?')) return;
   submitted[t]=true;
   gradeTab(t);
-  const att=parseInt(localStorage.getItem(ATK[t])||'0')+1; localStorage.setItem(ATK[t],att); document.getElementById('at'+t).textContent=att;
+  const att=parseInt(localStorage.getItem(keyS(t))||'0')+1; localStorage.setItem(keyS(t),att); document.getElementById('at'+t).textContent=att;
   saveState(t); updScore(t); updFloat(); showResult();
 }
 
@@ -269,7 +254,7 @@ function updScore(t){
 }
 
 function updFloat(){
-  const fb=document.getElementById('fb'); fb.setAttribute('data-ft',cur);
+  const fb=document.getElementById('fb'); fb.className='fb k'+(cur%4);
   if(submitted[cur]){ fb.textContent='📊 결과 다시 보기'; }
   else { const ans=countAnswered(cur); fb.textContent=ans>0?`✅ 제출하고 채점 (${ans}/${TOTAL[cur]})`:'✅ 제출하고 채점'; }
 }
@@ -278,7 +263,7 @@ function resetTab(t){
   if(!confirm('이 탭의 모든 답을 초기화할까요?')) return;
   picks[t]={}; submitted[t]=false; sub[t]={};
   Object.keys(msel).filter(k=>k.startsWith(t+'_')).forEach(k=>msel[k]=[]);
-  localStorage.removeItem(SKEY[t]);
+  localStorage.removeItem(keyD(t));
   buildOMR(t); updScore(t); updFloat();
 }
 
@@ -298,8 +283,8 @@ function closeOv(){ document.getElementById('ov').classList.remove('on'); }
 
 function sw(t){
   cur=t;
-  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('on',i===t));
-  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('on',i===t));
+  document.querySelectorAll('#tabs .tab').forEach((b,i)=>b.classList.toggle('on',i===t));
+  document.querySelectorAll('#panels .panel').forEach((p,i)=>p.classList.toggle('on',i===t));
   updFloat();
 }
 
@@ -307,12 +292,11 @@ function saveState(t){
   const shorts={};
   A[t].forEach((q,i)=>{ if(q.t==='short'){ const inp=document.getElementById(`si${t}_${i}`); if(inp)shorts[i]=inp.value; } });
   const multi={}; Object.keys(msel).filter(k=>k.startsWith(t+'_')).forEach(k=>multi[k]=msel[k]);
-  localStorage.setItem(SKEY[t], JSON.stringify({picks:picks[t], multi, shorts, submitted:submitted[t]}));
+  localStorage.setItem(keyD(t), JSON.stringify({picks:picks[t], multi, shorts, submitted:submitted[t]}));
 }
-
 function loadState(){
   A.forEach((_,t)=>{
-    const raw=localStorage.getItem(SKEY[t]); if(!raw)return;
+    const raw=localStorage.getItem(keyD(t)); if(!raw)return;
     let st; try{ st=JSON.parse(raw); }catch(e){ return; }
     if(st.picks){ picks[t]=st.picks; Object.entries(st.picks).forEach(([i,n])=>{ const b=document.getElementById(`cb${t}_${i}_${n}`); if(b)b.classList.add('sel'); }); }
     if(st.multi){ Object.entries(st.multi).forEach(([k,arr])=>{ msel[k]=arr.slice(); arr.forEach(n=>{ const b=document.getElementById(`mc${k}_${n}`); if(b)b.classList.add('sel'); }); }); }
@@ -320,9 +304,7 @@ function loadState(){
     submitted[t]=!!st.submitted;
   });
 }
-
-init();
-
+renderWeek(0);
 </script>
 </body>
 </html>
