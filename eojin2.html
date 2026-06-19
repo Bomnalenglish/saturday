@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>어진중2 OMR 채점</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&family=Teko:wght@600&display=swap');
+
+  :root {
+    --bg: #f5f0e8;
+    --surface: #ffffff;
+    --card: #ffffff;
+    --accent: #2563eb;
+    --accent2: #ea7a17;
+    --green: #16a34a;
+    --red: #dc2626;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a2040 0%, #0f1530 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 20px 16px 16px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(79,142,247,0.15);
+  }
+  .header h1 {
+    font-family: 'Teko', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(79,142,247,0.5);
+  }
+  .header p { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+
+  /* WEEK TABS */
+  .week-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    flex-wrap: wrap;
+  }
+  .week-btn {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    color: var(--muted);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .week-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(79,142,247,0.12);
+    box-shadow: 0 0 12px rgba(79,142,247,0.25);
+  }
+
+  /* SCHOOL TABS */
+  .school-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 16px 16px;
+    flex-wrap: wrap;
+  }
+  .school-btn {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    padding: 7px 16px;
+    border-radius: 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .school-btn.active {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(247,163,79,0.12);
+  }
+
+  /* SECTION */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* SCHOOL CONTENT */
+  .school-content { display: none; padding: 0 12px; }
+  .school-content.active { display: block; }
+
+  .school-title {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 16px;
+    padding: 10px;
+    background: var(--surface);
+    border-radius: 12px;
+    border-left: 4px solid var(--accent2);
+  }
+
+  /* QUESTIONS */
+  .questions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  /* MULTIPLE CHOICE */
+  .q-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .q-card.correct { border-color: var(--green) !important; background: rgba(62,207,110,0.07); }
+  .q-card.wrong { border-color: var(--red) !important; background: rgba(247,80,79,0.07); }
+
+  .q-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .q-num {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(79,142,247,0.15);
+    padding: 3px 10px;
+    border-radius: 8px;
+  }
+  .q-type-badge {
+    font-size: 0.7rem;
+    color: var(--muted);
+    background: var(--surface);
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .q-status { font-size: 1.2rem; }
+
+  .choices {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .choice-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .choice-btn:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
+  .choice-btn.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .choice-btn.correct-ans { background: var(--green); border-color: var(--green); color: #fff; }
+  .choice-btn.wrong-ans { background: var(--red); border-color: var(--red); color: #fff; }
+
+  /* SUBJECTIVE - REVEAL TYPE */
+  .q-subjective {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+  }
+  .reveal-btn {
+    width: 100%;
+    padding: 10px;
+    background: rgba(79,142,247,0.15);
+    border: 1.5px dashed var(--accent);
+    border-radius: 10px;
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .reveal-btn:hover { background: rgba(79,142,247,0.25); }
+
+  .answer-reveal {
+    display: none;
+    margin-top: 10px;
+    background: rgba(62,207,110,0.1);
+    border: 1.5px solid var(--green);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .answer-reveal.show { display: block; }
+  .answer-reveal .label {
+    font-size: 0.75rem;
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .answer-reveal .ans-text {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* SELF CHECK */
+  .self-check {
+    display: none;
+    margin-top: 8px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .self-check.show { display: flex; }
+  .self-o, .self-x {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+  .self-o { background: rgba(62,207,110,0.2); color: var(--green); border: 2px solid var(--green); }
+  .self-x { background: rgba(247,80,79,0.2); color: var(--red); border: 2px solid var(--red); }
+  .self-o.picked { background: var(--green); color: #fff; }
+  .self-x.picked { background: var(--red); color: #fff; }
+
+  /* SCORE */
+  .score-section {
+    max-width: 640px;
+    margin: 20px auto;
+    padding: 0 12px;
+  }
+  .score-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #7b5ef7);
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: 1px;
+    transition: opacity 0.2s;
+    box-shadow: 0 4px 20px rgba(79,142,247,0.4);
+  }
+  .score-btn:hover { opacity: 0.9; }
+
+  .result-box {
+    display: none;
+    margin-top: 14px;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 30px rgba(79,142,247,0.2);
+  }
+  .result-box.show { display: block; }
+  .result-box .big-score {
+    font-family: 'Teko', sans-serif;
+    font-size: 3.5rem;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(79,142,247,0.6);
+  }
+  .result-box .score-label { color: var(--muted); font-size: 0.85rem; margin: 4px 0 12px; }
+  .result-box .detail { font-size: 0.82rem; color: var(--muted); }
+  .result-box .capture-note {
+    margin-top: 14px;
+    padding: 10px;
+    background: rgba(247,163,79,0.15);
+    border: 1.5px solid var(--accent2);
+    border-radius: 10px;
+    color: var(--accent2);
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  /* RESET */
+  .reset-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-top: 8px;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    max-width: 640px;
+    margin: 0 auto 12px;
+    padding: 0 12px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+  .progress-text {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📝 어진중2 OMR 채점</h1>
+  <p>2025년 중2 영어 1학기 기말 · 동아(윤정미) 백발백중 · 8섹션 140문항</p>
+</div>
+
+<div class="week-tabs">
+  <button class="week-btn active" onclick="showWeek(1)">📅 6/20 (2주차)</button>
+</div>
+
+<div class="section active" id="week1">
+  <div class="school-tabs">
+    <button class="school-btn active" onclick="showSchool('w1','s1')">Functions①</button>
+    <button class="school-btn" onclick="showSchool('w1','s2')">Grammar①</button>
+    <button class="school-btn" onclick="showSchool('w1','s3')">Reading①</button>
+    <button class="school-btn" onclick="showSchool('w1','s4')">단원평가①</button>
+    <button class="school-btn" onclick="showSchool('w1','s5')">Functions②</button>
+    <button class="school-btn" onclick="showSchool('w1','s6')">Grammar②</button>
+    <button class="school-btn" onclick="showSchool('w1','s7')">Reading②</button>
+    <button class="school-btn" onclick="showSchool('w1','s8')">단원평가②</button>
+  </div>
+
+  <div class="school-content active" id="w1-s1">
+    <div class="school-title">📖 Functions Test ① · 10문항 · pp.67-69</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s1"></div></div>
+      <div class="progress-text" id="prog-text-w1-s1">0 / 10 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-s1"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-s1')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-s1"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-s1')">🔄 다시 풀기</button>
+    </div>
+  </div>
+  <div class="school-content" id="w1-s2">
+    <div class="school-title">📖 Grammar Test ① · 15문항 · pp.73-75</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s2"></div></div>
+      <div class="progress-text" id="prog-text-w1-s2">0 / 15 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-s2"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-s2')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-s2"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-s2')">🔄 다시 풀기</button>
+    </div>
+  </div>
+  <div class="school-content" id="w1-s3">
+    <div class="school-title">📖 Reading Test ① · 18문항 · pp.79-81</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s3"></div></div>
+      <div class="progress-text" id="prog-text-w1-s3">0 / 18 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-s3"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-s3')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-s3"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-s3')">🔄 다시 풀기</button>
+    </div>
+  </div>
+  <div class="school-content" id="w1-s4">
+    <div class="school-title">📖 단원평가 1회 ① · 27문항 · pp.82-85</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s4"></div></div>
+      <div class="progress-text" id="prog-text-w1-s4">0 / 27 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-s4"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-s4')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-s4"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-s4')">🔄 다시 풀기</button>
+    </div>
+  </div>
+  <div class="school-content" id="w1-s5">
+    <div class="school-title">📖 Functions Test ② · 10문항 · pp.95-97</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s5"></div></div>
+      <div class="progress-text" id="prog-text-w1-s5">0 / 10 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-s5"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-s5')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-s5"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-s5')">🔄 다시 풀기</button>
+    </div>
+  </div>
+  <div class="school-content" id="w1-s6">
+    <div class="school-title">📖 Grammar Test ② · 15문항 · pp.101-103</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s6"></div></div>
+      <div class="progress-text" id="prog-text-w1-s6">0 / 15 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-s6"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-s6')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-s6"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-s6')">🔄 다시 풀기</button>
+    </div>
+  </div>
+  <div class="school-content" id="w1-s7">
+    <div class="school-title">📖 Reading Test ② · 18문항 · pp.107-109</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s7"></div></div>
+      <div class="progress-text" id="prog-text-w1-s7">0 / 18 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-s7"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-s7')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-s7"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-s7')">🔄 다시 풀기</button>
+    </div>
+  </div>
+  <div class="school-content" id="w1-s8">
+    <div class="school-title">📖 단원평가 1회 ② · 27문항 · pp.110-113</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s8"></div></div>
+      <div class="progress-text" id="prog-text-w1-s8">0 / 27 완료</div>
+    </div>
+    <div class="questions-grid" id="qgrid-w1-s8"></div>
+    <div class="score-section">
+      <button class="score-btn" onclick="calcScore('w1-s8')">📊 점수 확인하기</button>
+      <div class="result-box" id="result-w1-s8"></div>
+      <button class="reset-btn" onclick="resetSchool('w1-s8')">🔄 다시 풀기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCHOOLS = {
+  "w1-s1": {
+    "name": "Functions①",
+    "pp": "pp.67-69",
+    "title": "Functions Test ①",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 9,
+        "type": "sub",
+        "ans": "cutting fruit"
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 2
+      }
+    ]
+  },
+  "w1-s2": {
+    "name": "Grammar①",
+    "pp": "pp.73-75",
+    "title": "Grammar Test ①",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 3,
+        "type": "sub",
+        "ans": "I have"
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 7,
+        "type": "sub",
+        "ans": "write → written"
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 9,
+        "type": "sub",
+        "ans": "was painted"
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 11,
+        "type": "sub",
+        "ans": "This book was read by many students"
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 13,
+        "type": "sub",
+        "ans": "ⓐ seen ⓑ watched"
+      },
+      {
+        "n": 14,
+        "type": "sub",
+        "ans": "The classrooms are cleaned by the students."
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 4
+      }
+    ]
+  },
+  "w1-s3": {
+    "name": "Reading①",
+    "pp": "pp.79-81",
+    "title": "Reading Test ①",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 3,
+        "type": "sub",
+        "ans": "Invention Fair"
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 6,
+        "type": "sub",
+        "ans": "is charged"
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 9,
+        "type": "sub",
+        "ans": "The Sitbag is designed for elderly people like her."
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 11,
+        "type": "sub",
+        "ans": "rest"
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 15,
+        "type": "sub",
+        "ans": "old water filters / dirty paint water"
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 18,
+        "type": "sub",
+        "ans": "make our world better"
+      }
+    ]
+  },
+  "w1-s4": {
+    "name": "단원평가①",
+    "pp": "pp.82-85",
+    "title": "단원평가 1회 ①",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": [
+          2,
+          4
+        ]
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 6,
+        "type": "sub",
+        "ans": "보미: 조부모님 방문하기 / 하준: 아빠와 등산가기"
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 8,
+        "type": "sub",
+        "ans": "What is it for"
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 13,
+        "type": "sub",
+        "ans": "My brother was born in 2015."
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 15,
+        "type": "sub",
+        "ans": "had"
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 17,
+        "type": "sub",
+        "ans": "Your phone is charged by this power."
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 19,
+        "type": "sub",
+        "ans": "wind"
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 22,
+        "type": "sub",
+        "ans": "designing → designed"
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 24,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 25,
+        "type": "sub",
+        "ans": "filter"
+      },
+      {
+        "n": 26,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 27,
+        "type": "mc",
+        "ans": 5
+      }
+    ]
+  },
+  "w1-s5": {
+    "name": "Functions②",
+    "pp": "pp.95-97",
+    "title": "Functions Test ②",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 9,
+        "type": "sub",
+        "ans": "Have you heard of the new cafe, Morning Sun?"
+      },
+      {
+        "n": 10,
+        "type": "sub",
+        "ans": "You'll do better next time."
+      }
+    ]
+  },
+  "w1-s6": {
+    "name": "Grammar②",
+    "pp": "pp.101-103",
+    "title": "Grammar Test ②",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 3,
+        "type": "sub",
+        "ans": "to go → go"
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 12,
+        "type": "sub",
+        "ans": "My mom made me wash the dishes."
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 15,
+        "type": "sub",
+        "ans": "a comic book to read"
+      }
+    ]
+  },
+  "w1-s7": {
+    "name": "Reading②",
+    "pp": "pp.107-109",
+    "title": "Reading Test ②",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 5,
+        "type": "sub",
+        "ans": "stuck"
+      },
+      {
+        "n": 6,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 9,
+        "type": "sub",
+        "ans": "to go"
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 14,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 15,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 17,
+        "type": "sub",
+        "ans": "South Georgia"
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 3
+      }
+    ]
+  },
+  "w1-s8": {
+    "name": "단원평가②",
+    "pp": "pp.110-113",
+    "title": "단원평가 1회 ②",
+    "questions": [
+      {
+        "n": 1,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 2,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 3,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 4,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 5,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 6,
+        "type": "sub",
+        "ans": "You'll do better next time."
+      },
+      {
+        "n": 7,
+        "type": "mc",
+        "ans": [
+          3,
+          5
+        ]
+      },
+      {
+        "n": 8,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 9,
+        "type": "mc",
+        "ans": 2
+      },
+      {
+        "n": 10,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 11,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 12,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 13,
+        "type": "mc",
+        "ans": 1
+      },
+      {
+        "n": 14,
+        "type": "sub",
+        "ans": "to sit → to sit on"
+      },
+      {
+        "n": 15,
+        "type": "sub",
+        "ans": "The hot sun made us drink more water."
+      },
+      {
+        "n": 16,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 17,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 18,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 19,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 20,
+        "type": "mc",
+        "ans": 3
+      },
+      {
+        "n": 21,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 22,
+        "type": "sub",
+        "ans": "I had my men get on the three lifeboats."
+      },
+      {
+        "n": 23,
+        "type": "mc",
+        "ans": 5
+      },
+      {
+        "n": 24,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 25,
+        "type": "sub",
+        "ans": "Everyone was saved."
+      },
+      {
+        "n": 26,
+        "type": "mc",
+        "ans": 4
+      },
+      {
+        "n": 27,
+        "type": "mc",
+        "ans": 5
+      }
+    ]
+  }
+};
+
+const userAnswers = {};
+
+function buildSchool(schoolId) {
+  const data = SCHOOLS[schoolId];
+  if (!data) return;
+  const grid = document.getElementById('qgrid-' + schoolId);
+  if (grid.innerHTML !== '') return;
+  userAnswers[schoolId] = {};
+  data.questions.forEach(q => {
+    userAnswers[schoolId][q.n] = null;
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'qcard-' + schoolId + '-' + q.n;
+    if (q.type === 'mc') {
+      const isMulti = Array.isArray(q.ans);
+      let choicesHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        choicesHTML += `<button class="choice-btn" id="cb-${schoolId}-${q.n}-${i}" onclick="selectChoice('${schoolId}',${q.n},${i})">${i}</button>`;
+      }
+      card.innerHTML = `
+        <div class="q-top">
+          <span class="q-num">Q${q.n}</span>
+          <span class="q-type-badge">${isMulti?'객관식·복수정답':'객관식'}</span>
+          <span class="q-status" id="qs-${schoolId}-${q.n}">⬜</span>
+        </div>
+        <div class="choices">${choicesHTML}</div>
+      `;
+    } else {
+      const ansText = Array.isArray(q.ans) ? q.ans.join('\n') : q.ans;
+      card.innerHTML = `
+        <div class="q-top">
+          <span class="q-num">Q${q.n}</span>
+          <span class="q-type-badge">서술형</span>
+          <span class="q-status" id="qs-${schoolId}-${q.n}">⬜</span>
+        </div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px;">정답을 확인 후 O/X로 자가채점하세요</div>
+        <button class="reveal-btn" onclick="revealAns('${schoolId}',${q.n})">🔍 정답 보기</button>
+        <div class="answer-reveal" id="ans-${schoolId}-${q.n}">
+          <div class="label">✅ 정답</div>
+          <div class="ans-text">${ansText.replace(/\n/g,'<br>')}</div>
+        </div>
+        <div class="self-check" id="sc-${schoolId}-${q.n}">
+          <button class="self-o" id="so-${schoolId}-${q.n}" onclick="selfCheck('${schoolId}',${q.n},'o')">⭕ 맞았어요</button>
+          <button class="self-x" id="sx-${schoolId}-${q.n}" onclick="selfCheck('${schoolId}',${q.n},'x')">❌ 틀렸어요</button>
+        </div>
+      `;
+      card.className = 'q-card q-subjective';
+    }
+    grid.appendChild(card);
+  });
+}
+
+const locked = {};
+
+function selectChoice(schoolId, qNum, choice) {
+  if (locked[schoolId]) return;
+  userAnswers[schoolId][qNum] = choice;
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.getElementById(`cb-${schoolId}-${qNum}-${i}`);
+    if (!btn) continue;
+    btn.classList.toggle('selected', i === choice);
+  }
+  const status = document.getElementById(`qs-${schoolId}-${qNum}`);
+  if (status) status.textContent = '✏️';
+  updateProgress(schoolId);
+}
+
+function revealAns(schoolId, qNum) {
+  const ans = document.getElementById(`ans-${schoolId}-${qNum}`);
+  const sc = document.getElementById(`sc-${schoolId}-${qNum}`);
+  ans.classList.add('show');
+  sc.classList.add('show');
+  const revBtn = ans.previousElementSibling;
+  if(revBtn && revBtn.classList.contains('reveal-btn')) revBtn.style.display = 'none';
+}
+
+function selfCheck(schoolId, qNum, result) {
+  if (userAnswers[schoolId][qNum] !== null) return;
+  userAnswers[schoolId][qNum] = result;
+  const card = document.getElementById(`qcard-${schoolId}-${qNum}`);
+  card.classList.add(result === 'o' ? 'correct' : 'wrong');
+  const so = document.getElementById(`so-${schoolId}-${qNum}`);
+  const sx = document.getElementById(`sx-${schoolId}-${qNum}`);
+  if (result === 'o') { so.classList.add('picked'); so.style.pointerEvents='none'; sx.style.pointerEvents='none'; }
+  else { sx.classList.add('picked'); so.style.pointerEvents='none'; sx.style.pointerEvents='none'; }
+  const status = document.getElementById(`qs-${schoolId}-${qNum}`);
+  status.textContent = result === 'o' ? '✅' : '❌';
+  updateProgress(schoolId);
+}
+
+function updateProgress(schoolId) {
+  const data = SCHOOLS[schoolId];
+  const total = data.questions.length;
+  let done = 0;
+  data.questions.forEach(q => { if (userAnswers[schoolId][q.n] !== null) done++; });
+  const pct = (done / total * 100).toFixed(0);
+  const fill = document.getElementById('prog-' + schoolId);
+  const txt = document.getElementById('prog-text-' + schoolId);
+  if (fill) fill.style.width = pct + '%';
+  if (txt) txt.textContent = `${done} / ${total} 완료`;
+}
+
+function calcScore(schoolId) {
+  const data = SCHOOLS[schoolId];
+  let correct = 0, total = 0, unanswered = 0;
+  locked[schoolId] = true;
+  data.questions.forEach(q => {
+    total++;
+    const ua = userAnswers[schoolId][q.n];
+    if (q.type === 'mc') {
+      const correctAns = Array.isArray(q.ans) ? q.ans : [q.ans];
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`cb-${schoolId}-${q.n}-${i}`);
+        if (!btn) continue;
+        btn.classList.remove('selected');
+        btn.style.pointerEvents = 'none';
+      }
+      const card = document.getElementById(`qcard-${schoolId}-${q.n}`);
+      const status = document.getElementById(`qs-${schoolId}-${q.n}`);
+      if (ua === null) {
+        unanswered++;
+        correctAns.forEach(c => { const cb = document.getElementById(`cb-${schoolId}-${q.n}-${c}`); if (cb) cb.classList.add('correct-ans'); });
+        if (status) status.textContent = '⬜';
+        return;
+      }
+      const isCorrect = correctAns.includes(ua);
+      const chosen = document.getElementById(`cb-${schoolId}-${q.n}-${ua}`);
+      if (chosen) chosen.classList.add(isCorrect ? 'correct-ans' : 'wrong-ans');
+      if (!isCorrect) correctAns.forEach(c => { const cb = document.getElementById(`cb-${schoolId}-${q.n}-${c}`); if (cb) cb.classList.add('correct-ans'); });
+      if (card) card.classList.add(isCorrect ? 'correct' : 'wrong');
+      if (status) status.textContent = isCorrect ? '✅' : '❌';
+      if (isCorrect) correct++;
+    } else {
+      if (ua === null) { unanswered++; return; }
+      if (ua === 'o') correct++;
+    }
+  });
+  const answered = total - unanswered;
+  const pct = answered > 0 ? Math.round(correct / answered * 100) : 0;
+  const score = Math.round(correct / total * 100);
+  const resultBox = document.getElementById('result-' + schoolId);
+  resultBox.innerHTML = `
+    <div class="big-score">${score}점</div>
+    <div class="score-label">전체 문항 기준 점수</div>
+    <div class="detail">
+      ${total}문항 중 ${correct}개 정답<br>
+      미응답: ${unanswered}문항 · 정답률: ${pct}%
+    </div>
+    <div class="capture-note">📸 캡처해서 선생님께 제출!</div>
+  `;
+  resultBox.classList.add('show');
+}
+
+function resetSchool(schoolId) {
+  const data = SCHOOLS[schoolId];
+  userAnswers[schoolId] = {};
+  locked[schoolId] = false;
+  data.questions.forEach(q => { userAnswers[schoolId][q.n] = null; });
+  const grid = document.getElementById('qgrid-' + schoolId);
+  grid.innerHTML = '';
+  buildSchool(schoolId);
+  const resultBox = document.getElementById('result-' + schoolId);
+  resultBox.classList.remove('show');
+  resultBox.innerHTML = '';
+  updateProgress(schoolId);
+}
+
+let currentWeek = 1;
+function showWeek(n) {
+  currentWeek = n;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('week' + n).classList.add('active');
+  document.querySelectorAll('.week-btn')[n-1].classList.add('active');
+}
+
+function showSchool(weekPrefix, schoolKey) {
+  const schoolId = weekPrefix + '-' + schoolKey;
+  const weekEl = document.getElementById('week' + weekPrefix.replace('w',''));
+  weekEl.querySelectorAll('.school-content').forEach(s => s.classList.remove('active'));
+  weekEl.querySelectorAll('.school-btn').forEach(b => b.classList.remove('active'));
+  const target = document.getElementById(schoolId);
+  if (target) target.classList.add('active');
+  const btns = weekEl.querySelectorAll('.school-btn');
+  const keys = { w1: ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"] };
+  const wk = 'w' + weekPrefix.replace('w','');
+  const idx = keys[wk].indexOf(schoolKey);
+  if (idx >= 0) btns[idx].classList.add('active');
+  buildSchool(schoolId);
+}
+
+(function init() {
+  buildSchool('w1-s1');
+})();
+</script>
+
+</body>
+</html>

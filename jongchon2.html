@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>종촌중 1학년 OMR 채점</title>
+<title>종촌중 2학년 OMR 채점</title>
 <style>
   :root{--c1:#0ea5e9;--c1l:#e0f2fe;--c2:#10b981;--c2l:#d1fae5;--c3:#f59e0b;--c3l:#fef3c7;--c4:#ef4444;--c4l:#fee2e2;--ok:#16a34a;--okl:#dcfce7;--ng:#dc2626;--ngl:#fee2e2;--bg:#f1f5f9;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;}
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -11,8 +11,9 @@
   .hdr{background:linear-gradient(135deg,#0c4a6e,#0ea5e9,#10b981);color:#fff;padding:16px 16px 12px;text-align:center;box-shadow:0 4px 16px rgba(14,165,233,.3);}
   .hdr h1{font-size:1.1rem;font-weight:800;}
   .hdr p{font-size:.73rem;opacity:.8;margin-top:3px;}
-  .tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07);}
-  .tab{flex:1;padding:9px 3px;border:none;background:#fff;font-size:.64rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;line-height:1.3;text-align:center;transition:all .15s;}
+  
+  .tabs{display:flex;flex-wrap:wrap;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+  .tab{flex:1 1 70px;min-width:60px;padding:9px 3px;border:none;background:#fff;font-size:.64rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;line-height:1.3;text-align:center;transition:all .15s;}
   .tab.on[data-t="0"]{color:var(--c1);border-bottom-color:var(--c1);background:var(--c1l);}
   .tab.on[data-t="1"]{color:var(--c2);border-bottom-color:var(--c2);background:var(--c2l);}
   .tab.on[data-t="2"]{color:var(--c3);border-bottom-color:var(--c3);background:var(--c3l);}
@@ -100,84 +101,88 @@
   .tch-note{font-size:.7rem;font-weight:700;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:6px 9px;}
   .tch-ans{margin-top:5px;font-size:.78rem;color:#1e293b;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:7px 10px;line-height:1.5;}
   .tch-ans b{color:#16a34a;margin-right:4px;}
+
+  /* week bar */
+  .weeks{display:flex;justify-content:center;gap:8px;padding:10px 10px 8px;background:#fff;border-bottom:1px solid var(--border);}
+  .wtab{background:#fff;border:2px solid var(--border);color:var(--muted);padding:7px 20px;border-radius:20px;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;}
+  .wtab.on{border-color:var(--c1);color:var(--c1);background:var(--c1l);box-shadow:0 2px 8px rgba(14,165,233,.18);}
+  /* cycling color classes */
+  .tab.on.k0{color:var(--c1);border-bottom-color:var(--c1);background:var(--c1l);}
+  .tab.on.k1{color:var(--c2);border-bottom-color:var(--c2);background:var(--c2l);}
+  .tab.on.k2{color:var(--c3);border-bottom-color:var(--c3);background:var(--c3l);}
+  .tab.on.k3{color:var(--c4);border-bottom-color:var(--c4);background:var(--c4l);}
+  .bin.k0{background:linear-gradient(90deg,var(--c1),#38bdf8);}
+  .bin.k1{background:linear-gradient(90deg,var(--c2),#34d399);}
+  .bin.k2{background:linear-gradient(90deg,var(--c3),#fbbf24);}
+  .bin.k3{background:linear-gradient(90deg,var(--c4),#f87171);}
+  .fb.k0{background:linear-gradient(135deg,var(--c1),#38bdf8);}
+  .fb.k1{background:linear-gradient(135deg,var(--c2),#34d399);}
+  .fb.k2{background:linear-gradient(135deg,var(--c3),#fbbf24);}
+  .fb.k3{background:linear-gradient(135deg,var(--c4),#f87171);}
+  .multi-note{font-size:.65rem;font-weight:700;color:#7c3aed;margin-bottom:3px;}
 </style>
 </head>
 <body>
 <div class="hdr">
   <h1>📋 종촌중 2학년 OMR 채점</h1>
-  <p>비상(황종배) Lesson 3·4 + 기말 · 6/13 1주차 | 풀어온 답을 입력하세요</p>
+  <p id="wdesc"></p>
 </div>
-<div class="tabs">
-  <button class="tab on" data-t="0" onclick="sw(0)">단원평가 L3<br><small>20문항·pp.96-99</small></button>
-  <button class="tab" data-t="1" onclick="sw(1)">서술형 L3<br><small>5문항·p.100</small></button>
-  <button class="tab" data-t="2" onclick="sw(2)">단원평가 L4<br><small>20문항·pp.126-129</small></button>
-  <button class="tab" data-t="3" onclick="sw(3)">서술형 L4<br><small>5문항·p.130</small></button>
-  <button class="tab" data-t="4" onclick="sw(4)">기말고사<br><small>30문항·pp.133-138</small></button>
+<div class="weeks" id="weeks">
+  <button class="wtab on" onclick="renderWeek(0)">📅 6/13 (1주차)</button>
+  <button class="wtab" onclick="renderWeek(1)">📅 6/20 (2주차)</button>
 </div>
-<div class="panel on p0" id="p0">
-  <div class="attbar"><span>도전 횟수: <strong id="at0">0</strong>회</span><button class="reset-btn" onclick="resetTab(0)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn0">0 <span>/ 20</span></div><div class="spct" id="sp0">0%</div></div><div class="bout"><div class="bin" id="bn0"></div></div><div class="sdet" id="sd0">답을 입력하고 채점해보세요</div></div>
-  <div id="omr0"></div>
-</div>
-<div class="panel p1" id="p1">
-  <div class="attbar"><span>도전 횟수: <strong id="at1">0</strong>회</span><button class="reset-btn" onclick="resetTab(1)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn1">0 <span>/ 5</span></div><div class="spct" id="sp1">0%</div></div><div class="bout"><div class="bin" id="bn1"></div></div><div class="sdet" id="sd1">답을 입력하고 채점해보세요</div></div>
-  <div id="omr1"></div>
-</div>
-<div class="panel p2" id="p2">
-  <div class="attbar"><span>도전 횟수: <strong id="at2">0</strong>회</span><button class="reset-btn" onclick="resetTab(2)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn2">0 <span>/ 20</span></div><div class="spct" id="sp2">0%</div></div><div class="bout"><div class="bin" id="bn2"></div></div><div class="sdet" id="sd2">답을 입력하고 채점해보세요</div></div>
-  <div id="omr2"></div>
-</div>
-<div class="panel p3" id="p3">
-  <div class="attbar"><span>도전 횟수: <strong id="at3">0</strong>회</span><button class="reset-btn" onclick="resetTab(3)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn3">0 <span>/ 5</span></div><div class="spct" id="sp3">0%</div></div><div class="bout"><div class="bin" id="bn3"></div></div><div class="sdet" id="sd3">답을 입력하고 채점해보세요</div></div>
-  <div id="omr3"></div>
-</div>
-<div class="panel p4" id="p4">
-  <div class="attbar"><span>도전 횟수: <strong id="at4">0</strong>회</span><button class="reset-btn" onclick="resetTab(4)">🔄 초기화</button></div>
-  <div class="sbar"><div class="sbar-top"><div class="snum" id="sn4">0 <span>/ 30</span></div><div class="spct" id="sp4">0%</div></div><div class="bout"><div class="bin" id="bn4"></div></div><div class="sdet" id="sd4">답을 입력하고 채점해보세요</div></div>
-  <div id="omr4"></div>
-</div>
-<div class="fw"><button class="fb" data-ft="0" id="fb" onclick="submitTab()">✅ 제출하고 채점</button></div>
+<div class="tabs" id="tabs"></div>
+<div id="panels"></div>
+<div class="fw"><button class="fb k0" id="fb" onclick="submitTab()">✅ 제출하고 채점</button></div>
 <div class="ov" id="ov">
   <div class="mod"><div class="me" id="me">🎉</div><div class="mt" id="mt">결과</div><div class="ms" id="msc"></div><div class="mb" id="mb"></div><button class="mc" onclick="closeOv()">확인</button></div>
 </div>
 <script>
-const A=[[{"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "tch", "a": "to make"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "tch", "a": "sang → sung"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "tch", "a": "Your phone is charged by this power."}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "tch", "a": "(A) thoughtful (B) helpful"}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}], [{"t": "tch", "a": "What is it for?"}, {"t": "tch", "a": "I'm planning [going] to go shopping. / I'm thinking of going shopping."}, {"t": "tch", "a": "Sally has worked at the UN since 2017."}, {"t": "tch", "a": "(1) were closed (2) were washed (3) was cleaned"}, {"t": "tch", "a": "(1) He has ridden bikes for about 10 years. (2) Your phone is charged by this power."}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "tch", "a": "Have you heard of Roald Amundsen"}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 1}, {"t": "mc", "a": 4}, {"t": "tch", "a": "the ship"}, {"t": "tch", "a": "I'll make my men return home safely."}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "tch", "a": "to eat"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}], [{"t": "tch", "a": "You'll do better next time."}, {"t": "tch", "a": "Have you heard of Neil Armstrong"}, {"t": "tch", "a": "(1) wants comic books to read (2) wants a chocolate cake to eat"}, {"t": "tch", "a": "(1) Mom made Jisu clean her room. (2) Mom made Jiho take out the trash. (3) Mom made Jia water the plants."}, {"t": "tch", "a": "먹을 음식이 거의 없고 날씨가 매우 추워서"}], [{"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "multi", "a": [1, 4]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "tch", "a": "a book to read"}, {"t": "mc", "a": 3}, {"t": "tch", "a": "I have ridden bikes for about 10 years."}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "tch", "a": "(A) dirty paint water (B) the Green Art Box"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "tch", "a": "Antarctica, home"}, {"t": "multi", "a": [2, 5]}, {"t": "mc", "a": 2}, {"t": "tch", "a": "16 days"}, {"t": "mc", "a": 1}, {"t": "mc", "a": 4}]];
-
-const ATK=['jc2s0','jc2s1','jc2s2','jc2s3','jc2s4'];
-const SKEY=['jc2d0','jc2d1','jc2d2','jc2d3','jc2d4'];
-const LABELS=["📘 단원평가 Lesson 3 (20문항 · pp.96-99)", "✍️ 서술형평가 Lesson 3 (5문항 · p.100)", "📗 단원평가 Lesson 4 (20문항 · pp.126-129)", "✍️ 서술형평가 Lesson 4 (5문항 · p.130)", "📝 1학기 기말고사 (30문항 · pp.133-138)"];
-let cur=0;
-const picks=A.map(()=>({}));
-const msel={};
-const submitted=A.map(()=>false);
-const sub=A.map(()=>({}));
+const WEEKS=[{"label": "📅 6/13 (1주차)", "desc": "비상(황종배) Lesson 3·4 + 기말 · 6/13 1주차 | 풀어온 답을 입력하세요", "tab": [["단원평가 L3", "20문항·pp.96-99"], ["서술형 L3", "5문항·p.100"], ["단원평가 L4", "20문항·pp.126-129"], ["서술형 L4", "5문항·p.130"], ["기말고사", "30문항·pp.133-138"]], "full": ["📘 단원평가 Lesson 3 (20문항 · pp.96-99)", "✍️ 서술형평가 Lesson 3 (5문항 · p.100)", "📗 단원평가 Lesson 4 (20문항 · pp.126-129)", "✍️ 서술형평가 Lesson 4 (5문항 · p.130)", "📝 1학기 기말고사 (30문항 · pp.133-138)"], "data": [[{"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "tch", "a": "to make"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "tch", "a": "sang → sung"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "tch", "a": "Your phone is charged by this power."}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "tch", "a": "(A) thoughtful (B) helpful"}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}], [{"t": "tch", "a": "What is it for?"}, {"t": "tch", "a": "I'm planning [going] to go shopping. / I'm thinking of going shopping."}, {"t": "tch", "a": "Sally has worked at the UN since 2017."}, {"t": "tch", "a": "(1) were closed (2) were washed (3) was cleaned"}, {"t": "tch", "a": "(1) He has ridden bikes for about 10 years. (2) Your phone is charged by this power."}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "tch", "a": "Have you heard of Roald Amundsen"}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 1}, {"t": "mc", "a": 4}, {"t": "tch", "a": "the ship"}, {"t": "tch", "a": "I'll make my men return home safely."}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "tch", "a": "to eat"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}], [{"t": "tch", "a": "You'll do better next time."}, {"t": "tch", "a": "Have you heard of Neil Armstrong"}, {"t": "tch", "a": "(1) wants comic books to read (2) wants a chocolate cake to eat"}, {"t": "tch", "a": "(1) Mom made Jisu clean her room. (2) Mom made Jiho take out the trash. (3) Mom made Jia water the plants."}, {"t": "tch", "a": "먹을 음식이 거의 없고 날씨가 매우 추워서"}], [{"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "multi", "a": [1, 4]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "tch", "a": "a book to read"}, {"t": "mc", "a": 3}, {"t": "tch", "a": "I have ridden bikes for about 10 years."}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "tch", "a": "(A) dirty paint water (B) the Green Art Box"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "tch", "a": "Antarctica, home"}, {"t": "multi", "a": [2, 5]}, {"t": "mc", "a": 2}, {"t": "tch", "a": "16 days"}, {"t": "mc", "a": 1}, {"t": "mc", "a": 4}]]}, {"label": "📅 6/20 (2주차)", "desc": "동아(윤정미) 백발백중 8섹션 · 6/20 2주차 | 풀어온 답을 입력하세요", "tab": [["Functions①", "10문항·pp.67-69"], ["Grammar①", "15문항·pp.73-75"], ["Reading①", "18문항·pp.79-81"], ["단원평가①", "27문항·pp.82-85"], ["Functions②", "10문항·pp.95-97"], ["Grammar②", "15문항·pp.101-103"], ["Reading②", "18문항·pp.107-109"], ["단원평가②", "27문항·pp.110-113"]], "full": ["Functions Test ① (10문항 · pp.67-69)", "Grammar Test ① (15문항 · pp.73-75)", "Reading Test ① (18문항 · pp.79-81)", "단원평가 1회 ① (27문항 · pp.82-85)", "Functions Test ② (10문항 · pp.95-97)", "Grammar Test ② (15문항 · pp.101-103)", "Reading Test ② (18문항 · pp.107-109)", "단원평가 1회 ② (27문항 · pp.110-113)"], "data": [[{"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "tch", "a": "cutting fruit"}, {"t": "mc", "a": 2}], [{"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "tch", "a": "I have"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "tch", "a": "write → written"}, {"t": "mc", "a": 5}, {"t": "tch", "a": "was painted"}, {"t": "mc", "a": 1}, {"t": "tch", "a": "This book was read by many students"}, {"t": "mc", "a": 4}, {"t": "tch", "a": "ⓐ seen ⓑ watched"}, {"t": "tch", "a": "The classrooms are cleaned by the students."}, {"t": "mc", "a": 4}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "tch", "a": "Invention Fair"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "tch", "a": "is charged"}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "tch", "a": "The Sitbag is designed for elderly people like her."}, {"t": "mc", "a": 5}, {"t": "tch", "a": "rest"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "tch", "a": "old water filters / dirty paint water"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 1}, {"t": "tch", "a": "make our world better"}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "mc", "a": [2, 4]}, {"t": "mc", "a": 3}, {"t": "tch", "a": "보미: 조부모님 방문하기 / 하준: 아빠와 등산가기"}, {"t": "mc", "a": 1}, {"t": "tch", "a": "What is it for"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 1}, {"t": "mc", "a": 2}, {"t": "mc", "a": 1}, {"t": "tch", "a": "My brother was born in 2015."}, {"t": "mc", "a": 1}, {"t": "tch", "a": "had"}, {"t": "mc", "a": 1}, {"t": "tch", "a": "Your phone is charged by this power."}, {"t": "mc", "a": 4}, {"t": "tch", "a": "wind"}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "tch", "a": "designing → designed"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "tch", "a": "filter"}, {"t": "mc", "a": 1}, {"t": "mc", "a": 5}], [{"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "tch", "a": "Have you heard of the new cafe, Morning Sun?"}, {"t": "tch", "a": "You'll do better next time."}], [{"t": "mc", "a": 2}, {"t": "mc", "a": 1}, {"t": "tch", "a": "to go → go"}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}, {"t": "tch", "a": "My mom made me wash the dishes."}, {"t": "mc", "a": 1}, {"t": "mc", "a": 5}, {"t": "tch", "a": "a comic book to read"}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "tch", "a": "stuck"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "tch", "a": "to go"}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "tch", "a": "South Georgia"}, {"t": "mc", "a": 3}], [{"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "tch", "a": "You'll do better next time."}, {"t": "mc", "a": [3, 5]}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "tch", "a": "to sit → to sit on"}, {"t": "tch", "a": "The hot sun made us drink more water."}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "tch", "a": "I had my men get on the three lifeboats."}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "tch", "a": "Everyone was saved."}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}]]}];
+let cw=0, A=[], LABELS=[], cur=0;
+let picks=[], msel={}, submitted=[], sub=[];
+function keyD(t){return 'jc2_w'+cw+'_d'+t;}
+function keyS(t){return 'jc2_w'+cw+'_s'+t;}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function autoTotal(t){return A[t].filter(q=>q.t==='mc'||q.t==='multi').length;}
 function tchTotal(t){return A[t].filter(q=>q.t==='tch').length;}
 
-function init(){
-  A.forEach((_,t)=>{ document.getElementById('at'+t).textContent=localStorage.getItem(ATK[t])||'0'; buildOMR(t); });
+function renderWeek(w){
+  cw=w; A=WEEKS[w].data; LABELS=WEEKS[w].full;
+  picks=A.map(()=>({})); msel={}; submitted=A.map(()=>false); sub=A.map(()=>({}));
+  document.querySelectorAll('.wtab').forEach((b,i)=>b.classList.toggle('on',i===w));
+  document.getElementById('wdesc').textContent=WEEKS[w].desc;
+  const tabsEl=document.getElementById('tabs'); tabsEl.innerHTML='';
+  WEEKS[w].tab.forEach((tb,i)=>{ const b=document.createElement('button'); b.className='tab k'+(i%4); b.innerHTML=esc(tb[0])+'<br><small>'+esc(tb[1])+'</small>'; b.onclick=()=>sw(i); tabsEl.appendChild(b); });
+  const panelsEl=document.getElementById('panels'); panelsEl.innerHTML='';
+  A.forEach((_,t)=>{
+    const p=document.createElement('div'); p.className='panel'; p.id='p'+t;
+    p.innerHTML=`<div class="attbar"><span>도전 횟수: <strong id="at${t}">0</strong>회</span><button class="reset-btn" onclick="resetTab(${t})">🔄 초기화</button></div>`
+      +`<div class="sbar"><div class="sbar-top"><div class="snum" id="sn${t}">0</div><div class="spct" id="sp${t}">0%</div></div><div class="bout"><div class="bin k${t%4}" id="bn${t}"></div></div><div class="sdet" id="sd${t}">답을 입력하고 채점해보세요</div></div>`
+      +`<div id="omr${t}"></div>`;
+    panelsEl.appendChild(p);
+  });
+  A.forEach((_,t)=>{ document.getElementById('at'+t).textContent=localStorage.getItem(keyS(t))||'0'; buildOMR(t); });
   loadState();
   A.forEach((_,t)=>{ if(submitted[t]) gradeTab(t); updScore(t); });
-  updFloat();
+  cur=0; sw(0);
 }
 
 function buildOMR(t){
   const data=A[t]; const el=document.getElementById('omr'+t); el.innerHTML='';
   const box=document.createElement('div'); box.className='omrbox';
-  box.innerHTML=`<h3>${LABELS[t]}</h3>`;
+  box.innerHTML=`<h3>${esc(LABELS[t])}</h3>`;
   data.forEach((q,i)=>{
     const row=document.createElement('div'); row.className='orow'; row.id=`r${t}_${i}`;
     const lbl=document.createElement('div'); lbl.className='qlbl'; lbl.textContent=i+1; row.appendChild(lbl);
     const ic=document.createElement('div'); ic.className='ricon'; ic.id=`ic${t}_${i}`; ic.textContent=(q.t==='tch'?'✍️':'?'); row.appendChild(ic);
     const ia=document.createElement('div'); ia.style.flex='1';
     if(q.t==='mc'){
+      const wrap=document.createElement('div');
+      if(Array.isArray(q.a)){ const note=document.createElement('div'); note.className='multi-note'; note.textContent='(복수정답)'; wrap.appendChild(note); }
       const chs=document.createElement('div'); chs.className='chs';
       '①②③④⑤'.split('').forEach((ch,ni)=>{ const b=document.createElement('button'); b.className='cb'; b.textContent=ch; b.id=`cb${t}_${i}_${ni+1}`; b.onclick=()=>selMC(t,i,ni+1); chs.appendChild(b); });
-      ia.appendChild(chs);
+      wrap.appendChild(chs); ia.appendChild(wrap);
     } else if(q.t==='multi'){
       const note=document.createElement('div'); note.className='multi-note'; note.textContent='(모두 선택)';
       const ma=document.createElement('div'); ma.className='ma'; ma.appendChild(note);
@@ -217,9 +222,9 @@ function gradeTab(t){
   A[t].forEach((q,i)=>{
     const ic=document.getElementById(`ic${t}_${i}`);
     if(q.t==='mc'){
-      const n=picks[t][i], cor=q.a;
-      '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`cb${t}_${i}_${x+1}`); if(!b)return; b.disabled=true; b.classList.remove('sel'); if(x+1===cor)b.classList.add('ok'); if(n!==undefined&&x+1===n&&n!==cor)b.classList.add('ng'); });
-      if(n!==undefined){ const ok=n===cor; sub[t][i]=ok; if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }
+      const n=picks[t][i]; const corList=Array.isArray(q.a)?q.a:[q.a];
+      '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`cb${t}_${i}_${x+1}`); if(!b)return; b.disabled=true; b.classList.remove('sel'); if(corList.includes(x+1))b.classList.add('ok'); if(n!==undefined&&x+1===n&&!corList.includes(n))b.classList.add('ng'); });
+      if(n!==undefined){ const ok=corList.includes(n); sub[t][i]=ok; if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }
       else if(ic){ ic.textContent='-'; ic.className='ricon'; }
     } else if(q.t==='multi'){
       const sel=[...(msel[`${t}_${i}`]||[])].sort((a,b)=>a-b); const ans=[...q.a].sort((a,b)=>a-b); const has=sel.length>0; const ok=has&&JSON.stringify(sel)===JSON.stringify(ans);
@@ -240,7 +245,7 @@ function submitTab(){
   if(auto>0 && ans<auto && !confirm('아직 '+(auto-ans)+'문항이 비어 있어요. 제출하고 채점할까요?')) return;
   submitted[t]=true;
   gradeTab(t);
-  const att=parseInt(localStorage.getItem(ATK[t])||'0')+1; localStorage.setItem(ATK[t],att); document.getElementById('at'+t).textContent=att;
+  const att=parseInt(localStorage.getItem(keyS(t))||'0')+1; localStorage.setItem(keyS(t),att); document.getElementById('at'+t).textContent=att;
   saveState(t); updScore(t); updFloat(); showResult();
 }
 
@@ -259,7 +264,7 @@ function updScore(t){
 }
 
 function updFloat(){
-  const fb=document.getElementById('fb'); fb.setAttribute('data-ft',cur);
+  const fb=document.getElementById('fb'); fb.className='fb k'+(cur%4);
   if(submitted[cur]){ fb.textContent='📊 결과 다시 보기'; }
   else if(autoTotal(cur)===0){ fb.textContent='✍️ 모범답안 보기'; }
   else { const ans=countAnswered(cur); fb.textContent=ans>0?`✅ 제출하고 채점 (${ans}/${autoTotal(cur)})`:'✅ 제출하고 채점'; }
@@ -269,7 +274,7 @@ function resetTab(t){
   if(!confirm('이 탭의 모든 답을 초기화할까요?')) return;
   picks[t]={}; submitted[t]=false; sub[t]={};
   Object.keys(msel).filter(k=>k.startsWith(t+'_')).forEach(k=>msel[k]=[]);
-  localStorage.removeItem(SKEY[t]);
+  localStorage.removeItem(keyD(t));
   buildOMR(t); updScore(t); updFloat();
 }
 
@@ -296,26 +301,25 @@ function closeOv(){ document.getElementById('ov').classList.remove('on'); }
 
 function sw(t){
   cur=t;
-  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('on',i===t));
-  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('on',i===t));
+  document.querySelectorAll('#tabs .tab').forEach((b,i)=>b.classList.toggle('on',i===t));
+  document.querySelectorAll('#panels .panel').forEach((p,i)=>p.classList.toggle('on',i===t));
   updFloat();
 }
 
 function saveState(t){
   const multi={}; Object.keys(msel).filter(k=>k.startsWith(t+'_')).forEach(k=>multi[k]=msel[k]);
-  localStorage.setItem(SKEY[t], JSON.stringify({picks:picks[t], multi, submitted:submitted[t]}));
+  localStorage.setItem(keyD(t), JSON.stringify({picks:picks[t], multi, submitted:submitted[t]}));
 }
 function loadState(){
   A.forEach((_,t)=>{
-    const raw=localStorage.getItem(SKEY[t]); if(!raw)return;
+    const raw=localStorage.getItem(keyD(t)); if(!raw)return;
     let st; try{ st=JSON.parse(raw); }catch(e){ return; }
     if(st.picks){ picks[t]=st.picks; Object.entries(st.picks).forEach(([i,n])=>{ const b=document.getElementById(`cb${t}_${i}_${n}`); if(b)b.classList.add('sel'); }); }
     if(st.multi){ Object.entries(st.multi).forEach(([k,arr])=>{ msel[k]=arr.slice(); arr.forEach(n=>{ const b=document.getElementById(`mc${k}_${n}`); if(b)b.classList.add('sel'); }); }); }
     submitted[t]=!!st.submitted;
   });
 }
-init();
-
+renderWeek(0);
 </script>
 </body>
 </html>
