@@ -3,844 +3,355 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>어진중2 OMR 채점</title>
+<title>어진중 2학년 OMR 채점</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&family=Teko:wght@600&display=swap');
+  :root{--c1:#0ea5e9;--c1l:#e0f2fe;--c2:#10b981;--c2l:#d1fae5;--c3:#f59e0b;--c3l:#fef3c7;--c4:#ef4444;--c4l:#fee2e2;--ok:#16a34a;--okl:#dcfce7;--ng:#dc2626;--ngl:#fee2e2;--bg:#f1f5f9;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Segoe UI','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  .hdr{background:linear-gradient(135deg,#0c4a6e,#0ea5e9,#10b981);color:#fff;padding:16px 16px 12px;text-align:center;box-shadow:0 4px 16px rgba(14,165,233,.3);}
+  .hdr h1{font-size:1.1rem;font-weight:800;}
+  .hdr p{font-size:.73rem;opacity:.8;margin-top:3px;}
+  
+  .tabs{display:flex;flex-wrap:wrap;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+  .tab{flex:1 1 70px;min-width:60px;padding:9px 3px;border:none;background:#fff;font-size:.64rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;line-height:1.3;text-align:center;transition:all .15s;}
+  .tab.on[data-t="0"]{color:var(--c1);border-bottom-color:var(--c1);background:var(--c1l);}
+  .tab.on[data-t="1"]{color:var(--c2);border-bottom-color:var(--c2);background:var(--c2l);}
+  .tab.on[data-t="2"]{color:var(--c3);border-bottom-color:var(--c3);background:var(--c3l);}
+  .tab.on[data-t="3"]{color:var(--c4);border-bottom-color:var(--c4);background:var(--c4l);}
+  .panel{display:none;padding:13px 11px 90px;}
+  .panel.on{display:block;}
+  .sbar{background:#fff;border-radius:12px;padding:12px 15px;margin-bottom:13px;box-shadow:0 1px 4px rgba(0,0,0,.07);}
+  .sbar-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+  .snum{font-size:1.05rem;font-weight:800;}.snum span{font-size:.72rem;font-weight:500;color:var(--muted);}
+  .spct{font-size:.72rem;color:var(--muted);}
+  .bout{height:8px;background:var(--border);border-radius:99px;overflow:hidden;}
+  .bin{height:100%;border-radius:99px;transition:width .4s;width:0;}
+  .p0 .bin{background:linear-gradient(90deg,var(--c1),#38bdf8);}
+  .p1 .bin{background:linear-gradient(90deg,var(--c2),#34d399);}
+  .p2 .bin{background:linear-gradient(90deg,var(--c3),#fbbf24);}
+  .p3 .bin{background:linear-gradient(90deg,var(--c4),#f87171);}
+  .sdet{font-size:.7rem;color:var(--muted);margin-top:5px;}
+  .omrbox{background:#fff;border-radius:13px;padding:13px 11px;box-shadow:0 1px 5px rgba(0,0,0,.07);margin-bottom:11px;}
+  .omrbox h3{font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:9px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+  .orow{display:flex;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f8fafc;gap:5px;}
+  .orow:last-child{border-bottom:none;}
+  .qlbl{width:24px;font-size:.7rem;font-weight:700;color:var(--muted);flex-shrink:0;text-align:right;padding-top:5px;}
+  .ricon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;flex-shrink:0;background:var(--border);color:var(--muted);margin-top:3px;}
+  .ricon.ok{background:var(--okl);color:var(--ok);}
+  .ricon.ng{background:var(--ngl);color:var(--ng);}
+  .chs{display:flex;gap:5px;flex-wrap:wrap;padding-top:2px;}
+  .cb{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:#fafafa;font-size:.82rem;font-weight:700;color:var(--muted);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;}
+  .cb:hover:not(:disabled){border-color:#93c5fd;background:#eff6ff;}
+  .cb.sel{border-color:#3b82f6;background:#dbeafe;color:#1d4ed8;}
+  .cb.sel.ok{border-color:var(--ok);background:var(--okl);color:var(--ok);}
+  .cb.sel.ng{border-color:var(--ng);background:var(--ngl);color:var(--ng);}
+  .cb:disabled{cursor:default;}
+  .tfw{display:flex;gap:5px;padding-top:2px;}
+  .multi-note{font-size:.65rem;font-weight:700;color:#7c3aed;margin-bottom:3px;}
+  .sw{display:flex;gap:5px;align-items:center;flex:1;}
+  .si{flex:1;min-width:0;padding:5px 7px;border:1.5px solid var(--border);border-radius:7px;font-size:.75rem;outline:none;}
+  .si:focus{border-color:#3b82f6;}
+  .si.ok{border-color:var(--ok);background:var(--okl);}
+  .si.ng{border-color:var(--ng);background:var(--ngl);}
+  .si:disabled{cursor:default;}
+  .gbtn{padding:5px 9px;border:none;border-radius:7px;background:#3b82f6;color:#fff;font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .gbtn:disabled{background:var(--muted);cursor:default;}
+  .ma{display:flex;flex-direction:column;gap:3px;flex:1;padding-top:2px;}
+  .mr{display:flex;gap:3px;flex-wrap:wrap;}
+  .msub{padding:4px 9px;border:none;border-radius:7px;background:#7c3aed;color:#fff;font-size:.68rem;font-weight:700;cursor:pointer;width:fit-content;margin-top:2px;}
+  .msub:disabled{background:var(--muted);cursor:default;}
+  .smwrap{display:flex;flex-direction:column;gap:4px;flex:1;}
+  .smrow{display:flex;gap:5px;align-items:center;}
+  .smlbl{font-size:.65rem;font-weight:700;color:var(--muted);white-space:nowrap;min-width:28px;}
+  .tf4wrap{display:flex;flex-direction:column;gap:5px;flex:1;padding-top:2px;}
+  .tf4row{display:flex;gap:6px;align-items:center;}
+  .tf4lbl{font-size:.65rem;font-weight:700;color:var(--muted);white-space:nowrap;min-width:28px;}
+  .tf4btns{display:flex;gap:3px;}
+  .fw{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:200;}
+  .fb{padding:12px 30px;border:none;border-radius:28px;font-size:.85rem;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.2);transition:transform .15s;}
+  .fb:hover{transform:translateY(-2px);}
+  .fb[data-ft="0"]{background:linear-gradient(135deg,var(--c1),#38bdf8);}
+  .fb[data-ft="1"]{background:linear-gradient(135deg,var(--c2),#34d399);}
+  .fb[data-ft="2"]{background:linear-gradient(135deg,var(--c3),#fbbf24);}
+  .fb[data-ft="3"]{background:linear-gradient(135deg,var(--c4),#f87171);}
+  .ov{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+  .ov.on{display:flex;}
+  .mod{background:#fff;border-radius:18px;padding:26px 20px;max-width:310px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .me{font-size:2.6rem;margin-bottom:7px;}
+  .mt{font-size:1.05rem;font-weight:800;margin-bottom:5px;}
+  .ms{font-size:2.2rem;font-weight:900;margin:9px 0;}
+  .ms.s{color:var(--ok);}.ms.w{color:#d97706;}.ms.d{color:var(--ng);}
+  .mb{font-size:.77rem;color:var(--muted);margin-bottom:16px;}
+  .mc{padding:10px 28px;border:none;border-radius:11px;background:#0ea5e9;color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;}
+  .attbar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:9px;}
+  .attbar span{font-size:.68rem;color:var(--muted);}
+  .attbar strong{color:var(--c1);}
+  .reset-btn{padding:4px 10px;border:1.5px solid #fca5a5;border-radius:20px;background:#fff;color:#dc2626;font-size:.68rem;font-weight:700;cursor:pointer;transition:all .15s;}
+  .reset-btn:hover{background:#fee2e2;}
+  .tab.on[data-t="4"]{color:var(--c1);border-bottom-color:var(--c1);background:var(--c1l);}
+  .tab.on[data-t="5"]{color:var(--c2);border-bottom-color:var(--c2);background:var(--c2l);}
+  .tab.on[data-t="6"]{color:var(--c3);border-bottom-color:var(--c3);background:var(--c3l);}
+  .p4 .bin{background:linear-gradient(90deg,var(--c1),#38bdf8);}
+  .p5 .bin{background:linear-gradient(90deg,var(--c2),#34d399);}
+  .p6 .bin{background:linear-gradient(90deg,var(--c3),#fbbf24);}
+  .fb[data-ft="4"]{background:linear-gradient(135deg,var(--c1),#38bdf8);}
+  .fb[data-ft="5"]{background:linear-gradient(135deg,var(--c2),#34d399);}
+  .fb[data-ft="6"]{background:linear-gradient(135deg,var(--c3),#fbbf24);}
+  .tch{flex:1;}
+  .tch-note{font-size:.7rem;font-weight:700;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:6px 9px;}
+  .tch-ans{margin-top:5px;font-size:.78rem;color:#1e293b;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:7px 10px;line-height:1.5;}
+  .tch-ans b{color:#16a34a;margin-right:4px;}
+  .tch-rv{font-size:.72rem;font-weight:700;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:6px 11px;cursor:pointer;}
+  .tch-rv:hover{background:#ffedd5;}
+  .tch-ox{display:flex;gap:6px;margin-top:6px;}
+  .oxb{flex:1;padding:7px 8px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-size:.74rem;font-weight:700;cursor:pointer;transition:all .12s;}
+  .oxo{color:var(--ok);} .oxo.on{background:var(--okl);border-color:var(--ok);}
+  .oxx{color:var(--ng);} .oxx.on{background:var(--ngl);border-color:var(--ng);}
 
-  :root {
-    --bg: #f5f0e8;
-    --surface: #ffffff;
-    --card: #ffffff;
-    --accent: #2563eb;
-    --accent2: #ea7a17;
-    --green: #16a34a;
-    --red: #dc2626;
-    --text: #1e293b;
-    --muted: #64748b;
-    --border: #e2e8f0;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans KR', sans-serif;
-    min-height: 100vh;
-    padding-bottom: 60px;
-  }
-
-  /* HEADER */
-  .header {
-    background: linear-gradient(135deg, #1a2040 0%, #0f1530 100%);
-    border-bottom: 2px solid var(--accent);
-    padding: 20px 16px 16px;
-    text-align: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 24px rgba(79,142,247,0.15);
-  }
-  .header h1 {
-    font-family: 'Teko', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    color: var(--accent);
-    text-shadow: 0 0 20px rgba(79,142,247,0.5);
-  }
-  .header p { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
-
-  /* WEEK TABS */
-  .week-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    padding: 16px;
-    flex-wrap: wrap;
-  }
-  .week-btn {
-    background: var(--surface);
-    border: 2px solid var(--border);
-    color: var(--muted);
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Noto Sans KR', sans-serif;
-  }
-  .week-btn.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(79,142,247,0.12);
-    box-shadow: 0 0 12px rgba(79,142,247,0.25);
-  }
-
-  /* SCHOOL TABS */
-  .school-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    padding: 0 16px 16px;
-    flex-wrap: wrap;
-  }
-  .school-btn {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    color: var(--muted);
-    padding: 7px 16px;
-    border-radius: 14px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Noto Sans KR', sans-serif;
-  }
-  .school-btn.active {
-    border-color: var(--accent2);
-    color: var(--accent2);
-    background: rgba(247,163,79,0.12);
-  }
-
-  /* SECTION */
-  .section { display: none; }
-  .section.active { display: block; }
-
-  /* SCHOOL CONTENT */
-  .school-content { display: none; padding: 0 12px; }
-  .school-content.active { display: block; }
-
-  .school-title {
-    text-align: center;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--accent2);
-    margin-bottom: 16px;
-    padding: 10px;
-    background: var(--surface);
-    border-radius: 12px;
-    border-left: 4px solid var(--accent2);
-  }
-
-  /* QUESTIONS */
-  .questions-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 640px;
-    margin: 0 auto;
-  }
-
-  /* MULTIPLE CHOICE */
-  .q-card {
-    background: var(--card);
-    border-radius: 14px;
-    padding: 14px 16px;
-    border: 1.5px solid var(--border);
-    transition: border-color 0.2s;
-  }
-  .q-card.correct { border-color: var(--green) !important; background: rgba(62,207,110,0.07); }
-  .q-card.wrong { border-color: var(--red) !important; background: rgba(247,80,79,0.07); }
-
-  .q-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  .q-num {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--accent);
-    background: rgba(79,142,247,0.15);
-    padding: 3px 10px;
-    border-radius: 8px;
-  }
-  .q-type-badge {
-    font-size: 0.7rem;
-    color: var(--muted);
-    background: var(--surface);
-    padding: 2px 8px;
-    border-radius: 6px;
-  }
-  .q-status { font-size: 1.2rem; }
-
-  .choices {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .choice-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'Noto Sans KR', sans-serif;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .choice-btn:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
-  .choice-btn.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .choice-btn.correct-ans { background: var(--green); border-color: var(--green); color: #fff; }
-  .choice-btn.wrong-ans { background: var(--red); border-color: var(--red); color: #fff; }
-
-  /* SUBJECTIVE - REVEAL TYPE */
-  .q-subjective {
-    background: var(--card);
-    border-radius: 14px;
-    padding: 14px 16px;
-    border: 1.5px solid var(--border);
-  }
-  .reveal-btn {
-    width: 100%;
-    padding: 10px;
-    background: rgba(79,142,247,0.15);
-    border: 1.5px dashed var(--accent);
-    border-radius: 10px;
-    color: var(--accent);
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-    transition: all 0.2s;
-    margin-top: 8px;
-  }
-  .reveal-btn:hover { background: rgba(79,142,247,0.25); }
-
-  .answer-reveal {
-    display: none;
-    margin-top: 10px;
-    background: rgba(62,207,110,0.1);
-    border: 1.5px solid var(--green);
-    border-radius: 10px;
-    padding: 12px;
-  }
-  .answer-reveal.show { display: block; }
-  .answer-reveal .label {
-    font-size: 0.75rem;
-    color: var(--green);
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-  .answer-reveal .ans-text {
-    font-size: 0.88rem;
-    color: var(--text);
-    line-height: 1.6;
-  }
-
-  /* SELF CHECK */
-  .self-check {
-    display: none;
-    margin-top: 8px;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .self-check.show { display: flex; }
-  .self-o, .self-x {
-    flex: 1;
-    padding: 8px;
-    border-radius: 8px;
-    border: none;
-    font-size: 1.2rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-    transition: all 0.2s;
-  }
-  .self-o { background: rgba(62,207,110,0.2); color: var(--green); border: 2px solid var(--green); }
-  .self-x { background: rgba(247,80,79,0.2); color: var(--red); border: 2px solid var(--red); }
-  .self-o.picked { background: var(--green); color: #fff; }
-  .self-x.picked { background: var(--red); color: #fff; }
-
-  /* SCORE */
-  .score-section {
-    max-width: 640px;
-    margin: 20px auto;
-    padding: 0 12px;
-  }
-  .score-btn {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, var(--accent), #7b5ef7);
-    border: none;
-    border-radius: 14px;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-    letter-spacing: 1px;
-    transition: opacity 0.2s;
-    box-shadow: 0 4px 20px rgba(79,142,247,0.4);
-  }
-  .score-btn:hover { opacity: 0.9; }
-
-  .result-box {
-    display: none;
-    margin-top: 14px;
-    background: var(--card);
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-    border: 2px solid var(--accent);
-    box-shadow: 0 0 30px rgba(79,142,247,0.2);
-  }
-  .result-box.show { display: block; }
-  .result-box .big-score {
-    font-family: 'Teko', sans-serif;
-    font-size: 3.5rem;
-    color: var(--accent);
-    line-height: 1;
-    text-shadow: 0 0 20px rgba(79,142,247,0.6);
-  }
-  .result-box .score-label { color: var(--muted); font-size: 0.85rem; margin: 4px 0 12px; }
-  .result-box .detail { font-size: 0.82rem; color: var(--muted); }
-  .result-box .capture-note {
-    margin-top: 14px;
-    padding: 10px;
-    background: rgba(247,163,79,0.15);
-    border: 1.5px solid var(--accent2);
-    border-radius: 10px;
-    color: var(--accent2);
-    font-size: 0.88rem;
-    font-weight: 700;
-  }
-
-  /* RESET */
-  .reset-btn {
-    width: 100%;
-    padding: 10px;
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    color: var(--muted);
-    font-size: 0.85rem;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-    margin-top: 8px;
-    transition: all 0.2s;
-  }
-  .reset-btn:hover { border-color: var(--red); color: var(--red); }
-
-  /* PROGRESS BAR */
-  .progress-wrap {
-    max-width: 640px;
-    margin: 0 auto 12px;
-    padding: 0 12px;
-  }
-  .progress-bar {
-    height: 6px;
-    background: var(--border);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 3px;
-    transition: width 0.3s;
-    width: 0%;
-  }
-  .progress-text {
-    font-size: 0.75rem;
-    color: var(--muted);
-    text-align: right;
-    margin-top: 4px;
-  }
+  /* week bar */
+  .weeks{display:flex;justify-content:center;gap:8px;padding:10px 10px 8px;background:#fff;border-bottom:1px solid var(--border);}
+  .wtab{background:#fff;border:2px solid var(--border);color:var(--muted);padding:7px 20px;border-radius:20px;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;}
+  .wtab.on{border-color:var(--c1);color:var(--c1);background:var(--c1l);box-shadow:0 2px 8px rgba(14,165,233,.18);}
+  /* cycling color classes */
+  .tab.on.k0{color:var(--c1);border-bottom-color:var(--c1);background:var(--c1l);}
+  .tab.on.k1{color:var(--c2);border-bottom-color:var(--c2);background:var(--c2l);}
+  .tab.on.k2{color:var(--c3);border-bottom-color:var(--c3);background:var(--c3l);}
+  .tab.on.k3{color:var(--c4);border-bottom-color:var(--c4);background:var(--c4l);}
+  .bin.k0{background:linear-gradient(90deg,var(--c1),#38bdf8);}
+  .bin.k1{background:linear-gradient(90deg,var(--c2),#34d399);}
+  .bin.k2{background:linear-gradient(90deg,var(--c3),#fbbf24);}
+  .bin.k3{background:linear-gradient(90deg,var(--c4),#f87171);}
+  .fb.k0{background:linear-gradient(135deg,var(--c1),#38bdf8);}
+  .fb.k1{background:linear-gradient(135deg,var(--c2),#34d399);}
+  .fb.k2{background:linear-gradient(135deg,var(--c3),#fbbf24);}
+  .fb.k3{background:linear-gradient(135deg,var(--c4),#f87171);}
+  .multi-note{font-size:.65rem;font-weight:700;color:#7c3aed;margin-bottom:3px;}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <h1>📝 어진중2 OMR 채점</h1>
-  <p>2025년 중2 영어 1학기 기말 · 동아(윤정미) 백발백중 · 9섹션 155문항(문법 포함)</p>
+<div class="hdr">
+  <h1>📋 어진중 2학년 OMR 채점</h1>
+  <p id="wdesc"></p>
 </div>
-
-<div class="week-tabs">
-  <button class="week-btn" onclick="showWeek(1)">📅 6/20 (2주차)</button>
-  <button class="week-btn active" onclick="showWeek(2)">📅 6/27 (3주차)</button>
+<div class="weeks" id="weeks">
+  <button class="wtab on" onclick="renderWeek(0)">📅 9/5 (토요보강)</button>
 </div>
-
-<div class="section" id="week1">
-  <div class="school-tabs">
-    <button class="school-btn active" onclick="showSchool('w1','gram')">문법</button>
-    <button class="school-btn" onclick="showSchool('w1','s1')">Functions①</button>
-    <button class="school-btn" onclick="showSchool('w1','s2')">Grammar①</button>
-    <button class="school-btn" onclick="showSchool('w1','s3')">Reading①</button>
-    <button class="school-btn" onclick="showSchool('w1','s4')">단원평가①</button>
-    <button class="school-btn" onclick="showSchool('w1','s5')">Functions②</button>
-    <button class="school-btn" onclick="showSchool('w1','s6')">Grammar②</button>
-    <button class="school-btn" onclick="showSchool('w1','s7')">Reading②</button>
-    <button class="school-btn" onclick="showSchool('w1','s8')">단원평가②</button>
-  </div>
-
-  <div class="school-content active" id="w1-gram">
-    <div class="school-title">📖 문법 (직전보강) · 15문항</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w1-gram"></div></div>
-      <div class="progress-text" id="prog-text-w1-gram">0 / 15 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w1-gram"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w1-gram')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w1-gram"></div>
-      <button class="reset-btn" onclick="resetSchool('w1-gram')">🔄 다시 풀기</button>
-    </div>
-  </div>
-
-  <div class="school-content" id="w1-s1">
-    <div class="school-title">📖 Functions Test ① · 10문항 · pp.67-69</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s1"></div></div>
-      <div class="progress-text" id="prog-text-w1-s1">0 / 10 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w1-s1"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w1-s1')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w1-s1"></div>
-      <button class="reset-btn" onclick="resetSchool('w1-s1')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w1-s2">
-    <div class="school-title">📖 Grammar Test ① · 15문항 · pp.73-75</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s2"></div></div>
-      <div class="progress-text" id="prog-text-w1-s2">0 / 15 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w1-s2"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w1-s2')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w1-s2"></div>
-      <button class="reset-btn" onclick="resetSchool('w1-s2')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w1-s3">
-    <div class="school-title">📖 Reading Test ① · 18문항 · pp.79-81</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s3"></div></div>
-      <div class="progress-text" id="prog-text-w1-s3">0 / 18 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w1-s3"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w1-s3')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w1-s3"></div>
-      <button class="reset-btn" onclick="resetSchool('w1-s3')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w1-s4">
-    <div class="school-title">📖 단원평가 1회 ① · 27문항 · pp.82-85</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s4"></div></div>
-      <div class="progress-text" id="prog-text-w1-s4">0 / 27 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w1-s4"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w1-s4')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w1-s4"></div>
-      <button class="reset-btn" onclick="resetSchool('w1-s4')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w1-s5">
-    <div class="school-title">📖 Functions Test ② · 10문항 · pp.95-97</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s5"></div></div>
-      <div class="progress-text" id="prog-text-w1-s5">0 / 10 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w1-s5"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w1-s5')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w1-s5"></div>
-      <button class="reset-btn" onclick="resetSchool('w1-s5')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w1-s6">
-    <div class="school-title">📖 Grammar Test ② · 15문항 · pp.101-103</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s6"></div></div>
-      <div class="progress-text" id="prog-text-w1-s6">0 / 15 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w1-s6"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w1-s6')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w1-s6"></div>
-      <button class="reset-btn" onclick="resetSchool('w1-s6')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w1-s7">
-    <div class="school-title">📖 Reading Test ② · 18문항 · pp.107-109</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s7"></div></div>
-      <div class="progress-text" id="prog-text-w1-s7">0 / 18 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w1-s7"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w1-s7')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w1-s7"></div>
-      <button class="reset-btn" onclick="resetSchool('w1-s7')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w1-s8">
-    <div class="school-title">📖 단원평가 1회 ② · 27문항 · pp.110-113</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w1-s8"></div></div>
-      <div class="progress-text" id="prog-text-w1-s8">0 / 27 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w1-s8"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w1-s8')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w1-s8"></div>
-      <button class="reset-btn" onclick="resetSchool('w1-s8')">🔄 다시 풀기</button>
-    </div>
-  </div>
+<div class="tabs" id="tabs"></div>
+<div id="panels"></div>
+<div class="fw"><button class="fb k0" id="fb" onclick="submitTab()">✅ 제출하고 채점</button></div>
+<div class="ov" id="ov">
+  <div class="mod"><div class="me" id="me">🎉</div><div class="mt" id="mt">결과</div><div class="ms" id="msc"></div><div class="mb" id="mb"></div><button class="mc" onclick="closeOv()">확인</button></div>
 </div>
-
-<div class="section active" id="week2">
-  <div class="school-tabs">
-    <button class="school-btn active" onclick="showSchool('w2','g1')">문법 L3-1</button>
-    <button class="school-btn" onclick="showSchool('w2','g2')">문법 L3-2</button>
-    <button class="school-btn" onclick="showSchool('w2','g3')">문법 L4-1</button>
-    <button class="school-btn" onclick="showSchool('w2','g4')">문법 L4-2</button>
-    <button class="school-btn" onclick="showSchool('w2','g5')">기말 1회</button>
-    <button class="school-btn" onclick="showSchool('w2','g6')">기말 2회</button>
-    <button class="school-btn" onclick="showSchool('w2','g7')">기말 3회</button>
-  </div>
-
-  <div class="school-content active" id="w2-g1">
-    <div class="school-title">📘 문법 마스터 LESSON 3-1 현재완료 (31문항 · pp.8-11)</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-g1"></div></div>
-      <div class="progress-text" id="prog-text-w2-g1">0 / 31 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w2-g1"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-g1')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-g1"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-g1')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w2-g2">
-    <div class="school-title">📘 문법 마스터 LESSON 3-2 수동태 (37문항 · pp.20-25)</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-g2"></div></div>
-      <div class="progress-text" id="prog-text-w2-g2">0 / 37 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w2-g2"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-g2')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-g2"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-g2')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w2-g3">
-    <div class="school-title">📗 문법 마스터 LESSON 4-1 사역동사 (42문항 · pp.34-39)</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-g3"></div></div>
-      <div class="progress-text" id="prog-text-w2-g3">0 / 42 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w2-g3"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-g3')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-g3"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-g3')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w2-g4">
-    <div class="school-title">📙 문법 마스터 LESSON 4-2 형용사적 to부정사 (40문항 · pp.46-51)</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-g4"></div></div>
-      <div class="progress-text" id="prog-text-w2-g4">0 / 40 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w2-g4"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-g4')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-g4"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-g4')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w2-g5">
-    <div class="school-title">📝 기말고사 1회 Lessons 3~4 (27문항 · pp.133-137)</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-g5"></div></div>
-      <div class="progress-text" id="prog-text-w2-g5">0 / 27 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w2-g5"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-g5')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-g5"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-g5')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w2-g6">
-    <div class="school-title">📝 기말고사 2회 Lessons 3~4 (27문항 · pp.138-142)</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-g6"></div></div>
-      <div class="progress-text" id="prog-text-w2-g6">0 / 27 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w2-g6"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-g6')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-g6"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-g6')">🔄 다시 풀기</button>
-    </div>
-  </div>
-  <div class="school-content" id="w2-g7">
-    <div class="school-title">📝 기말고사 3회 Lessons 3~4 (27문항 · pp.143-147)</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="prog-w2-g7"></div></div>
-      <div class="progress-text" id="prog-text-w2-g7">0 / 27 완료</div>
-    </div>
-    <div class="questions-grid" id="qgrid-w2-g7"></div>
-    <div class="score-section">
-      <button class="score-btn" onclick="calcScore('w2-g7')">📊 점수 확인하기</button>
-      <div class="result-box" id="result-w2-g7"></div>
-      <button class="reset-btn" onclick="resetSchool('w2-g7')">🔄 다시 풀기</button>
-    </div>
-  </div>
-</div>
-
 <script>
-const SCHOOLS = {"w1-gram": {"name": "문법", "pp": "직전보강", "title": "문법 (직전보강)", "questions": [{"n": 1, "type": "mc", "ans": 1}, {"n": 2, "type": "mc", "ans": 1}, {"n": 3, "type": "mc", "ans": 5}, {"n": 4, "type": "mc", "ans": 4}, {"n": 5, "type": "mc", "ans": 2}, {"n": 6, "type": "mc", "ans": 1}, {"n": 7, "type": "mc", "ans": 4}, {"n": 8, "type": "mc", "ans": 2}, {"n": 9, "type": "mc", "ans": 5}, {"n": 10, "type": "mc", "ans": 4}, {"n": 11, "type": "mc", "ans": 1}, {"n": 12, "type": "mc", "ans": 3}, {"n": 13, "type": "mc", "ans": 1}, {"n": 14, "type": "mc", "ans": 3}, {"n": 15, "type": "mc", "ans": 1}]}, "w1-s1": {"name": "Functions①", "pp": "pp.67-69", "title": "Functions Test ①", "questions": [{"n": 1, "type": "mc", "ans": 4}, {"n": 2, "type": "mc", "ans": 2}, {"n": 3, "type": "mc", "ans": 5}, {"n": 4, "type": "mc", "ans": 5}, {"n": 5, "type": "mc", "ans": 5}, {"n": 6, "type": "mc", "ans": 2}, {"n": 7, "type": "mc", "ans": 5}, {"n": 8, "type": "mc", "ans": 4}, {"n": 9, "type": "sub", "ans": "cutting fruit"}, {"n": 10, "type": "mc", "ans": 2}]}, "w1-s2": {"name": "Grammar①", "pp": "pp.73-75", "title": "Grammar Test ①", "questions": [{"n": 1, "type": "mc", "ans": 3}, {"n": 2, "type": "mc", "ans": 4}, {"n": 3, "type": "sub", "ans": "I have"}, {"n": 4, "type": "mc", "ans": 3}, {"n": 5, "type": "mc", "ans": 4}, {"n": 6, "type": "mc", "ans": 1}, {"n": 7, "type": "sub", "ans": "write → written"}, {"n": 8, "type": "mc", "ans": 5}, {"n": 9, "type": "sub", "ans": "was painted"}, {"n": 10, "type": "mc", "ans": 1}, {"n": 11, "type": "sub", "ans": "This book was read by many students"}, {"n": 12, "type": "mc", "ans": 4}, {"n": 13, "type": "sub", "ans": "ⓐ seen ⓑ watched"}, {"n": 14, "type": "sub", "ans": "The classrooms are cleaned by the students."}, {"n": 15, "type": "mc", "ans": 4}]}, "w1-s3": {"name": "Reading①", "pp": "pp.79-81", "title": "Reading Test ①", "questions": [{"n": 1, "type": "mc", "ans": 5}, {"n": 2, "type": "mc", "ans": 3}, {"n": 3, "type": "sub", "ans": "Invention Fair"}, {"n": 4, "type": "mc", "ans": 4}, {"n": 5, "type": "mc", "ans": 4}, {"n": 6, "type": "sub", "ans": "is charged"}, {"n": 7, "type": "mc", "ans": 2}, {"n": 8, "type": "mc", "ans": 3}, {"n": 9, "type": "sub", "ans": "The Sitbag is designed for elderly people like her."}, {"n": 10, "type": "mc", "ans": 5}, {"n": 11, "type": "sub", "ans": "rest"}, {"n": 12, "type": "mc", "ans": 4}, {"n": 13, "type": "mc", "ans": 5}, {"n": 14, "type": "mc", "ans": 3}, {"n": 15, "type": "sub", "ans": "old water filters / dirty paint water"}, {"n": 16, "type": "mc", "ans": 3}, {"n": 17, "type": "mc", "ans": 1}, {"n": 18, "type": "sub", "ans": "make our world better"}]}, "w1-s4": {"name": "단원평가①", "pp": "pp.82-85", "title": "단원평가 1회 ①", "questions": [{"n": 1, "type": "mc", "ans": 5}, {"n": 2, "type": "mc", "ans": 4}, {"n": 3, "type": "mc", "ans": 1}, {"n": 4, "type": "multi", "ans": [2, 4]}, {"n": 5, "type": "mc", "ans": 3}, {"n": 6, "type": "sub", "ans": "보미: 조부모님 방문하기 / 하준: 아빠와 등산가기"}, {"n": 7, "type": "mc", "ans": 1}, {"n": 8, "type": "sub", "ans": "What is it for"}, {"n": 9, "type": "mc", "ans": 3}, {"n": 10, "type": "mc", "ans": 3}, {"n": 11, "type": "mc", "ans": 2}, {"n": 12, "type": "mc", "ans": 1}, {"n": 13, "type": "sub", "ans": "My brother was born in 2015."}, {"n": 14, "type": "mc", "ans": 1}, {"n": 15, "type": "sub", "ans": "had"}, {"n": 16, "type": "mc", "ans": 1}, {"n": 17, "type": "sub", "ans": "Your phone is charged by this power."}, {"n": 18, "type": "mc", "ans": 4}, {"n": 19, "type": "sub", "ans": "wind"}, {"n": 20, "type": "mc", "ans": 5}, {"n": 21, "type": "mc", "ans": 3}, {"n": 22, "type": "sub", "ans": "designing → designed"}, {"n": 23, "type": "mc", "ans": 3}, {"n": 24, "type": "mc", "ans": 4}, {"n": 25, "type": "sub", "ans": "filter"}, {"n": 26, "type": "mc", "ans": 1}, {"n": 27, "type": "mc", "ans": 5}]}, "w1-s5": {"name": "Functions②", "pp": "pp.95-97", "title": "Functions Test ②", "questions": [{"n": 1, "type": "mc", "ans": 4}, {"n": 2, "type": "mc", "ans": 4}, {"n": 3, "type": "mc", "ans": 2}, {"n": 4, "type": "mc", "ans": 4}, {"n": 5, "type": "mc", "ans": 4}, {"n": 6, "type": "mc", "ans": 2}, {"n": 7, "type": "mc", "ans": 5}, {"n": 8, "type": "mc", "ans": 4}, {"n": 9, "type": "sub", "ans": "Have you heard of the new cafe, Morning Sun?"}, {"n": 10, "type": "sub", "ans": "You'll do better next time."}]}, "w1-s6": {"name": "Grammar②", "pp": "pp.101-103", "title": "Grammar Test ②", "questions": [{"n": 1, "type": "mc", "ans": 2}, {"n": 2, "type": "mc", "ans": 1}, {"n": 3, "type": "sub", "ans": "to go → go"}, {"n": 4, "type": "mc", "ans": 5}, {"n": 5, "type": "mc", "ans": 1}, {"n": 6, "type": "mc", "ans": 3}, {"n": 7, "type": "mc", "ans": 5}, {"n": 8, "type": "mc", "ans": 3}, {"n": 9, "type": "mc", "ans": 2}, {"n": 10, "type": "mc", "ans": 2}, {"n": 11, "type": "mc", "ans": 4}, {"n": 12, "type": "sub", "ans": "My mom made me wash the dishes."}, {"n": 13, "type": "mc", "ans": 1}, {"n": 14, "type": "mc", "ans": 5}, {"n": 15, "type": "sub", "ans": "a comic book to read"}]}, "w1-s7": {"name": "Reading②", "pp": "pp.107-109", "title": "Reading Test ②", "questions": [{"n": 1, "type": "mc", "ans": 5}, {"n": 2, "type": "mc", "ans": 1}, {"n": 3, "type": "mc", "ans": 5}, {"n": 4, "type": "mc", "ans": 1}, {"n": 5, "type": "sub", "ans": "stuck"}, {"n": 6, "type": "mc", "ans": 3}, {"n": 7, "type": "mc", "ans": 3}, {"n": 8, "type": "mc", "ans": 5}, {"n": 9, "type": "sub", "ans": "to go"}, {"n": 10, "type": "mc", "ans": 5}, {"n": 11, "type": "mc", "ans": 1}, {"n": 12, "type": "mc", "ans": 3}, {"n": 13, "type": "mc", "ans": 5}, {"n": 14, "type": "mc", "ans": 2}, {"n": 15, "type": "mc", "ans": 3}, {"n": 16, "type": "mc", "ans": 4}, {"n": 17, "type": "sub", "ans": "South Georgia"}, {"n": 18, "type": "mc", "ans": 3}]}, "w1-s8": {"name": "단원평가②", "pp": "pp.110-113", "title": "단원평가 1회 ②", "questions": [{"n": 1, "type": "mc", "ans": 5}, {"n": 2, "type": "mc", "ans": 5}, {"n": 3, "type": "mc", "ans": 2}, {"n": 4, "type": "mc", "ans": 3}, {"n": 5, "type": "mc", "ans": 5}, {"n": 6, "type": "sub", "ans": "You'll do better next time."}, {"n": 7, "type": "multi", "ans": [3, 5]}, {"n": 8, "type": "mc", "ans": 2}, {"n": 9, "type": "mc", "ans": 2}, {"n": 10, "type": "mc", "ans": 3}, {"n": 11, "type": "mc", "ans": 3}, {"n": 12, "type": "mc", "ans": 4}, {"n": 13, "type": "mc", "ans": 1}, {"n": 14, "type": "sub", "ans": "to sit → to sit on"}, {"n": 15, "type": "sub", "ans": "The hot sun made us drink more water."}, {"n": 16, "type": "mc", "ans": 3}, {"n": 17, "type": "mc", "ans": 5}, {"n": 18, "type": "mc", "ans": 4}, {"n": 19, "type": "mc", "ans": 5}, {"n": 20, "type": "mc", "ans": 3}, {"n": 21, "type": "mc", "ans": 4}, {"n": 22, "type": "sub", "ans": "I had my men get on the three lifeboats."}, {"n": 23, "type": "mc", "ans": 5}, {"n": 24, "type": "mc", "ans": 4}, {"n": 25, "type": "sub", "ans": "Everyone was saved."}, {"n": 26, "type": "mc", "ans": 4}, {"n": 27, "type": "mc", "ans": 5}]}, "w2-g1": {"name": "문법 L3-1", "pp": "", "title": "📘 문법 마스터 LESSON 3-1 현재완료 (31문항 · pp.8-11)", "questions": [{"n": 1, "type": "mc", "ans": 1}, {"n": 2, "type": "mc", "ans": 5}, {"n": 3, "type": "mc", "ans": 3}, {"n": 4, "type": "mc", "ans": 5}, {"n": 5, "type": "mc", "ans": 3}, {"n": 6, "type": "mc", "ans": 4}, {"n": 7, "type": "mc", "ans": 1}, {"n": 8, "type": "mc", "ans": 2}, {"n": 9, "type": "mc", "ans": 1}, {"n": 10, "type": "mc", "ans": 3}, {"n": 11, "type": "mc", "ans": 3}, {"n": 12, "type": "mc", "ans": 3}, {"n": 13, "type": "mc", "ans": 5}, {"n": 14, "type": "mc", "ans": 1}, {"n": 15, "type": "mc", "ans": 2}, {"n": 16, "type": "multi", "ans": [2, 4]}, {"n": 17, "type": "mc", "ans": 4}, {"n": 18, "type": "mc", "ans": 2}, {"n": 19, "type": "mc", "ans": 3}, {"n": 20, "type": "mc", "ans": 3}, {"n": 21, "type": "mc", "ans": 3}, {"n": 22, "type": "mc", "ans": 2}, {"n": 23, "type": "mc", "ans": 2}, {"n": 24, "type": "mc", "ans": 2}, {"n": 25, "type": "mc", "ans": 2}, {"n": 26, "type": "mc", "ans": 2}, {"n": 27, "type": "mc", "ans": 1}, {"n": 28, "type": "mc", "ans": 4}, {"n": 29, "type": "mc", "ans": 4}, {"n": 30, "type": "mc", "ans": 3}, {"n": 31, "type": "mc", "ans": 4}]}, "w2-g2": {"name": "문법 L3-2", "pp": "", "title": "📘 문법 마스터 LESSON 3-2 수동태 (37문항 · pp.20-25)", "questions": [{"n": 1, "type": "mc", "ans": 5}, {"n": 2, "type": "mc", "ans": 3}, {"n": 3, "type": "mc", "ans": 4}, {"n": 4, "type": "mc", "ans": 4}, {"n": 5, "type": "mc", "ans": 1}, {"n": 6, "type": "mc", "ans": 2}, {"n": 7, "type": "mc", "ans": 2}, {"n": 8, "type": "mc", "ans": 3}, {"n": 9, "type": "mc", "ans": 2}, {"n": 10, "type": "mc", "ans": 3}, {"n": 11, "type": "mc", "ans": 3}, {"n": 12, "type": "mc", "ans": 3}, {"n": 13, "type": "mc", "ans": 2}, {"n": 14, "type": "mc", "ans": 3}, {"n": 15, "type": "mc", "ans": 5}, {"n": 16, "type": "mc", "ans": 3}, {"n": 17, "type": "mc", "ans": 4}, {"n": 18, "type": "mc", "ans": 4}, {"n": 19, "type": "mc", "ans": 2}, {"n": 20, "type": "mc", "ans": 2}, {"n": 21, "type": "mc", "ans": 1}, {"n": 22, "type": "mc", "ans": 4}, {"n": 23, "type": "mc", "ans": 2}, {"n": 24, "type": "mc", "ans": 3}, {"n": 25, "type": "mc", "ans": 2}, {"n": 26, "type": "mc", "ans": 2}, {"n": 27, "type": "mc", "ans": 5}, {"n": 28, "type": "mc", "ans": 1}, {"n": 29, "type": "mc", "ans": 4}, {"n": 30, "type": "mc", "ans": 3}, {"n": 31, "type": "mc", "ans": 2}, {"n": 32, "type": "mc", "ans": 3}, {"n": 33, "type": "mc", "ans": 4}, {"n": 34, "type": "mc", "ans": 3}, {"n": 35, "type": "mc", "ans": 4}, {"n": 36, "type": "mc", "ans": 2}, {"n": 37, "type": "mc", "ans": 3}]}, "w2-g3": {"name": "문법 L4-1", "pp": "", "title": "📗 문법 마스터 LESSON 4-1 사역동사 (42문항 · pp.34-39)", "questions": [{"n": 1, "type": "mc", "ans": 1}, {"n": 2, "type": "mc", "ans": 4}, {"n": 3, "type": "mc", "ans": 2}, {"n": 4, "type": "mc", "ans": 3}, {"n": 5, "type": "mc", "ans": 1}, {"n": 6, "type": "mc", "ans": 3}, {"n": 7, "type": "mc", "ans": 3}, {"n": 8, "type": "mc", "ans": 2}, {"n": 9, "type": "mc", "ans": 4}, {"n": 10, "type": "mc", "ans": 4}, {"n": 11, "type": "mc", "ans": 3}, {"n": 12, "type": "mc", "ans": 1}, {"n": 13, "type": "mc", "ans": 2}, {"n": 14, "type": "mc", "ans": 1}, {"n": 15, "type": "mc", "ans": 1}, {"n": 16, "type": "mc", "ans": 2}, {"n": 17, "type": "mc", "ans": 4}, {"n": 18, "type": "mc", "ans": 1}, {"n": 19, "type": "mc", "ans": 2}, {"n": 20, "type": "mc", "ans": 5}, {"n": 21, "type": "mc", "ans": 2}, {"n": 22, "type": "mc", "ans": 2}, {"n": 23, "type": "mc", "ans": 2}, {"n": 24, "type": "mc", "ans": 4}, {"n": 25, "type": "mc", "ans": 1}, {"n": 26, "type": "mc", "ans": 4}, {"n": 27, "type": "mc", "ans": 2}, {"n": 28, "type": "mc", "ans": 2}, {"n": 29, "type": "mc", "ans": 1}, {"n": 30, "type": "mc", "ans": 4}, {"n": 31, "type": "mc", "ans": 2}, {"n": 32, "type": "mc", "ans": 1}, {"n": 33, "type": "mc", "ans": 1}, {"n": 34, "type": "mc", "ans": 2}, {"n": 35, "type": "multi", "ans": [4, 5]}, {"n": 36, "type": "mc", "ans": 4}, {"n": 37, "type": "mc", "ans": 1}, {"n": 38, "type": "mc", "ans": 4}, {"n": 39, "type": "mc", "ans": 5}, {"n": 40, "type": "sub", "ans": "(1) I had her check my bike. (2) I had the photographer take a picture of my family."}, {"n": 41, "type": "sub", "ans": "He had them throw away the trash."}, {"n": 42, "type": "sub", "ans": "(1) to practice → practice (2) borrowing → borrow (3) finish → to finish"}]}, "w2-g4": {"name": "문법 L4-2", "pp": "", "title": "📙 문법 마스터 LESSON 4-2 형용사적 to부정사 (40문항 · pp.46-51)", "questions": [{"n": 1, "type": "mc", "ans": 1}, {"n": 2, "type": "mc", "ans": 3}, {"n": 3, "type": "mc", "ans": 4}, {"n": 4, "type": "mc", "ans": 4}, {"n": 5, "type": "mc", "ans": 2}, {"n": 6, "type": "mc", "ans": 2}, {"n": 7, "type": "mc", "ans": 3}, {"n": 8, "type": "mc", "ans": 2}, {"n": 9, "type": "mc", "ans": 4}, {"n": 10, "type": "mc", "ans": 2}, {"n": 11, "type": "mc", "ans": 3}, {"n": 12, "type": "mc", "ans": 1}, {"n": 13, "type": "mc", "ans": 4}, {"n": 14, "type": "mc", "ans": 2}, {"n": 15, "type": "mc", "ans": 3}, {"n": 16, "type": "mc", "ans": 1}, {"n": 17, "type": "mc", "ans": 2}, {"n": 18, "type": "mc", "ans": 2}, {"n": 19, "type": "mc", "ans": 5}, {"n": 20, "type": "mc", "ans": 3}, {"n": 21, "type": "mc", "ans": 1}, {"n": 22, "type": "mc", "ans": 1}, {"n": 23, "type": "mc", "ans": 4}, {"n": 24, "type": "mc", "ans": 3}, {"n": 25, "type": "mc", "ans": 1}, {"n": 26, "type": "mc", "ans": 4}, {"n": 27, "type": "mc", "ans": 2}, {"n": 28, "type": "mc", "ans": 2}, {"n": 29, "type": "mc", "ans": 1}, {"n": 30, "type": "mc", "ans": 1}, {"n": 31, "type": "mc", "ans": 1}, {"n": 32, "type": "mc", "ans": 1}, {"n": 33, "type": "mc", "ans": 3}, {"n": 34, "type": "mc", "ans": 5}, {"n": 35, "type": "mc", "ans": 2}, {"n": 36, "type": "multi", "ans": [3, 5]}, {"n": 37, "type": "mc", "ans": 2}, {"n": 38, "type": "sub", "ans": "(1) Tim has a lot of homework to do. (2) I have four classes to take today. (3) Eunbi has a sister to take care of."}, {"n": 39, "type": "sub", "ans": "He needs a knife to cut the steak."}, {"n": 40, "type": "sub", "ans": "Hawaii is a good place to enjoy beautiful beaches."}]}, "w2-g5": {"name": "기말 1회", "pp": "", "title": "📝 기말고사 1회 Lessons 3~4 (27문항 · pp.133-137)", "questions": [{"n": 1, "type": "mc", "ans": 5}, {"n": 2, "type": "mc", "ans": 3}, {"n": 3, "type": "mc", "ans": 3}, {"n": 4, "type": "mc", "ans": 1}, {"n": 5, "type": "sub", "ans": "is planning to invent a special fork"}, {"n": 6, "type": "mc", "ans": 5}, {"n": 7, "type": "mc", "ans": 1}, {"n": 8, "type": "sub", "ans": "Have you heard of Neil Armstrong"}, {"n": 9, "type": "mc", "ans": 3}, {"n": 10, "type": "mc", "ans": 5}, {"n": 11, "type": "sub", "ans": "The meal was cooked by the chef."}, {"n": 12, "type": "sub", "ans": "He has studied math"}, {"n": 13, "type": "mc", "ans": 1}, {"n": 14, "type": "mc", "ans": 2}, {"n": 15, "type": "sub", "ans": "let me go out"}, {"n": 16, "type": "mc", "ans": 2}, {"n": 17, "type": "sub", "ans": "ridden bikes for about 10 years"}, {"n": 18, "type": "sub", "ans": "ⓐ fan ⓑ wind"}, {"n": 19, "type": "sub", "ans": "is designed"}, {"n": 20, "type": "sub", "ans": "ⓐ chair ⓑ elderly"}, {"n": 21, "type": "mc", "ans": 5}, {"n": 22, "type": "sub", "ans": "solution"}, {"n": 23, "type": "mc", "ans": 2}, {"n": 24, "type": "mc", "ans": 5}, {"n": 25, "type": "mc", "ans": 3}, {"n": 26, "type": "mc", "ans": 1}, {"n": 27, "type": "sub", "ans": "I'll make my men return"}]}, "w2-g6": {"name": "기말 2회", "pp": "", "title": "📝 기말고사 2회 Lessons 3~4 (27문항 · pp.138-142)", "questions": [{"n": 1, "type": "mc", "ans": 1}, {"n": 2, "type": "mc", "ans": 4}, {"n": 3, "type": "mc", "ans": 2}, {"n": 4, "type": "sub", "ans": "I'm planning to play soccer (this weekend)."}, {"n": 5, "type": "mc", "ans": 1}, {"n": 6, "type": "mc", "ans": 3}, {"n": 7, "type": "mc", "ans": 3}, {"n": 8, "type": "mc", "ans": 3}, {"n": 9, "type": "mc", "ans": 1}, {"n": 10, "type": "sub", "ans": "This letter was sent by Tom"}, {"n": 11, "type": "mc", "ans": 4}, {"n": 12, "type": "mc", "ans": 3}, {"n": 13, "type": "mc", "ans": 4}, {"n": 14, "type": "sub", "ans": "I found a quiet place to study."}, {"n": 15, "type": "mc", "ans": 2}, {"n": 16, "type": "mc", "ans": 4}, {"n": 17, "type": "mc", "ans": 4}, {"n": 18, "type": "sub", "ans": "charge"}, {"n": 19, "type": "sub", "ans": "dirty paint water"}, {"n": 20, "type": "mc", "ans": 1}, {"n": 21, "type": "mc", "ans": 3}, {"n": 22, "type": "mc", "ans": 3}, {"n": 23, "type": "mc", "ans": 4}, {"n": 24, "type": "mc", "ans": 2}, {"n": 25, "type": "sub", "ans": "got → get"}, {"n": 26, "type": "mc", "ans": 2}, {"n": 27, "type": "mc", "ans": 5}]}, "w2-g7": {"name": "기말 3회", "pp": "", "title": "📝 기말고사 3회 Lessons 3~4 (27문항 · pp.143-147)", "questions": [{"n": 1, "type": "mc", "ans": 3}, {"n": 2, "type": "mc", "ans": 5}, {"n": 3, "type": "mc", "ans": 3}, {"n": 4, "type": "sub", "ans": "for cutting paper"}, {"n": 5, "type": "mc", "ans": 2}, {"n": 6, "type": "mc", "ans": 3}, {"n": 7, "type": "mc", "ans": 3}, {"n": 8, "type": "mc", "ans": 3}, {"n": 9, "type": "mc", "ans": 2}, {"n": 10, "type": "mc", "ans": 4}, {"n": 11, "type": "sub", "ans": "This picture was painted by a famous artist."}, {"n": 12, "type": "mc", "ans": 4}, {"n": 13, "type": "mc", "ans": 2}, {"n": 14, "type": "sub", "ans": "broke → was broken"}, {"n": 15, "type": "sub", "ans": "He made Tom bring the book."}, {"n": 16, "type": "mc", "ans": 5}, {"n": 17, "type": "mc", "ans": 3}, {"n": 18, "type": "sub", "ans": "ran out of battery"}, {"n": 19, "type": "mc", "ans": 3}, {"n": 20, "type": "mc", "ans": 3}, {"n": 21, "type": "mc", "ans": 4}, {"n": 22, "type": "mc", "ans": 1}, {"n": 23, "type": "mc", "ans": 3}, {"n": 24, "type": "mc", "ans": 3}, {"n": 25, "type": "sub", "ans": "There is little food to eat"}, {"n": 26, "type": "mc", "ans": 3}, {"n": 27, "type": "mc", "ans": 2}]}};
+const WEEKS=[{"label": "📅 9/5 (토요보강)", "desc": "Lesson 05 최종점검 모의고사 1·2·3회 (75문항) · 9/5 토요보강 | 풀어온 답을 입력하세요", "tab": [["최종점검 1회", "25문항·pp.60-63"], ["최종점검 2회", "25문항·pp.64-67"], ["최종점검 3회", "25문항·pp.68-71"]], "full": ["📘 Lesson 05 최종점검 모의고사 1회 (25문항 · pp.60-63)", "📗 Lesson 05 최종점검 모의고사 2회 (25문항 · pp.64-67)", "📙 Lesson 05 최종점검 모의고사 3회 (25문항 · pp.68-71)"], "data": [[{"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "tch", "a": "ⓐ of  ⓑ by"}, {"t": "multi", "a": [3, 5]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "tch", "a": "ⓒ → ⓑ → ⓐ"}, {"t": "mc", "a": 1}, {"t": "multi", "a": [2, 5]}, {"t": "tch", "a": "She bought a piano which[that] she wanted for a long time."}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "tch", "a": "ⓐ as  ⓑ which[that]"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "tch", "a": "small"}, {"t": "mc", "a": 2}, {"t": "mc", "a": 1}, {"t": "tch", "a": "sick"}, {"t": "mc", "a": 3}, {"t": "multi", "a": [2, 5]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "tch", "a": "blossom"}], [{"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "tch", "a": "blossom, pea, against"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "tch", "a": "(ⓐ) → (ⓒ) → (ⓑ)"}, {"t": "mc", "a": 3}, {"t": "tch", "a": "whom[who/that]"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "tch", "a": "(ⓑ) → Some deserts are as cold as polar regions at night. / (ⓒ) → The moon shines as brightly as the stars."}, {"t": "mc", "a": 4}, {"t": "tch", "a": "There will be something that you can do!"}, {"t": "tch", "a": "(④) getting → to get"}, {"t": "mc", "a": 5}, {"t": "tch", "a": "It is as little as a baby's finger."}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "multi", "a": [2, 4, 5]}, {"t": "mc", "a": 1}, {"t": "tch", "a": "(1) → The little pea was as happy as the girl. (2) → It finally found the thing which[that] it could do."}], [{"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "tch", "a": "(b)lossom"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "tch", "a": "I'm looking forward to the camp."}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "tch", "a": "Kindness is as warm as sunshine."}, {"t": "mc", "a": 3}, {"t": "tch", "a": "Ants are as busy as bees."}, {"t": "mc", "a": 3}, {"t": "tch", "a": "There will be something that you can do!"}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "tch", "a": "was as little as a baby's finger"}, {"t": "tch", "a": "It became as tall as"}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "tch", "a": "It finally found the thing which[that] it could do."}, {"t": "mc", "a": 3}]], "id": "0905"}];
+let cw=0, A=[], LABELS=[], cur=0;
+let picks=[], msel={}, submitted=[], sub=[], subT=[];
+function wid(){return WEEKS[cw].id||('w'+cw);}
+function keyD(t){return 'ej2_'+wid()+'_d'+t;}
+function keyS(t){return 'ej2_'+wid()+'_s'+t;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function autoTotal(t){return A[t].filter(q=>q.t==='mc'||q.t==='multi').length;}
+function tchTotal(t){return A[t].filter(q=>q.t==='tch').length;}
 
-const userAnswers = {};
+function renderWeek(w){
+  cw=w; A=WEEKS[w].data; LABELS=WEEKS[w].full;
+  picks=A.map(()=>({})); msel={}; submitted=A.map(()=>false); sub=A.map(()=>({})); subT=A.map(()=>({}));
+  document.querySelectorAll('.wtab').forEach((b,i)=>b.classList.toggle('on',i===w));
+  document.getElementById('wdesc').textContent=WEEKS[w].desc;
+  const tabsEl=document.getElementById('tabs'); tabsEl.innerHTML='';
+  WEEKS[w].tab.forEach((tb,i)=>{ const b=document.createElement('button'); b.className='tab k'+(i%4); b.innerHTML=esc(tb[0])+'<br><small>'+esc(tb[1])+'</small>'; b.onclick=()=>sw(i); tabsEl.appendChild(b); });
+  const panelsEl=document.getElementById('panels'); panelsEl.innerHTML='';
+  A.forEach((_,t)=>{
+    const p=document.createElement('div'); p.className='panel'; p.id='p'+t;
+    p.innerHTML=`<div class="attbar"><span>도전 횟수: <strong id="at${t}">0</strong>회</span><button class="reset-btn" onclick="resetTab(${t})">🔄 초기화</button></div>`
+      +`<div class="sbar"><div class="sbar-top"><div class="snum" id="sn${t}">0</div><div class="spct" id="sp${t}">0%</div></div><div class="bout"><div class="bin k${t%4}" id="bn${t}"></div></div><div class="sdet" id="sd${t}">답을 입력하고 채점해보세요</div></div>`
+      +`<div id="omr${t}"></div>`;
+    panelsEl.appendChild(p);
+  });
+  A.forEach((_,t)=>{ document.getElementById('at'+t).textContent=localStorage.getItem(keyS(t))||'0'; buildOMR(t); });
+  loadState();
+  A.forEach((_,t)=>{ if(submitted[t]) gradeTab(t); updScore(t); });
+  cur=0; sw(0);
+}
 
-function buildSchool(schoolId) {
-  const data = SCHOOLS[schoolId];
-  if (!data) return;
-  const grid = document.getElementById('qgrid-' + schoolId);
-  if (grid.innerHTML !== '') return;
-  userAnswers[schoolId] = {};
-  data.questions.forEach(q => {
-    userAnswers[schoolId][q.n] = null;
-    const card = document.createElement('div');
-    card.className = 'q-card';
-    card.id = 'qcard-' + schoolId + '-' + q.n;
-    if (q.type === 'mc' || q.type === 'multi') {
-      const isMulti = (q.type === 'multi');
-      let choicesHTML = '';
-      for (let i = 1; i <= 5; i++) {
-        const _fn = isMulti ? `selectMulti('${schoolId}',${q.n},${i})` : `selectChoice('${schoolId}',${q.n},${i})`;
-        choicesHTML += `<button class="choice-btn" id="cb-${schoolId}-${q.n}-${i}" onclick="${_fn}">${i}</button>`;
-      }
-      const _hint = isMulti ? `<div style="font-size:0.75rem;color:var(--accent2);font-weight:700;margin-bottom:6px;">✔️ 복수정답 · 정답 2개를 모두 선택해야 맞음</div>` : '';
-      card.innerHTML = `
-        <div class="q-top">
-          <span class="q-num">Q${q.n}</span>
-          <span class="q-type-badge">${isMulti?'복수정답·2개선택':'객관식'}</span>
-          <span class="q-status" id="qs-${schoolId}-${q.n}">⬜</span>
-        </div>
-        ${_hint}
-        <div class="choices">${choicesHTML}</div>
-      `;
-    } else {
-      const ansText = Array.isArray(q.ans) ? q.ans.join('\n') : q.ans;
-      card.innerHTML = `
-        <div class="q-top">
-          <span class="q-num">Q${q.n}</span>
-          <span class="q-type-badge">서술형</span>
-          <span class="q-status" id="qs-${schoolId}-${q.n}">⬜</span>
-        </div>
-        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px;">정답을 확인 후 O/X로 자가채점하세요</div>
-        <button class="reveal-btn" onclick="revealAns('${schoolId}',${q.n})">🔍 정답 보기</button>
-        <div class="answer-reveal" id="ans-${schoolId}-${q.n}">
-          <div class="label">✅ 정답</div>
-          <div class="ans-text">${ansText.replace(/\n/g,'<br>')}</div>
-        </div>
-        <div class="self-check" id="sc-${schoolId}-${q.n}">
-          <button class="self-o" id="so-${schoolId}-${q.n}" onclick="selfCheck('${schoolId}',${q.n},'o')">⭕ 맞았어요</button>
-          <button class="self-x" id="sx-${schoolId}-${q.n}" onclick="selfCheck('${schoolId}',${q.n},'x')">❌ 틀렸어요</button>
-        </div>
-      `;
-      card.className = 'q-card q-subjective';
+function buildOMR(t){
+  const data=A[t]; const el=document.getElementById('omr'+t); el.innerHTML='';
+  const box=document.createElement('div'); box.className='omrbox';
+  box.innerHTML=`<h3>${esc(LABELS[t])}</h3>`;
+  data.forEach((q,i)=>{
+    const row=document.createElement('div'); row.className='orow'; row.id=`r${t}_${i}`;
+    const lbl=document.createElement('div'); lbl.className='qlbl'; lbl.textContent=i+1; row.appendChild(lbl);
+    const ic=document.createElement('div'); ic.className='ricon'; ic.id=`ic${t}_${i}`; ic.textContent=(q.t==='tch'?'✍️':'?'); row.appendChild(ic);
+    const ia=document.createElement('div'); ia.style.flex='1';
+    if(q.t==='mc'){
+      const wrap=document.createElement('div');
+      if(Array.isArray(q.a)){ const note=document.createElement('div'); note.className='multi-note'; note.textContent='(복수정답)'; wrap.appendChild(note); }
+      const chs=document.createElement('div'); chs.className='chs';
+      '①②③④⑤'.split('').forEach((ch,ni)=>{ const b=document.createElement('button'); b.className='cb'; b.textContent=ch; b.id=`cb${t}_${i}_${ni+1}`; b.onclick=()=>selMC(t,i,ni+1); chs.appendChild(b); });
+      wrap.appendChild(chs); ia.appendChild(wrap);
+    } else if(q.t==='multi'){
+      const note=document.createElement('div'); note.className='multi-note'; note.textContent='✔️ 복수정답 · '+q.a.length+'개 모두 선택해야 정답';
+      const ma=document.createElement('div'); ma.className='ma'; ma.appendChild(note);
+      const mr=document.createElement('div'); mr.className='mr'; msel[`${t}_${i}`]=[];
+      '①②③④⑤'.split('').forEach((ch,ni)=>{ const b=document.createElement('button'); b.className='cb'; b.textContent=ch; b.id=`mc${t}_${i}_${ni+1}`; b.onclick=()=>togMulti(t,i,ni+1); mr.appendChild(b); });
+      ma.appendChild(mr); ia.appendChild(ma);
+    } else if(q.t==='tch'){
+      const w=document.createElement('div'); w.className='tch';
+      w.innerHTML=`<button class="tch-rv" id="rv${t}_${i}" onclick="revealTch(${t},${i})">🔍 정답 보기</button>`
+        +`<div class="tch-ans" id="ta${t}_${i}" style="display:none"></div>`
+        +`<div class="tch-ox" id="ox${t}_${i}" style="display:none">`
+        +`<button class="oxb oxo" id="oxo${t}_${i}" onclick="selfTch(${t},${i},true)">⭕ 맞았어요</button>`
+        +`<button class="oxb oxx" id="oxx${t}_${i}" onclick="selfTch(${t},${i},false)">❌ 틀렸어요</button>`
+        +`</div>`;
+      ia.appendChild(w);
     }
-    grid.appendChild(card);
+    row.appendChild(ia); box.appendChild(row);
+  });
+  el.appendChild(box);
+}
+
+function selMC(t,i,n){
+  if(submitted[t])return;
+  picks[t][i]=n;
+  '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`cb${t}_${i}_${x+1}`); if(b)b.classList.toggle('sel',x+1===n); });
+  saveState(t); updScore(t); updFloat();
+}
+function togMulti(t,i,n){
+  if(submitted[t])return;
+  const k=`${t}_${i}`; const arr=msel[k]||[]; msel[k]=arr;
+  const b=document.getElementById(`mc${t}_${i}_${n}`);
+  if(arr.includes(n)){ msel[k]=arr.filter(x=>x!==n); if(b)b.classList.remove('sel'); }
+  else { arr.push(n); if(b)b.classList.add('sel'); }
+  saveState(t); updScore(t); updFloat();
+}
+
+function revealTch(t,i){
+  const ta=document.getElementById(`ta${t}_${i}`); if(ta){ ta.style.display='block'; ta.innerHTML='<b>모범답안</b>'+esc(A[t][i].a); }
+  const ox=document.getElementById(`ox${t}_${i}`); if(ox) ox.style.display='flex';
+  const rb=document.getElementById(`rv${t}_${i}`); if(rb) rb.style.display='none';
+}
+function selfTch(t,i,ok){
+  revealTch(t,i);
+  subT[t][i]=ok;
+  const bo=document.getElementById(`oxo${t}_${i}`), bx=document.getElementById(`oxx${t}_${i}`);
+  if(bo) bo.classList.toggle('on',ok); if(bx) bx.classList.toggle('on',!ok);
+  const ic=document.getElementById(`ic${t}_${i}`); if(ic){ ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng'); }
+  saveState(t); updScore(t); updFloat();
+}
+
+function isAnswered(t,i){ const q=A[t][i]; if(q.t==='mc')return picks[t][i]!==undefined; if(q.t==='multi')return (msel[`${t}_${i}`]||[]).length>0; return false; }
+function countAnswered(t){ let c=0; A[t].forEach((q,i)=>{ if(isAnswered(t,i))c++; }); return c; }
+
+function gradeTab(t){
+  A[t].forEach((q,i)=>{
+    const ic=document.getElementById(`ic${t}_${i}`);
+    if(q.t==='mc'){
+      const n=picks[t][i]; const corList=Array.isArray(q.a)?q.a:[q.a];
+      '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`cb${t}_${i}_${x+1}`); if(!b)return; b.disabled=true; b.classList.remove('sel'); if(corList.includes(x+1))b.classList.add('ok'); if(n!==undefined&&x+1===n&&!corList.includes(n))b.classList.add('ng'); });
+      if(n!==undefined){ const ok=corList.includes(n); sub[t][i]=ok; if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }
+      else if(ic){ ic.textContent='-'; ic.className='ricon'; }
+    } else if(q.t==='multi'){
+      const sel=[...(msel[`${t}_${i}`]||[])].sort((a,b)=>a-b); const ans=[...q.a].sort((a,b)=>a-b); const has=sel.length>0; const ok=has&&JSON.stringify(sel)===JSON.stringify(ans);
+      '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`mc${t}_${i}_${x+1}`); if(!b)return; b.disabled=true; b.classList.remove('sel'); if(ans.includes(x+1))b.classList.add('ok'); if(sel.includes(x+1)&&!ans.includes(x+1))b.classList.add('ng'); });
+      if(has){ sub[t][i]=ok; if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }
+      else if(ic){ ic.textContent='-'; ic.className='ricon'; }
+    } else if(q.t==='tch'){
+      revealTch(t,i);
+    }
   });
 }
 
-const locked = {};
+function submitTab(){
+  const t=cur;
+  if(submitted[t]){ showResult(); return; }
+  const auto=autoTotal(t); const ans=countAnswered(t);
+  if(auto>0 && ans===0){ alert('먼저 답을 입력해주세요!'); return; }
+  if(auto>0 && ans<auto && !confirm('아직 '+(auto-ans)+'문항이 비어 있어요. 제출하고 채점할까요?')) return;
+  submitted[t]=true;
+  gradeTab(t);
+  const att=parseInt(localStorage.getItem(keyS(t))||'0')+1; localStorage.setItem(keyS(t),att); document.getElementById('at'+t).textContent=att;
+  saveState(t); updScore(t); updFloat(); showResult();
+}
 
-function selectChoice(schoolId, qNum, choice) {
-  if (locked[schoolId]) return;
-  userAnswers[schoolId][qNum] = choice;
-  for (let i = 1; i <= 5; i++) {
-    const btn = document.getElementById(`cb-${schoolId}-${qNum}-${i}`);
-    if (!btn) continue;
-    btn.classList.toggle('selected', i === choice);
+function updScore(t){
+  const auto=autoTotal(t), tch=tchTotal(t), ans=countAnswered(t), correct=Object.values(sub[t]).filter(v=>v).length, g=submitted[t];
+  const tcor=Object.values(subT[t]).filter(v=>v).length, tdone=Object.keys(subT[t]).length;
+  const sn=document.getElementById('sn'+t);
+  if(auto===0){ sn.innerHTML= tdone>0?`${tcor} <span>/ ${tch}</span>`:`✍️ <span>서술형 ${tch}문항</span>`; }
+  else { sn.innerHTML=`${g?correct:ans} <span>/ ${auto}</span>`; }
+  if(auto===0){
+    document.getElementById('sp'+t).textContent= tdone>0?Math.round(tcor/tdone*100)+'%':'—';
+    document.getElementById('bn'+t).style.width=(tch?tdone/tch*100:0)+'%';
+  } else {
+    document.getElementById('sp'+t).textContent=(g?(ans>0?Math.round(correct/ans*100):0):Math.round(ans/auto*100))+'%';
+    document.getElementById('bn'+t).style.width=(ans/auto*100)+'%';
   }
-  const status = document.getElementById(`qs-${schoolId}-${qNum}`);
-  if (status) status.textContent = '✏️';
-  updateProgress(schoolId);
+  let d;
+  if(auto===0){ d=`서술형 ${tch}문항 · 🔍 정답 보고 O/X 채점 (채점 ${tdone}/${tch} · 정답 ${tcor})`; }
+  else if(g){ d=`객관식 정답 ${correct} · 오답 ${ans-correct} · 미응답 ${auto-ans}`+(tch?` · 서술형 정답 ${tcor}/${tch}`:''); }
+  else { d=`객관식 입력 ${ans}/${auto}`+(tch?` · 서술형 ${tch}문항(🔍 정답 보고 채점)`:''); }
+  document.getElementById('sd'+t).textContent=d;
 }
 
-function selectMulti(schoolId, qNum, choice) {
-  if (locked[schoolId]) return;
-  let arr = Array.isArray(userAnswers[schoolId][qNum]) ? userAnswers[schoolId][qNum].slice() : [];
-  if (arr.includes(choice)) arr = arr.filter(x => x !== choice);
-  else arr.push(choice);
-  userAnswers[schoolId][qNum] = arr.length ? arr : null;
-  for (let i = 1; i <= 5; i++) {
-    const btn = document.getElementById(`cb-${schoolId}-${qNum}-${i}`);
-    if (btn) btn.classList.toggle('selected', arr.includes(i));
+function updFloat(){
+  const fb=document.getElementById('fb'); fb.className='fb k'+(cur%4);
+  if(submitted[cur]){ fb.textContent='📊 결과 다시 보기'; }
+  else if(autoTotal(cur)===0){ fb.textContent='📊 결과 보기'; }
+  else { const ans=countAnswered(cur); fb.textContent=ans>0?`✅ 제출하고 채점 (${ans}/${autoTotal(cur)})`:'✅ 제출하고 채점'; }
+}
+
+function resetTab(t){
+  if(!confirm('이 탭의 모든 답을 초기화할까요?')) return;
+  picks[t]={}; submitted[t]=false; sub[t]={}; subT[t]={};
+  Object.keys(msel).filter(k=>k.startsWith(t+'_')).forEach(k=>msel[k]=[]);
+  localStorage.removeItem(keyD(t));
+  buildOMR(t); updScore(t); updFloat();
+}
+
+function showResult(){
+  const t=cur; if(!submitted[t]){ submitTab(); return; }
+  const auto=autoTotal(t), tch=tchTotal(t);
+  const done=Object.keys(sub[t]).length, correct=Object.values(sub[t]).filter(v=>v).length, pct=done>0?Math.round(correct/done*100):0;
+  if(auto===0){
+    const tcor=Object.values(subT[t]).filter(v=>v).length, tdone=Object.keys(subT[t]).length, tp=tdone>0?Math.round(tcor/tdone*100):0;
+    document.getElementById('me').textContent= tp>=90?'🏆':tp>=70?'😊':tp>=50?'🤔':'✍️';
+    document.getElementById('mt').textContent='서술형 자가채점';
+    document.getElementById('msc').className='ms '+(tp>=70?'s':tp>=50?'w':'d'); document.getElementById('msc').textContent=`${tcor} / ${tch}`;
+    document.getElementById('mb').textContent= tdone<tch?`아직 ${tch-tdone}문항 미채점 · 🔍 정답 보고 O/X로 채점하세요`:`서술형 정답률 ${tp}%`;
+  } else {
+    const emoji=pct>=90?'🏆':pct>=70?'😊':pct>=50?'🤔':'😅';
+    const title=pct>=90?'훌륭해요!':pct>=70?'잘했어요!':pct>=50?'조금 더 노력해요!':'다시 도전해봐요!';
+    const cls=pct>=70?'s':pct>=50?'w':'d';
+    document.getElementById('me').textContent=emoji; document.getElementById('mt').textContent=title;
+    document.getElementById('msc').className='ms '+cls; document.getElementById('msc').textContent=`${correct} / ${done}`;
+    document.getElementById('mb').textContent=`객관식 정답률 ${pct}% · 미응답 ${auto-done}문항`+(tch?` · 서술형 정답 ${Object.values(subT[t]).filter(v=>v).length}/${tch}`:'');
   }
-  const status = document.getElementById(`qs-${schoolId}-${qNum}`);
-  if (status) status.textContent = arr.length ? '✏️' : '⬜';
-  updateProgress(schoolId);
+  document.getElementById('ov').classList.add('on');
+}
+function closeOv(){ document.getElementById('ov').classList.remove('on'); }
+
+function sw(t){
+  cur=t;
+  document.querySelectorAll('#tabs .tab').forEach((b,i)=>b.classList.toggle('on',i===t));
+  document.querySelectorAll('#panels .panel').forEach((p,i)=>p.classList.toggle('on',i===t));
+  updFloat();
 }
 
-function revealAns(schoolId, qNum) {
-  const ans = document.getElementById(`ans-${schoolId}-${qNum}`);
-  const sc = document.getElementById(`sc-${schoolId}-${qNum}`);
-  ans.classList.add('show');
-  sc.classList.add('show');
-  const revBtn = ans.previousElementSibling;
-  if(revBtn && revBtn.classList.contains('reveal-btn')) revBtn.style.display = 'none';
+function saveState(t){
+  const multi={}; Object.keys(msel).filter(k=>k.startsWith(t+'_')).forEach(k=>multi[k]=msel[k]);
+  localStorage.setItem(keyD(t), JSON.stringify({picks:picks[t], multi, submitted:submitted[t], subT:subT[t]}));
 }
-
-function selfCheck(schoolId, qNum, result) {
-  if (userAnswers[schoolId][qNum] !== null) return;
-  userAnswers[schoolId][qNum] = result;
-  const card = document.getElementById(`qcard-${schoolId}-${qNum}`);
-  card.classList.add(result === 'o' ? 'correct' : 'wrong');
-  const so = document.getElementById(`so-${schoolId}-${qNum}`);
-  const sx = document.getElementById(`sx-${schoolId}-${qNum}`);
-  if (result === 'o') { so.classList.add('picked'); so.style.pointerEvents='none'; sx.style.pointerEvents='none'; }
-  else { sx.classList.add('picked'); so.style.pointerEvents='none'; sx.style.pointerEvents='none'; }
-  const status = document.getElementById(`qs-${schoolId}-${qNum}`);
-  status.textContent = result === 'o' ? '✅' : '❌';
-  updateProgress(schoolId);
-}
-
-function updateProgress(schoolId) {
-  const data = SCHOOLS[schoolId];
-  const total = data.questions.length;
-  let done = 0;
-  data.questions.forEach(q => { if (userAnswers[schoolId][q.n] !== null) done++; });
-  const pct = (done / total * 100).toFixed(0);
-  const fill = document.getElementById('prog-' + schoolId);
-  const txt = document.getElementById('prog-text-' + schoolId);
-  if (fill) fill.style.width = pct + '%';
-  if (txt) txt.textContent = `${done} / ${total} 완료`;
-}
-
-function calcScore(schoolId) {
-  const data = SCHOOLS[schoolId];
-  let correct = 0, total = 0, unanswered = 0;
-  locked[schoolId] = true;
-  data.questions.forEach(q => {
-    total++;
-    const ua = userAnswers[schoolId][q.n];
-    if (q.type === 'multi') {
-      const ansSet = [...q.ans].sort((a,b)=>a-b);
-      const uaArr = Array.isArray(ua) ? [...ua].sort((a,b)=>a-b) : null;
-      for (let i = 1; i <= 5; i++) {
-        const btn = document.getElementById(`cb-${schoolId}-${q.n}-${i}`);
-        if (!btn) continue;
-        btn.classList.remove('selected');
-        btn.style.pointerEvents = 'none';
-      }
-      const card = document.getElementById(`qcard-${schoolId}-${q.n}`);
-      const status = document.getElementById(`qs-${schoolId}-${q.n}`);
-      ansSet.forEach(c => { const cb = document.getElementById(`cb-${schoolId}-${q.n}-${c}`); if (cb) cb.classList.add('correct-ans'); });
-      if (uaArr === null) { unanswered++; if (status) status.textContent = '⬜'; return; }
-      uaArr.forEach(c => { if (!ansSet.includes(c)) { const cb = document.getElementById(`cb-${schoolId}-${q.n}-${c}`); if (cb) { cb.classList.remove('correct-ans'); cb.classList.add('wrong-ans'); } } });
-      const ok = JSON.stringify(uaArr) === JSON.stringify(ansSet);
-      if (card) card.classList.add(ok ? 'correct' : 'wrong');
-      if (status) status.textContent = ok ? '✅' : '❌';
-      if (ok) correct++;
-      return;
-    }
-    if (q.type === 'mc') {
-      const correctAns = Array.isArray(q.ans) ? q.ans : [q.ans];
-      for (let i = 1; i <= 5; i++) {
-        const btn = document.getElementById(`cb-${schoolId}-${q.n}-${i}`);
-        if (!btn) continue;
-        btn.classList.remove('selected');
-        btn.style.pointerEvents = 'none';
-      }
-      const card = document.getElementById(`qcard-${schoolId}-${q.n}`);
-      const status = document.getElementById(`qs-${schoolId}-${q.n}`);
-      if (ua === null) {
-        unanswered++;
-        correctAns.forEach(c => { const cb = document.getElementById(`cb-${schoolId}-${q.n}-${c}`); if (cb) cb.classList.add('correct-ans'); });
-        if (status) status.textContent = '⬜';
-        return;
-      }
-      const isCorrect = correctAns.includes(ua);
-      const chosen = document.getElementById(`cb-${schoolId}-${q.n}-${ua}`);
-      if (chosen) chosen.classList.add(isCorrect ? 'correct-ans' : 'wrong-ans');
-      if (!isCorrect) correctAns.forEach(c => { const cb = document.getElementById(`cb-${schoolId}-${q.n}-${c}`); if (cb) cb.classList.add('correct-ans'); });
-      if (card) card.classList.add(isCorrect ? 'correct' : 'wrong');
-      if (status) status.textContent = isCorrect ? '✅' : '❌';
-      if (isCorrect) correct++;
-    } else {
-      if (ua === null) { unanswered++; return; }
-      if (ua === 'o') correct++;
-    }
+function loadState(){
+  A.forEach((_,t)=>{
+    const raw=localStorage.getItem(keyD(t)); if(!raw)return;
+    let st; try{ st=JSON.parse(raw); }catch(e){ return; }
+    if(st.picks){ picks[t]=st.picks; Object.entries(st.picks).forEach(([i,n])=>{ const b=document.getElementById(`cb${t}_${i}_${n}`); if(b)b.classList.add('sel'); }); }
+    if(st.multi){ Object.entries(st.multi).forEach(([k,arr])=>{ msel[k]=arr.slice(); arr.forEach(n=>{ const b=document.getElementById(`mc${k}_${n}`); if(b)b.classList.add('sel'); }); }); }
+    if(st.subT){ subT[t]=st.subT; Object.entries(st.subT).forEach(([i,ok])=>{ revealTch(t,Number(i)); const bo=document.getElementById(`oxo${t}_${i}`), bx=document.getElementById(`oxx${t}_${i}`); if(bo)bo.classList.toggle('on',ok); if(bx)bx.classList.toggle('on',!ok); const ic=document.getElementById(`ic${t}_${i}`); if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }); }
+    submitted[t]=!!st.submitted;
   });
-  const answered = total - unanswered;
-  const pct = answered > 0 ? Math.round(correct / answered * 100) : 0;
-  const score = Math.round(correct / total * 100);
-  const resultBox = document.getElementById('result-' + schoolId);
-  resultBox.innerHTML = `
-    <div class="big-score">${score}점</div>
-    <div class="score-label">전체 문항 기준 점수</div>
-    <div class="detail">
-      ${total}문항 중 ${correct}개 정답<br>
-      미응답: ${unanswered}문항 · 정답률: ${pct}%
-    </div>
-    <div class="capture-note">📸 캡처해서 선생님께 제출!</div>
-  `;
-  resultBox.classList.add('show');
 }
-
-function resetSchool(schoolId) {
-  const data = SCHOOLS[schoolId];
-  userAnswers[schoolId] = {};
-  locked[schoolId] = false;
-  data.questions.forEach(q => { userAnswers[schoolId][q.n] = null; });
-  const grid = document.getElementById('qgrid-' + schoolId);
-  grid.innerHTML = '';
-  buildSchool(schoolId);
-  const resultBox = document.getElementById('result-' + schoolId);
-  resultBox.classList.remove('show');
-  resultBox.innerHTML = '';
-  updateProgress(schoolId);
-}
-
-let currentWeek = 1;
-function showWeek(n) {
-  currentWeek = n;
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('week' + n).classList.add('active');
-  document.querySelectorAll('.week-btn')[n-1].classList.add('active');
-}
-
-function showSchool(weekPrefix, schoolKey) {
-  const schoolId = weekPrefix + '-' + schoolKey;
-  const weekEl = document.getElementById('week' + weekPrefix.replace('w',''));
-  weekEl.querySelectorAll('.school-content').forEach(s => s.classList.remove('active'));
-  weekEl.querySelectorAll('.school-btn').forEach(b => b.classList.remove('active'));
-  const target = document.getElementById(schoolId);
-  if (target) target.classList.add('active');
-  const btns = weekEl.querySelectorAll('.school-btn');
-  const keys = { w1: ["gram", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"], w2: ["g1","g2","g3","g4","g5","g6","g7"] };
-  const wk = 'w' + weekPrefix.replace('w','');
-  const idx = keys[wk].indexOf(schoolKey);
-  if (idx >= 0) btns[idx].classList.add('active');
-  buildSchool(schoolId);
-}
-
-(function init() {
-  showWeek(2);
-  buildSchool('w2-g1');
-})();
+renderWeek(0);
 </script>
-
 </body>
 </html>
