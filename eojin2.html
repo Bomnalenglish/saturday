@@ -3,356 +3,530 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>어진중 2학년 OMR 채점</title>
+<title>중2 비상(황) Lesson 5~6 OMR 자가채점</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-  :root{--c1:#0ea5e9;--c1l:#e0f2fe;--c2:#10b981;--c2l:#d1fae5;--c3:#f59e0b;--c3l:#fef3c7;--c4:#ef4444;--c4l:#fee2e2;--ok:#16a34a;--okl:#dcfce7;--ng:#dc2626;--ngl:#fee2e2;--bg:#f1f5f9;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Segoe UI','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-  .hdr{background:linear-gradient(135deg,#0c4a6e,#0ea5e9,#10b981);color:#fff;padding:16px 16px 12px;text-align:center;box-shadow:0 4px 16px rgba(14,165,233,.3);}
-  .hdr h1{font-size:1.1rem;font-weight:800;}
-  .hdr p{font-size:.73rem;opacity:.8;margin-top:3px;}
-  
-  .tabs{display:flex;flex-wrap:wrap;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07);}
-  .tab{flex:1 1 70px;min-width:60px;padding:9px 3px;border:none;background:#fff;font-size:.64rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;line-height:1.3;text-align:center;transition:all .15s;}
-  .tab.on[data-t="0"]{color:var(--c1);border-bottom-color:var(--c1);background:var(--c1l);}
-  .tab.on[data-t="1"]{color:var(--c2);border-bottom-color:var(--c2);background:var(--c2l);}
-  .tab.on[data-t="2"]{color:var(--c3);border-bottom-color:var(--c3);background:var(--c3l);}
-  .tab.on[data-t="3"]{color:var(--c4);border-bottom-color:var(--c4);background:var(--c4l);}
-  .panel{display:none;padding:13px 11px 90px;}
-  .panel.on{display:block;}
-  .sbar{background:#fff;border-radius:12px;padding:12px 15px;margin-bottom:13px;box-shadow:0 1px 4px rgba(0,0,0,.07);}
-  .sbar-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
-  .snum{font-size:1.05rem;font-weight:800;}.snum span{font-size:.72rem;font-weight:500;color:var(--muted);}
-  .spct{font-size:.72rem;color:var(--muted);}
-  .bout{height:8px;background:var(--border);border-radius:99px;overflow:hidden;}
-  .bin{height:100%;border-radius:99px;transition:width .4s;width:0;}
-  .p0 .bin{background:linear-gradient(90deg,var(--c1),#38bdf8);}
-  .p1 .bin{background:linear-gradient(90deg,var(--c2),#34d399);}
-  .p2 .bin{background:linear-gradient(90deg,var(--c3),#fbbf24);}
-  .p3 .bin{background:linear-gradient(90deg,var(--c4),#f87171);}
-  .sdet{font-size:.7rem;color:var(--muted);margin-top:5px;}
-  .omrbox{background:#fff;border-radius:13px;padding:13px 11px;box-shadow:0 1px 5px rgba(0,0,0,.07);margin-bottom:11px;}
-  .omrbox h3{font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:9px;padding-bottom:5px;border-bottom:1px solid var(--border);}
-  .orow{display:flex;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f8fafc;gap:5px;}
-  .orow:last-child{border-bottom:none;}
-  .qlbl{width:24px;font-size:.7rem;font-weight:700;color:var(--muted);flex-shrink:0;text-align:right;padding-top:5px;}
-  .ricon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;flex-shrink:0;background:var(--border);color:var(--muted);margin-top:3px;}
-  .ricon.ok{background:var(--okl);color:var(--ok);}
-  .ricon.ng{background:var(--ngl);color:var(--ng);}
-  .chs{display:flex;gap:5px;flex-wrap:wrap;padding-top:2px;}
-  .cb{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:#fafafa;font-size:.82rem;font-weight:700;color:var(--muted);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;}
-  .cb:hover:not(:disabled){border-color:#93c5fd;background:#eff6ff;}
-  .cb.sel{border-color:#3b82f6;background:#dbeafe;color:#1d4ed8;}
-  .cb.sel.ok{border-color:var(--ok);background:var(--okl);color:var(--ok);}
-  .cb.sel.ng{border-color:var(--ng);background:var(--ngl);color:var(--ng);}
-  .cb:disabled{cursor:default;}
-  .tfw{display:flex;gap:5px;padding-top:2px;}
-  .multi-note{font-size:.65rem;font-weight:700;color:#7c3aed;margin-bottom:3px;}
-  .sw{display:flex;gap:5px;align-items:center;flex:1;}
-  .si{flex:1;min-width:0;padding:5px 7px;border:1.5px solid var(--border);border-radius:7px;font-size:.75rem;outline:none;}
-  .si:focus{border-color:#3b82f6;}
-  .si.ok{border-color:var(--ok);background:var(--okl);}
-  .si.ng{border-color:var(--ng);background:var(--ngl);}
-  .si:disabled{cursor:default;}
-  .gbtn{padding:5px 9px;border:none;border-radius:7px;background:#3b82f6;color:#fff;font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap;}
-  .gbtn:disabled{background:var(--muted);cursor:default;}
-  .ma{display:flex;flex-direction:column;gap:3px;flex:1;padding-top:2px;}
-  .mr{display:flex;gap:3px;flex-wrap:wrap;}
-  .msub{padding:4px 9px;border:none;border-radius:7px;background:#7c3aed;color:#fff;font-size:.68rem;font-weight:700;cursor:pointer;width:fit-content;margin-top:2px;}
-  .msub:disabled{background:var(--muted);cursor:default;}
-  .smwrap{display:flex;flex-direction:column;gap:4px;flex:1;}
-  .smrow{display:flex;gap:5px;align-items:center;}
-  .smlbl{font-size:.65rem;font-weight:700;color:var(--muted);white-space:nowrap;min-width:28px;}
-  .tf4wrap{display:flex;flex-direction:column;gap:5px;flex:1;padding-top:2px;}
-  .tf4row{display:flex;gap:6px;align-items:center;}
-  .tf4lbl{font-size:.65rem;font-weight:700;color:var(--muted);white-space:nowrap;min-width:28px;}
-  .tf4btns{display:flex;gap:3px;}
-  .fw{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:200;}
-  .fb{padding:12px 30px;border:none;border-radius:28px;font-size:.85rem;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.2);transition:transform .15s;}
-  .fb:hover{transform:translateY(-2px);}
-  .fb[data-ft="0"]{background:linear-gradient(135deg,var(--c1),#38bdf8);}
-  .fb[data-ft="1"]{background:linear-gradient(135deg,var(--c2),#34d399);}
-  .fb[data-ft="2"]{background:linear-gradient(135deg,var(--c3),#fbbf24);}
-  .fb[data-ft="3"]{background:linear-gradient(135deg,var(--c4),#f87171);}
-  .ov{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
-  .ov.on{display:flex;}
-  .mod{background:#fff;border-radius:18px;padding:26px 20px;max-width:310px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);}
-  .me{font-size:2.6rem;margin-bottom:7px;}
-  .mt{font-size:1.05rem;font-weight:800;margin-bottom:5px;}
-  .ms{font-size:2.2rem;font-weight:900;margin:9px 0;}
-  .ms.s{color:var(--ok);}.ms.w{color:#d97706;}.ms.d{color:var(--ng);}
-  .mb{font-size:.77rem;color:var(--muted);margin-bottom:16px;}
-  .mc{padding:10px 28px;border:none;border-radius:11px;background:#0ea5e9;color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;}
-  .attbar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:9px;}
-  .attbar span{font-size:.68rem;color:var(--muted);}
-  .attbar strong{color:var(--c1);}
-  .reset-btn{padding:4px 10px;border:1.5px solid #fca5a5;border-radius:20px;background:#fff;color:#dc2626;font-size:.68rem;font-weight:700;cursor:pointer;transition:all .15s;}
-  .reset-btn:hover{background:#fee2e2;}
-  .tab.on[data-t="4"]{color:var(--c1);border-bottom-color:var(--c1);background:var(--c1l);}
-  .tab.on[data-t="5"]{color:var(--c2);border-bottom-color:var(--c2);background:var(--c2l);}
-  .tab.on[data-t="6"]{color:var(--c3);border-bottom-color:var(--c3);background:var(--c3l);}
-  .p4 .bin{background:linear-gradient(90deg,var(--c1),#38bdf8);}
-  .p5 .bin{background:linear-gradient(90deg,var(--c2),#34d399);}
-  .p6 .bin{background:linear-gradient(90deg,var(--c3),#fbbf24);}
-  .fb[data-ft="4"]{background:linear-gradient(135deg,var(--c1),#38bdf8);}
-  .fb[data-ft="5"]{background:linear-gradient(135deg,var(--c2),#34d399);}
-  .fb[data-ft="6"]{background:linear-gradient(135deg,var(--c3),#fbbf24);}
-  .tch{flex:1;}
-  .tch-note{font-size:.7rem;font-weight:700;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:6px 9px;}
-  .tch-ans{margin-top:5px;font-size:.78rem;color:#1e293b;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:7px 10px;line-height:1.5;}
-  .tch-ans b{color:#16a34a;margin-right:4px;}
-  .tch-rv{font-size:.72rem;font-weight:700;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:6px 11px;cursor:pointer;}
-  .tch-rv:hover{background:#ffedd5;}
-  .tch-ox{display:flex;gap:6px;margin-top:6px;}
-  .oxb{flex:1;padding:7px 8px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-size:.74rem;font-weight:700;cursor:pointer;transition:all .12s;}
-  .oxo{color:var(--ok);} .oxo.on{background:var(--okl);border-color:var(--ok);}
-  .oxx{color:var(--ng);} .oxx.on{background:var(--ngl);border-color:var(--ng);}
+:root{
+  --bg:#FAF6EF; --surface:#FFFFFF; --ink:#2E2A24; --muted:#8A7F70;
+  --line:#E6DCCB; --accent:#3D7A5A; --accent-soft:#EAF2ED;
+  --wrong:#B23A2E; --wrong-soft:#FBEDEB; --gold:#C9821F;
+  --radius:10px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  font-size:16px; line-height:1.55; padding-bottom:80px;
+}
+.wrap{max-width:720px;margin:0 auto;padding:0 14px}
 
-  /* week bar */
-  .weeks{display:flex;justify-content:center;gap:8px;padding:10px 10px 8px;background:#fff;border-bottom:1px solid var(--border);}
-  .wtab{background:#fff;border:2px solid var(--border);color:var(--muted);padding:7px 20px;border-radius:20px;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;}
-  .wtab.on{border-color:var(--c1);color:var(--c1);background:var(--c1l);box-shadow:0 2px 8px rgba(14,165,233,.18);}
-  /* cycling color classes */
-  .tab.on.k0{color:var(--c1);border-bottom-color:var(--c1);background:var(--c1l);}
-  .tab.on.k1{color:var(--c2);border-bottom-color:var(--c2);background:var(--c2l);}
-  .tab.on.k2{color:var(--c3);border-bottom-color:var(--c3);background:var(--c3l);}
-  .tab.on.k3{color:var(--c4);border-bottom-color:var(--c4);background:var(--c4l);}
-  .bin.k0{background:linear-gradient(90deg,var(--c1),#38bdf8);}
-  .bin.k1{background:linear-gradient(90deg,var(--c2),#34d399);}
-  .bin.k2{background:linear-gradient(90deg,var(--c3),#fbbf24);}
-  .bin.k3{background:linear-gradient(90deg,var(--c4),#f87171);}
-  .fb.k0{background:linear-gradient(135deg,var(--c1),#38bdf8);}
-  .fb.k1{background:linear-gradient(135deg,var(--c2),#34d399);}
-  .fb.k2{background:linear-gradient(135deg,var(--c3),#fbbf24);}
-  .fb.k3{background:linear-gradient(135deg,var(--c4),#f87171);}
-  .multi-note{font-size:.65rem;font-weight:700;color:#7c3aed;margin-bottom:3px;}
+/* ── 헤더 ── */
+header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.hd{display:flex;align-items:baseline;gap:10px;padding:14px 0 10px;flex-wrap:wrap}
+.hd h1{font-size:18px;font-weight:700;margin:0;letter-spacing:-0.02em}
+.hd .who{font-size:13px;color:var(--muted);margin-left:auto}
+.hd .who b{color:var(--ink);font-weight:600}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;border:1px solid var(--line);background:var(--bg);color:var(--muted);
+  padding:7px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;
+}
+.tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ── 로그인 ── */
+#login{padding:56px 0}
+#login h2{font-size:22px;margin:0 0 6px;letter-spacing:-0.02em}
+#login p{color:var(--muted);font-size:14px;margin:0 0 26px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:7px}
+.field input{
+  width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:var(--radius);
+  font-size:16px;font-family:inherit;background:var(--surface);color:var(--ink)
+}
+.field input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.schools{display:flex;gap:8px}
+.schools button{
+  flex:1;padding:13px;border:1px solid var(--line);background:var(--surface);
+  border-radius:var(--radius);font-size:15px;font-weight:600;font-family:inherit;color:var(--ink);cursor:pointer
+}
+.schools button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.primary{
+  width:100%;padding:15px;border:0;border-radius:var(--radius);background:var(--accent);
+  color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:10px
+}
+.primary:disabled{background:#CFC7B8;cursor:not-allowed}
+
+/* ── 시험지 ── */
+.sheet-head{padding:20px 0 6px}
+.sheet-head h2{font-size:20px;margin:0;letter-spacing:-0.02em}
+.sheet-head span{font-size:13px;color:var(--muted)}
+.group{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin:14px 0;overflow:hidden}
+.group>h3{
+  margin:0;padding:12px 14px;font-size:14px;font-weight:700;
+  background:#F4EEE3;border-bottom:1px solid var(--line);letter-spacing:-0.01em
+}
+.group>h3 em{font-style:normal;font-weight:500;color:var(--muted);font-size:12px;margin-left:6px}
+
+.row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid #F2EBDE;flex-wrap:wrap}
+.row:last-child{border-bottom:0}
+.num{width:30px;flex:0 0 30px;font-size:14px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.row.ok .num{color:var(--accent)}
+.row.no .num{color:var(--wrong)}
+
+/* 객관식 */
+.bubbles{display:flex;gap:6px}
+.bubble{
+  width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);
+  font-size:15px;font-family:inherit;color:var(--muted);cursor:pointer;display:grid;place-items:center;padding:0
+}
+.bubble.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:700}
+/* 2택 */
+.picks{display:flex;gap:6px;flex-wrap:wrap}
+.pick{
+  padding:8px 14px;min-height:38px;border:1.5px solid var(--line);background:var(--surface);
+  border-radius:999px;font-size:14px;font-family:inherit;color:var(--ink);cursor:pointer
+}
+.pick.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:700}
+.multi{font-size:11px;color:var(--gold);font-weight:700;margin-left:2px}
+
+/* 서술형 */
+.rev{flex:1;min-width:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.showbtn{
+  padding:7px 14px;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;
+  font-size:13px;font-family:inherit;color:var(--muted);cursor:pointer;font-weight:600
+}
+.ans{
+  flex:1;min-width:200px;background:var(--accent-soft);border-radius:8px;padding:8px 11px;
+  font-size:14px;line-height:1.5;color:#1F4A38;word-break:break-word
+}
+.ox{display:flex;gap:6px;margin-left:auto}
+.ox button{
+  width:38px;height:38px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);
+  font-size:16px;font-weight:700;font-family:inherit;color:var(--muted);cursor:pointer;padding:0
+}
+.ox button.o.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ox button.x.on{background:var(--wrong);border-color:var(--wrong);color:#fff}
+
+/* 결과 */
+.actions{display:flex;gap:8px;margin:18px 0 10px}
+.actions button{
+  flex:1;padding:13px;border-radius:var(--radius);font-size:15px;font-weight:700;font-family:inherit;cursor:pointer
+}
+.btn-grade{border:0;background:var(--accent);color:#fff}
+.btn-reset{border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+.result{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;margin-bottom:24px;display:none
+}
+.result.show{display:block}
+.score{font-size:15px;font-weight:700;margin-bottom:8px}
+.score b{font-size:26px;color:var(--accent);font-variant-numeric:tabular-nums}
+.wronglist{font-size:13px;color:var(--muted);line-height:1.7}
+.wronglist b{color:var(--wrong)}
+.note{
+  background:#FDF6E6;border:1px solid #EFE0BE;border-radius:8px;padding:11px 13px;
+  font-size:13px;color:#6B5626;line-height:1.6;margin:12px 0
+}
+footer{text-align:center;font-size:12px;color:var(--muted);padding:26px 0}
+@media (max-width:420px){
+  .bubble{width:34px;height:34px;font-size:14px}
+  .ox button{width:34px;height:34px}
+  .ans{min-width:100%}
+  .ox{margin-left:0}
+}
 </style>
 </head>
 <body>
-<div class="hdr">
-  <h1>📋 어진중 2학년 OMR 채점</h1>
-  <p id="wdesc"></p>
+
+<!-- 로그인 -->
+<div id="login" class="wrap">
+  <h2>Lesson 5~6 답안지</h2>
+  <p>비상(황종배) 중2 · 문법 최종점검</p>
+  <div class="field">
+    <label for="nm">이름</label>
+    <input id="nm" type="text" placeholder="이름을 쓰세요" autocomplete="off">
+  </div>
+  <div class="field">
+    <label>학교</label>
+    <div class="schools">
+      <button type="button" data-s="종촌중">종촌중</button>
+      <button type="button" data-s="어진중">어진중</button>
+    </div>
+  </div>
+  <button id="start" class="primary" disabled>시작하기</button>
 </div>
-<div class="weeks" id="weeks">
-  <button class="wtab on" onclick="renderWeek(0)">📅 9/12 (토요보강)</button>
-  <button class="wtab" onclick="renderWeek(1)">📅 9/5 (토요보강)</button>
+
+<!-- 본화면 -->
+<div id="app" style="display:none">
+  <header>
+    <div class="wrap">
+      <div class="hd">
+        <h1>Lesson 5~6 답안지</h1>
+        <div class="who"><b id="whoName"></b> <span id="whoSchool"></span></div>
+      </div>
+      <div class="tabs" id="tabs"></div>
+    </div>
+  </header>
+  <main class="wrap" id="sheet"></main>
+  <footer>봄날영어수학학원</footer>
 </div>
-<div class="tabs" id="tabs"></div>
-<div id="panels"></div>
-<div class="fw"><button class="fb k0" id="fb" onclick="submitTab()">✅ 제출하고 채점</button></div>
-<div class="ov" id="ov">
-  <div class="mod"><div class="me" id="me">🎉</div><div class="mt" id="mt">결과</div><div class="ms" id="msc"></div><div class="mb" id="mb"></div><button class="mc" onclick="closeOv()">확인</button></div>
-</div>
+
 <script>
-const WEEKS=[{"label": "📅 9/12 (토요보강)", "desc": "Lesson 06 최종점검 모의고사 1·2·3회 + 단원·서술형 평가 · 9/12 토요보강 | 풀어온 답을 입력하세요", "tab": [["최종점검 1회", "25문항·pp.72-75"], ["최종점검 2회", "25문항·pp.76-79"], ["최종점검 3회", "25문항·pp.80-83"], ["단원평가 L6", "20문항·pp.196-199"], ["서술형평가 L6", "5문항·p.200"]], "full": ["📘 Lesson 06 최종점검 모의고사 1회 (25문항 · pp.72-75)", "📗 Lesson 06 최종점검 모의고사 2회 (25문항 · pp.76-79)", "📙 Lesson 06 최종점검 모의고사 3회 (25문항 · pp.80-83)", "📕 단원 평가 Lesson 6 (20문항 · pp.196~199)", "📒 서술형 평가 Lesson 6 (5문항 · p.200)"], "data": [[{"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "tch", "a": "criss-cross, angles, skipped"}, {"t": "mc", "a": 1}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "multi", "a": [2, 5]}, {"t": "tch", "a": "I'm really curious about the robot."}, {"t": "mc", "a": 3}, {"t": "mc", "a": 3}, {"t": "tch", "a": "moving"}, {"t": "mc", "a": 2}, {"t": "tch", "a": "(ⓐ) → If he keeps trying, he will reach his goal.  (ⓒ) → We won't see the moon unless the clouds move away. [We will see the moon if the clouds move away.]"}, {"t": "mc", "a": 1}, {"t": "mc", "a": 1}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "tch", "a": "shadow, science, nature"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "tch", "a": "throw"}, {"t": "mc", "a": 4}, {"t": "tch", "a": "we watched hundreds of stars shining[shine] in the sky"}, {"t": "mc", "a": 5}], [{"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "tch", "a": "of"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "tch", "a": "(ⓑ) → (ⓐ) → (ⓒ) → (ⓓ)"}, {"t": "mc", "a": 4}, {"t": "tch", "a": "If the ice in the Arctic keeps melting"}, {"t": "tch", "a": "ⓐ felt, shaking  ⓑ noticed, landing  ⓒ heard, singing"}, {"t": "multi", "a": [1, 2, 5]}, {"t": "tch", "a": "(ⓐ) → If you press this switch, the screen turns dark.  (ⓒ) → She felt her bag slipping[slip] from her shoulder."}, {"t": "mc", "a": 4}, {"t": "tch", "a": "roof"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "tch", "a": "If we put the tent here, the tent will be in the tree's shadow then."}, {"t": "mc", "a": 3}, {"t": "tch", "a": "if you throw a stone, it can skip"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "tch", "a": "pattern"}, {"t": "tch", "a": "to make space[room], try[trying]"}], [{"t": "mc", "a": 3}, {"t": "mc", "a": 3}, {"t": "tch", "a": "movement"}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "tch", "a": "we have to take our trash home"}, {"t": "mc", "a": 3}, {"t": "tch", "a": "I'm curious about it."}, {"t": "multi", "a": [1, 3]}, {"t": "mc", "a": 3}, {"t": "tch", "a": "If you don't[do not] add more wood[Unless you add more wood], the fire will go out"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "tch", "a": "key"}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "tch", "a": "ⓐ → to be  ⓑ → will[can/may/might/should] be"}, {"t": "mc", "a": 1}, {"t": "mc", "a": 3}, {"t": "tch", "a": "ⓐ 물을 가로질러서 물수제비 뜨는 것  ⓑ 이 납작한 돌"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 3}, {"t": "tch", "a": "ⓐ for  ⓑ at"}, {"t": "mc", "a": 2}, {"t": "mc", "a": 4}], [{"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "tch", "a": "we have to be quiet after 10 p.m."}, {"t": "multi", "a": [2, 3]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "multi", "a": [1, 3]}, {"t": "tch", "a": "If you don't get up now"}, {"t": "mc", "a": 4}, {"t": "tch", "a": "movement"}, {"t": "mc", "a": 2}, {"t": "mc", "a": 2}, {"t": "tch", "a": "I saw Dad skipping stones"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "tch", "a": "surprises"}, {"t": "mc", "a": 3}], [{"t": "tch", "a": "I'm really curious about space food."}, {"t": "tch", "a": "You have to take your trash home."}, {"t": "tch", "a": "If we water this tree well, it will grow tall."}, {"t": "tch", "a": "I saw a woman walking her dog (in the park)."}, {"t": "tch", "a": "we watched hundreds of stars shining in the sky"}]], "id": "0912"}, {"label": "📅 9/5 (토요보강)", "desc": "Lesson 05 최종점검 모의고사 1·2·3회 + 단원·서술형 평가 · 9/5 토요보강 | 풀어온 답을 입력하세요", "tab": [["최종점검 1회", "25문항·pp.60-63"], ["최종점검 2회", "25문항·pp.64-67"], ["최종점검 3회", "25문항·pp.68-71"], ["단원평가 L5", "20문항·pp.164-167"], ["서술형평가 L5", "5문항·p.168"]], "full": ["📘 Lesson 05 최종점검 모의고사 1회 (25문항 · pp.60-63)", "📗 Lesson 05 최종점검 모의고사 2회 (25문항 · pp.64-67)", "📙 Lesson 05 최종점검 모의고사 3회 (25문항 · pp.68-71)", "📕 단원 평가 Lesson 5 (20문항 · pp.164~167)", "📒 서술형 평가 Lesson 5 (5문항 · p.168)"], "data": [[{"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "tch", "a": "ⓐ of  ⓑ by"}, {"t": "multi", "a": [3, 5]}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "tch", "a": "ⓒ → ⓑ → ⓐ"}, {"t": "mc", "a": 1}, {"t": "multi", "a": [2, 5]}, {"t": "tch", "a": "She bought a piano which[that] she wanted for a long time."}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "tch", "a": "ⓐ as  ⓑ which[that]"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "tch", "a": "small"}, {"t": "mc", "a": 2}, {"t": "mc", "a": 1}, {"t": "tch", "a": "sick"}, {"t": "mc", "a": 3}, {"t": "multi", "a": [2, 5]}, {"t": "mc", "a": 5}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "tch", "a": "blossom"}], [{"t": "mc", "a": 3}, {"t": "mc", "a": 2}, {"t": "tch", "a": "blossom, pea, against"}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "tch", "a": "(ⓐ) → (ⓒ) → (ⓑ)"}, {"t": "mc", "a": 3}, {"t": "tch", "a": "whom[who/that]"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "tch", "a": "(ⓑ) → Some deserts are as cold as polar regions at night. / (ⓒ) → The moon shines as brightly as the stars."}, {"t": "mc", "a": 4}, {"t": "tch", "a": "There will be something that you can do!"}, {"t": "tch", "a": "(④) getting → to get"}, {"t": "mc", "a": 5}, {"t": "tch", "a": "It is as little as a baby's finger."}, {"t": "mc", "a": 5}, {"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 4}, {"t": "multi", "a": [2, 4, 5]}, {"t": "mc", "a": 1}, {"t": "tch", "a": "(1) → The little pea was as happy as the girl. (2) → It finally found the thing which[that] it could do."}], [{"t": "mc", "a": 2}, {"t": "mc", "a": 5}, {"t": "tch", "a": "(b)lossom"}, {"t": "mc", "a": 4}, {"t": "mc", "a": 5}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "tch", "a": "I'm looking forward to the camp."}, {"t": "mc", "a": 4}, {"t": "mc", "a": 2}, {"t": "tch", "a": "Kindness is as warm as sunshine."}, {"t": "mc", "a": 3}, {"t": "tch", "a": "Ants are as busy as bees."}, {"t": "mc", "a": 3}, {"t": "tch", "a": "There will be something that you can do!"}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "tch", "a": "was as little as a baby's finger"}, {"t": "tch", "a": "It became as tall as"}, {"t": "mc", "a": 5}, {"t": "mc", "a": 4}, {"t": "mc", "a": 1}, {"t": "tch", "a": "It finally found the thing which[that] it could do."}, {"t": "mc", "a": 3}], [{"t": "mc", "a": 2}, {"t": "mc", "a": 3}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "tch", "a": "looking forward"}, {"t": "multi", "a": [2, 5]}, {"t": "mc", "a": 4}, {"t": "mc", "a": 4}, {"t": "mc", "a": 3}, {"t": "tch", "a": "so → as"}, {"t": "mc", "a": 5}, {"t": "tch", "a": "that"}, {"t": "mc", "a": 4}, {"t": "tch", "a": "ⓐ the smallest pea  ⓑ soil"}, {"t": "mc", "a": 1}, {"t": "tch", "a": "It is as little as a baby's finger."}, {"t": "mc", "a": 5}, {"t": "mc", "a": 1}, {"t": "tch", "a": "You are the friend I have waited for!"}, {"t": "multi", "a": [3, 5]}], [{"t": "tch", "a": "I'm looking forward to it."}, {"t": "tch", "a": "I recommend Wonka."}, {"t": "tch", "a": "(1) Smartphone A is as light as Smartphone B.  (2) Smartphone A is as expensive as Smartphone B."}, {"t": "tch", "a": "(1) These are the books which[that] her mom gave to Sujin as a birthday gift.  (2) This is the cap which[that] Yuna gave to Sujin as a birthday gift."}, {"t": "tch", "a": "(1) The little pea was as happy as the girl.  (2) the thing which it could do"}]], "id": "0905"}];
-let cw=0, A=[], LABELS=[], cur=0;
-let picks=[], msel={}, submitted=[], sub=[], subT=[];
-function wid(){return WEEKS[cw].id||('w'+cw);}
-function keyD(t){return 'ej2_'+wid()+'_d'+t;}
-function keyS(t){return 'ej2_'+wid()+'_s'+t;}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function autoTotal(t){return A[t].filter(q=>q.t==='mc'||q.t==='multi').length;}
-function tchTotal(t){return A[t].filter(q=>q.t==='tch').length;}
+/* ============ 데이터 ============
+   mc   : ['번호', [정답번호들], 복수정답여부]
+   pick : ['번호', ['보기1','보기2'], 정답인덱스]
+   rev  : ['번호', '정답 텍스트']
+================================== */
+const SHEETS = [
+{id:'s1', tab:'L5 확인문제', title:'Lesson 5 핵심 Grammar 확인 문제', sub:'교재 pp.8~9 · 전부 정답 확인형',
+ groups:[
+  {t:'Point 1 · 교과서 문장 속 Grammar', type:'rev', items:[
+   ['01','as happy as'],['02','as fast as'],['03','as exciting as'],['04','as long as'],['05','as beautiful as'],
+   ['06','as big as'],['07','as strong as'],['08','as quiet as'],['09','as busy as'],['10','as free as']]},
+  {t:'Point 1 · More Exercise', type:'rev', items:[
+   ['01','I read as many books as Mike.'],
+   ['02','Her hair is as long as mine.'],
+   ['03','Mr. Jones is twice as old as Nick.'],
+   ['04',"Susan's backpack is not so heavy as Mike's."],
+   ['05','This mountain is not so high as Mt. Everest.'],
+   ['06','These carrots are not so fresh as those.'],
+   ['07','Math is not as interesting as Science.']]},
+  {t:'Point 2 · 교과서 문장 속 Grammar', type:'rev', items:[
+   ['01','which'],['02','whom[who]'],['03','which'],['04','whom[who]'],['05','which'],['06','which'],
+   ['07','which'],['08','which'],['09','which'],['10','which'],['11','which']]},
+  {t:'Point 2 · More Exercise', type:'rev', items:[
+   ['01','Jessie is the girl whom I told you about.'],
+   ['02','I love all the songs which the band played.'],
+   ['03','The film that you recommended was really boring.'],
+   ['04','The person to whom James talked is our principal.'],
+   ['05','The man who I interviewed this morning is a doctor.'],
+   ['06','The church that a famous architect designed looks so beautiful.']]}
+ ]},
 
-function renderWeek(w){
-  cw=w; A=WEEKS[w].data; LABELS=WEEKS[w].full;
-  picks=A.map(()=>({})); msel={}; submitted=A.map(()=>false); sub=A.map(()=>({})); subT=A.map(()=>({}));
-  document.querySelectorAll('.wtab').forEach((b,i)=>b.classList.toggle('on',i===w));
-  document.getElementById('wdesc').textContent=WEEKS[w].desc;
-  const tabsEl=document.getElementById('tabs'); tabsEl.innerHTML='';
-  WEEKS[w].tab.forEach((tb,i)=>{ const b=document.createElement('button'); b.className='tab k'+(i%4); b.innerHTML=esc(tb[0])+'<br><small>'+esc(tb[1])+'</small>'; b.onclick=()=>sw(i); tabsEl.appendChild(b); });
-  const panelsEl=document.getElementById('panels'); panelsEl.innerHTML='';
-  A.forEach((_,t)=>{
-    const p=document.createElement('div'); p.className='panel'; p.id='p'+t;
-    p.innerHTML=`<div class="attbar"><span>도전 횟수: <strong id="at${t}">0</strong>회</span><button class="reset-btn" onclick="resetTab(${t})">🔄 초기화</button></div>`
-      +`<div class="sbar"><div class="sbar-top"><div class="snum" id="sn${t}">0</div><div class="spct" id="sp${t}">0%</div></div><div class="bout"><div class="bin k${t%4}" id="bn${t}"></div></div><div class="sdet" id="sd${t}">답을 입력하고 채점해보세요</div></div>`
-      +`<div id="omr${t}"></div>`;
-    panelsEl.appendChild(p);
-  });
-  A.forEach((_,t)=>{ document.getElementById('at'+t).textContent=localStorage.getItem(keyS(t))||'0'; buildOMR(t); });
-  loadState();
-  A.forEach((_,t)=>{ if(submitted[t]) gradeTab(t); updScore(t); });
-  cur=0; sw(0);
+{id:'s2', tab:'L5 워크시트', title:'Lesson 5 GRAMMAR worksheet', sub:'원급 비교 · 목적격 관계대명사',
+ groups:[
+  {t:'❶ 원급 비교 · A', s:'괄호 고르기', type:'pick', items:[
+   ['01',['as','so'],0],['02',['you','yours'],1],['03',['tall','taller'],0],
+   ['04',['not so','so not'],0],['05',['two','twice'],1]]},
+  {t:'❶ 원급 비교 · B', s:'빈칸 쓰기', type:'rev', items:[
+   ['01','as many books as'],['02','as long as mine'],['03','twice as old as'],
+   ['04','not as[so] heavy as'],['05','not as[so] high as']]},
+  {t:'❶ 원급 비교 · C', s:'틀린 곳 고치기', type:'rev', items:[
+   ['01','prettier → pretty'],['02',"Brian → Brian's"],['03','taller → tall'],
+   ['04','so → as'],['05','so not → not so']]},
+  {t:'❷ 목적격 관계대명사 · A', s:'괄호 고르기', type:'pick', items:[
+   ['01',['that','who'],0],['02',['who','which'],1],['03',['that','who'],0],
+   ['04',['whom','which'],0],['05',['who','which'],1]]},
+  {t:'❷ 목적격 관계대명사 · B', s:'두 문장 → 한 문장 (that 쓰지 말 것)', type:'rev', items:[
+   ['01','The man who(m) my sister likes works at the bakery.'],
+   ['02','Do you know the girl who(m) Andy is waiting for?'],
+   ['03','They are the children who(m) my aunt is taking care of.'],
+   ['04','This is the vase which I broke yesterday.'],
+   ['05','The music which I listened to last night was so good.']]},
+  {t:'❷ 목적격 관계대명사 · C', s:'틀린 곳 고치기', type:'rev', items:[
+   ['01','who → which[that]'],['02','which → who(m)[that]'],['03','it → 삭제'],
+   ['04','which → who(m)[that]'],['05','to that I enjoy listening → which[that] I enjoy listening to']]}
+ ]},
+
+{id:'s3', tab:'L5 실전문제', title:'Lesson 5 Grammar Test', sub:'5-1 원급 비교 · 5-2 목적격 관계대명사',
+ groups:[
+  {t:'5-1 원급 비교 · 객관식', type:'mc', items:[
+   ['01',[2]],['02',[2,3],true],['03',[2]],['04',[5]],['05',[5]],
+   ['07',[4]],['08',[5]],['09',[5]],['10',[3]],['11',[2]],['12',[4]],
+   ['13',[5]],['14',[1]],['15',[5]],['16',[1]],['18',[3]],['19',[2]]]},
+  {t:'5-1 원급 비교 · 서술형', type:'rev', items:[
+   ['06','not as[so] smart as'],
+   ['17','(1) as expensive as　(2) not as[so] expensive as [cheaper than]　(3) not as[so] cheap as [more expensive than]'],
+   ['20','(1) Smith is as smart as Harry.　(2) This book is not as interesting as that book. [that one / not so interesting as …]']]},
+  {t:'5-2 목적격 관계대명사 · 객관식', type:'mc', items:[
+   ['01',[3,4],true],['02',[2]],['03',[4]],['04',[3]],['05',[3]],
+   ['07',[1,5],true],['08',[3]],['10',[5]],['11',[5]],['12',[4]],
+   ['14',[1,2,5],true],['15',[4]],['17',[3]],['18',[3]],['19',[2]]]},
+  {t:'5-2 목적격 관계대명사 · 서술형', type:'rev', items:[
+   ['06','(1) the novel which[that] my mom has written recently　(2) The man who(m)[that] I hope to meet'],
+   ['09','who → which[that]'],
+   ['13','She gave me the purse (which[that]) I tried to find.'],
+   ['16','(1) that　(2) that　(3) whom　(4) which'],
+   ['20','The food that[which] I want to eat[have]']]}
+ ]},
+
+{id:'s4', tab:'L6 확인문제', title:'Lesson 6 핵심 Grammar 확인 문제', sub:'교재 pp.22~23 · 전부 정답 확인형',
+ groups:[
+  {t:'Point 1 · 교과서 문장 속 Grammar', type:'rev', items:[
+   ['01','If you smile'],['02','If you lose'],['03','If it rains tomorrow'],['04','If you turn off'],
+   ['05','If I practice hard'],['06','If you hold my hand'],['07','If you speak kind words'],
+   ['08','If you face a storm'],['09','If we water this tree'],["10","If she doesn't get up"],
+   ['11','If you make enough space']]},
+  {t:'Point 1 · More Exercise', type:'rev', items:[
+   ['01','If you need help, please call me.'],
+   ['02','If it rains tomorrow, we will cancel the picnic.'],
+   ['03',"If you don't hurry, you will be late for school."],
+   ['04','If you exercise every day, you will be healthy.'],
+   ['05','If it snows tomorrow, we will make a snowman.'],
+   ['06','If you tell him the truth, he will understand.'],
+   ['07','If you eat more vegetables, you will feel better.']]},
+  {t:'Point 2 · 교과서 문장 속 Grammar', type:'rev', items:[
+   ['01','heard, someone, calling'],['02','heard, birds, singing'],['03','saw, a woman, walking'],
+   ['04','heard, his phone, ringing'],['05','saw, a big turtle, swimming'],['06','saw, a dolphin, jumping'],
+   ['07','watched, hundreds of stars, shining'],['08','saw, a boy'],['09','heard, a bell, ringing']]},
+  {t:'Point 2 · More Exercise', type:'rev', items:[
+   ['01','felt the ground shaking'],
+   ['02','smelled something burning in the kitchen'],
+   ['03','heard someone playing the piano'],
+   ['04','watched a cat jumping over the fence'],
+   ['05','noticed someone staring at me']]}
+ ]},
+
+{id:'s5', tab:'L6 실전문제', title:'Lesson 6 Grammar Test', sub:'6-1 접속사 if · 6-2 지각동사',
+ groups:[
+  {t:'6-1 접속사 if · 객관식', type:'mc', items:[
+   ['01',[2]],['02',[1]],['03',[5]],['04',[1]],['06',[1]],['07',[5]],['08',[4]],['09',[3]],
+   ['11',[2]],['12',[2]],['13',[2]],['15',[5]],['17',[2]],['18',[2]],['19',[2]]]},
+  {t:'6-1 접속사 if · 서술형', type:'rev', items:[
+   ['05','If, get, will be'],
+   ['10',"Unless → If　(또는 won't → will)"],
+   ['14',"you speak up, I can't hear you"],
+   ['16','if'],
+   ['20','(1) turn, will see　(2) has, will exercise']]},
+  {t:'6-2 지각동사 · 객관식', type:'mc', items:[
+   ['01',[2]],['02',[2]],['03',[3]],['05',[2]],['06',[2,5],true],['08',[1,4],true],['09',[3]],
+   ['10',[2]],['11',[1]],['13',[3]],['14',[1,5],true],['15',[3]],['16',[5]],['18',[2]],['19',[3,4],true]]},
+  {t:'6-2 지각동사 · 서술형', type:'rev', items:[
+   ['04','to fly → fly[flying]'],
+   ['07','(1) study[studying]　(2) talk[talking]'],
+   ['12','screaming'],
+   ['17','paint[painting]'],
+   ['20','(1) He felt something touch[touching] his leg.　(2) She watched children read[reading] books in the library.']]}
+ ]},
+
+{id:'s6', tab:'L6 워크시트', title:'Lesson 6 GRAMMAR worksheet', sub:'접속사 if · 지각동사',
+ groups:[
+  {t:'❶ 접속사 if · A', s:'괄호 고르기', type:'pick', items:[
+   ['01',['is','will be'],0],['02',['So','If'],1],['03',['is','will be'],0],
+   ['04',["won't water","don't water"],1],['05',['If','Unless'],1]]},
+  {t:'❶ 접속사 if · B', s:'틀린 곳 고쳐 문장 다시 쓰기', type:'rev', items:[
+   ['01','If it is sunny tomorrow, I will go to the beach.'],
+   ['02','Clark will win the contest if he does his best.'],
+   ['03','If you see Brian, please give him this book.'],
+   ['04',"If you don't water the plants enough [Unless you water the plants enough], they won't grow well."],
+   ['05',"We will be late if we don't leave now [unless we leave now]."]]},
+  {t:'❶ 접속사 if · C', s:'문장 완성', type:'rev', items:[
+   ['01',"If you are[you're] free"],
+   ['02','Unless you do your best'],
+   ['03',"If it doesn't rain tomorrow"],
+   ['04','If you exercise regularly'],
+   ['05','Unless you speak loudly']]},
+  {t:'❷ 지각동사 · A', s:'괄호 고르기', type:'pick', items:[
+   ['01',['saw','had'],0],['02',['play','to play'],0],['03',['heard','made'],0],
+   ['04',['to shine','shining'],1],['05',['played','playing'],1]]},
+  {t:'❷ 지각동사 · B', s:'밑줄 친 부분 고치기', type:'rev', items:[
+   ['01','sleep[sleeping]'],['02','burn[burning]'],['03','shake[shaking]'],
+   ['04','cry[crying]'],['05','talk[talking]']]},
+  {t:'❷ 지각동사 · C', s:'빈칸 쓰기', type:'rev', items:[
+   ['01','I felt something bite[biting]'],
+   ['02','She noticed him tell[telling]'],
+   ['03','heard her dog bark[barking]'],
+   ['04','They watched the player hit[hitting]'],
+   ['05','We saw the singers dance[dancing]']]}
+ ]}
+];
+
+/* ============ 상태 ============ */
+const KEY='bn_omr_m2_L56_v1';
+let S = load();
+function load(){
+  try{ return JSON.parse(localStorage.getItem(KEY)) || blank(); }catch(e){ return blank(); }
+}
+function blank(){ return {name:'', school:'', ans:{}, self:{}, seen:{}, graded:{}}; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+/* ============ 로그인 ============ */
+const nmEl=document.getElementById('nm'), startEl=document.getElementById('start');
+let pickedSchool = S.school || localStorage.getItem('bn_school') || '';
+nmEl.value = S.name || localStorage.getItem('bn_name') || '';
+document.querySelectorAll('.schools button').forEach(b=>{
+  if(b.dataset.s===pickedSchool) b.classList.add('on');
+  b.onclick=()=>{
+    document.querySelectorAll('.schools button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); pickedSchool=b.dataset.s; checkReady();
+  };
+});
+nmEl.oninput=checkReady;
+function checkReady(){ startEl.disabled = !(nmEl.value.trim() && pickedSchool); }
+checkReady();
+startEl.onclick=()=>{
+  S.name=nmEl.value.trim(); S.school=pickedSchool;
+  try{ localStorage.setItem('bn_name',S.name); localStorage.setItem('bn_school',S.school); }catch(e){}
+  save(); enter();
+};
+if(S.name && S.school) enter();
+
+function enter(){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('whoName').textContent=S.name;
+  document.getElementById('whoSchool').textContent=S.school;
+  buildTabs(); render(0);
 }
 
-function buildOMR(t){
-  const data=A[t]; const el=document.getElementById('omr'+t); el.innerHTML='';
-  const box=document.createElement('div'); box.className='omrbox';
-  box.innerHTML=`<h3>${esc(LABELS[t])}</h3>`;
-  data.forEach((q,i)=>{
-    const row=document.createElement('div'); row.className='orow'; row.id=`r${t}_${i}`;
-    const lbl=document.createElement('div'); lbl.className='qlbl'; lbl.textContent=i+1; row.appendChild(lbl);
-    const ic=document.createElement('div'); ic.className='ricon'; ic.id=`ic${t}_${i}`; ic.textContent=(q.t==='tch'?'✍️':'?'); row.appendChild(ic);
-    const ia=document.createElement('div'); ia.style.flex='1';
-    if(q.t==='mc'){
-      const wrap=document.createElement('div');
-      if(Array.isArray(q.a)){ const note=document.createElement('div'); note.className='multi-note'; note.textContent='(복수정답)'; wrap.appendChild(note); }
-      const chs=document.createElement('div'); chs.className='chs';
-      '①②③④⑤'.split('').forEach((ch,ni)=>{ const b=document.createElement('button'); b.className='cb'; b.textContent=ch; b.id=`cb${t}_${i}_${ni+1}`; b.onclick=()=>selMC(t,i,ni+1); chs.appendChild(b); });
-      wrap.appendChild(chs); ia.appendChild(wrap);
-    } else if(q.t==='multi'){
-      const note=document.createElement('div'); note.className='multi-note'; note.textContent='✔️ 복수정답 · '+q.a.length+'개 모두 선택해야 정답';
-      const ma=document.createElement('div'); ma.className='ma'; ma.appendChild(note);
-      const mr=document.createElement('div'); mr.className='mr'; msel[`${t}_${i}`]=[];
-      '①②③④⑤'.split('').forEach((ch,ni)=>{ const b=document.createElement('button'); b.className='cb'; b.textContent=ch; b.id=`mc${t}_${i}_${ni+1}`; b.onclick=()=>togMulti(t,i,ni+1); mr.appendChild(b); });
-      ma.appendChild(mr); ia.appendChild(ma);
-    } else if(q.t==='tch'){
-      const w=document.createElement('div'); w.className='tch';
-      w.innerHTML=`<button class="tch-rv" id="rv${t}_${i}" onclick="revealTch(${t},${i})">🔍 정답 보기</button>`
-        +`<div class="tch-ans" id="ta${t}_${i}" style="display:none"></div>`
-        +`<div class="tch-ox" id="ox${t}_${i}" style="display:none">`
-        +`<button class="oxb oxo" id="oxo${t}_${i}" onclick="selfTch(${t},${i},true)">⭕ 맞았어요</button>`
-        +`<button class="oxb oxx" id="oxx${t}_${i}" onclick="selfTch(${t},${i},false)">❌ 틀렸어요</button>`
-        +`</div>`;
-      ia.appendChild(w);
+/* ============ 탭 ============ */
+let cur=0;
+function buildTabs(){
+  const t=document.getElementById('tabs'); t.innerHTML='';
+  SHEETS.forEach((sh,i)=>{
+    const b=document.createElement('button');
+    b.className='tab'+(i===cur?' on':''); b.textContent=sh.tab;
+    b.onclick=()=>render(i); t.appendChild(b);
+  });
+}
+
+/* ============ 렌더 ============ */
+function k(sid,gi,n){ return sid+'|'+gi+'|'+n; }
+
+function render(i){
+  cur=i;
+  document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('on',j===i));
+  const sh=SHEETS[i], m=document.getElementById('sheet');
+  m.innerHTML='';
+
+  const head=document.createElement('div');
+  head.className='sheet-head';
+  head.innerHTML='<h2>'+sh.title+'</h2><span>'+sh.sub+'</span>';
+  m.appendChild(head);
+
+  const note=document.createElement('div');
+  note.className='note';
+  note.textContent='객관식은 답을 골라 마킹하고, 서술형은 [정답 보기]를 눌러 내 답과 비교한 뒤 O 또는 X를 직접 누르세요.';
+  m.appendChild(note);
+
+  sh.groups.forEach((g,gi)=>{
+    const box=document.createElement('div'); box.className='group';
+    const h=document.createElement('h3');
+    h.innerHTML=g.t+(g.s?'<em>'+g.s+'</em>':'');
+    box.appendChild(h);
+    g.items.forEach(it=>box.appendChild(rowFor(sh.id,gi,g,it)));
+    m.appendChild(box);
+  });
+
+  const act=document.createElement('div'); act.className='actions';
+  const gb=document.createElement('button'); gb.className='btn-grade'; gb.textContent='채점하기';
+  gb.onclick=()=>{ S.graded[sh.id]=1; save(); render(i); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}); };
+  const rb=document.createElement('button'); rb.className='btn-reset'; rb.textContent='다시 풀기';
+  rb.onclick=()=>{
+    if(!confirm('이 시험지의 답을 모두 지울까요?')) return;
+    Object.keys(S.ans).forEach(x=>{ if(x.startsWith(sh.id+'|')) delete S.ans[x]; });
+    Object.keys(S.self).forEach(x=>{ if(x.startsWith(sh.id+'|')) delete S.self[x]; });
+    Object.keys(S.seen).forEach(x=>{ if(x.startsWith(sh.id+'|')) delete S.seen[x]; });
+    delete S.graded[sh.id]; save(); render(i); window.scrollTo({top:0});
+  };
+  act.appendChild(gb); act.appendChild(rb); m.appendChild(act);
+
+  const res=document.createElement('div'); res.className='result'; res.id='res';
+  m.appendChild(res);
+  if(S.graded[sh.id]) showResult(sh);
+}
+
+function rowFor(sid,gi,g,it){
+  const row=document.createElement('div'); row.className='row';
+  const key=k(sid,gi,it[0]);
+  const n=document.createElement('div'); n.className='num'; n.textContent=it[0];
+  row.appendChild(n);
+
+  if(g.type==='mc'){
+    const wrap=document.createElement('div'); wrap.className='bubbles';
+    const multi=!!it[2];
+    for(let v=1;v<=5;v++){
+      const b=document.createElement('button'); b.className='bubble';
+      b.textContent='①②③④⑤'[v-1];
+      const picked=(S.ans[key]||[]).includes(v);
+      if(picked) b.classList.add('on');
+      b.onclick=()=>{
+        let a=S.ans[key]||[];
+        if(multi){ a = a.includes(v) ? a.filter(x=>x!==v) : a.concat(v).sort(); }
+        else { a = a.includes(v) ? [] : [v]; }
+        S.ans[key]=a; save(); render(cur);
+      };
+      wrap.appendChild(b);
     }
-    row.appendChild(ia); box.appendChild(row);
-  });
-  el.appendChild(box);
-}
+    row.appendChild(wrap);
+    if(multi){ const m=document.createElement('span'); m.className='multi'; m.textContent='모두 고르기'; row.appendChild(m); }
+    markRow(row,sid,key,graded(sid)?judgeMC(S.ans[key],it[1]):null);
+  }
 
-function selMC(t,i,n){
-  if(submitted[t])return;
-  picks[t][i]=n;
-  '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`cb${t}_${i}_${x+1}`); if(b)b.classList.toggle('sel',x+1===n); });
-  saveState(t); updScore(t); updFloat();
-}
-function togMulti(t,i,n){
-  if(submitted[t])return;
-  const k=`${t}_${i}`; const arr=msel[k]||[]; msel[k]=arr;
-  const b=document.getElementById(`mc${t}_${i}_${n}`);
-  if(arr.includes(n)){ msel[k]=arr.filter(x=>x!==n); if(b)b.classList.remove('sel'); }
-  else { arr.push(n); if(b)b.classList.add('sel'); }
-  saveState(t); updScore(t); updFloat();
-}
+  else if(g.type==='pick'){
+    const wrap=document.createElement('div'); wrap.className='picks';
+    it[1].forEach((label,idx)=>{
+      const b=document.createElement('button'); b.className='pick'; b.textContent=label;
+      if((S.ans[key]||[])[0]===idx) b.classList.add('on');
+      b.onclick=()=>{ S.ans[key]=((S.ans[key]||[])[0]===idx)?[]:[idx]; save(); render(cur); };
+      wrap.appendChild(b);
+    });
+    row.appendChild(wrap);
+    const a=(S.ans[key]||[])[0];
+    markRow(row,sid,key, graded(sid) ? (a===undefined?false:a===it[2]) : null);
+  }
 
-function revealTch(t,i){
-  const ta=document.getElementById(`ta${t}_${i}`); if(ta){ ta.style.display='block'; ta.innerHTML='<b>모범답안</b>'+esc(A[t][i].a); }
-  const ox=document.getElementById(`ox${t}_${i}`); if(ox) ox.style.display='flex';
-  const rb=document.getElementById(`rv${t}_${i}`); if(rb) rb.style.display='none';
-}
-function selfTch(t,i,ok){
-  revealTch(t,i);
-  subT[t][i]=ok;
-  const bo=document.getElementById(`oxo${t}_${i}`), bx=document.getElementById(`oxx${t}_${i}`);
-  if(bo) bo.classList.toggle('on',ok); if(bx) bx.classList.toggle('on',!ok);
-  const ic=document.getElementById(`ic${t}_${i}`); if(ic){ ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng'); }
-  saveState(t); updScore(t); updFloat();
-}
-
-function isAnswered(t,i){ const q=A[t][i]; if(q.t==='mc')return picks[t][i]!==undefined; if(q.t==='multi')return (msel[`${t}_${i}`]||[]).length>0; return false; }
-function countAnswered(t){ let c=0; A[t].forEach((q,i)=>{ if(isAnswered(t,i))c++; }); return c; }
-
-function gradeTab(t){
-  A[t].forEach((q,i)=>{
-    const ic=document.getElementById(`ic${t}_${i}`);
-    if(q.t==='mc'){
-      const n=picks[t][i]; const corList=Array.isArray(q.a)?q.a:[q.a];
-      '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`cb${t}_${i}_${x+1}`); if(!b)return; b.disabled=true; b.classList.remove('sel'); if(corList.includes(x+1))b.classList.add('ok'); if(n!==undefined&&x+1===n&&!corList.includes(n))b.classList.add('ng'); });
-      if(n!==undefined){ const ok=corList.includes(n); sub[t][i]=ok; if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }
-      else if(ic){ ic.textContent='-'; ic.className='ricon'; }
-    } else if(q.t==='multi'){
-      const sel=[...(msel[`${t}_${i}`]||[])].sort((a,b)=>a-b); const ans=[...q.a].sort((a,b)=>a-b); const has=sel.length>0; const ok=has&&JSON.stringify(sel)===JSON.stringify(ans);
-      '①②③④⑤'.split('').forEach((_,x)=>{ const b=document.getElementById(`mc${t}_${i}_${x+1}`); if(!b)return; b.disabled=true; b.classList.remove('sel'); if(ans.includes(x+1))b.classList.add('ok'); if(sel.includes(x+1)&&!ans.includes(x+1))b.classList.add('ng'); });
-      if(has){ sub[t][i]=ok; if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }
-      else if(ic){ ic.textContent='-'; ic.className='ricon'; }
-    } else if(q.t==='tch'){
-      revealTch(t,i);
+  else { // rev
+    const box=document.createElement('div'); box.className='rev';
+    if(S.seen[key]){
+      const a=document.createElement('div'); a.className='ans'; a.textContent=it[1];
+      box.appendChild(a);
+      const ox=document.createElement('div'); ox.className='ox';
+      [['O','o'],['X','x']].forEach(([t,c])=>{
+        const b=document.createElement('button'); b.className=c+(S.self[key]===t?' on':''); b.textContent=t;
+        b.onclick=()=>{ S.self[key]=(S.self[key]===t?'':t); save(); render(cur); };
+        ox.appendChild(b);
+      });
+      box.appendChild(ox);
+    } else {
+      const b=document.createElement('button'); b.className='showbtn'; b.textContent='정답 보기';
+      b.onclick=()=>{ S.seen[key]=1; save(); render(cur); };
+      box.appendChild(b);
     }
-  });
-}
-
-function submitTab(){
-  const t=cur;
-  if(submitted[t]){ showResult(); return; }
-  const auto=autoTotal(t); const ans=countAnswered(t);
-  if(auto>0 && ans===0){ alert('먼저 답을 입력해주세요!'); return; }
-  if(auto>0 && ans<auto && !confirm('아직 '+(auto-ans)+'문항이 비어 있어요. 제출하고 채점할까요?')) return;
-  submitted[t]=true;
-  gradeTab(t);
-  const att=parseInt(localStorage.getItem(keyS(t))||'0')+1; localStorage.setItem(keyS(t),att); document.getElementById('at'+t).textContent=att;
-  saveState(t); updScore(t); updFloat(); showResult();
-}
-
-function updScore(t){
-  const auto=autoTotal(t), tch=tchTotal(t), ans=countAnswered(t), correct=Object.values(sub[t]).filter(v=>v).length, g=submitted[t];
-  const tcor=Object.values(subT[t]).filter(v=>v).length, tdone=Object.keys(subT[t]).length;
-  const sn=document.getElementById('sn'+t);
-  if(auto===0){ sn.innerHTML= tdone>0?`${tcor} <span>/ ${tch}</span>`:`✍️ <span>서술형 ${tch}문항</span>`; }
-  else { sn.innerHTML=`${g?correct:ans} <span>/ ${auto}</span>`; }
-  if(auto===0){
-    document.getElementById('sp'+t).textContent= tdone>0?Math.round(tcor/tdone*100)+'%':'—';
-    document.getElementById('bn'+t).style.width=(tch?tdone/tch*100:0)+'%';
-  } else {
-    document.getElementById('sp'+t).textContent=(g?(ans>0?Math.round(correct/ans*100):0):Math.round(ans/auto*100))+'%';
-    document.getElementById('bn'+t).style.width=(ans/auto*100)+'%';
+    row.appendChild(box);
+    if(S.self[key]==='O') row.classList.add('ok');
+    if(S.self[key]==='X') row.classList.add('no');
   }
-  let d;
-  if(auto===0){ d=`서술형 ${tch}문항 · 🔍 정답 보고 O/X 채점 (채점 ${tdone}/${tch} · 정답 ${tcor})`; }
-  else if(g){ d=`객관식 정답 ${correct} · 오답 ${ans-correct} · 미응답 ${auto-ans}`+(tch?` · 서술형 정답 ${tcor}/${tch}`:''); }
-  else { d=`객관식 입력 ${ans}/${auto}`+(tch?` · 서술형 ${tch}문항(🔍 정답 보고 채점)`:''); }
-  document.getElementById('sd'+t).textContent=d;
+  return row;
 }
 
-function updFloat(){
-  const fb=document.getElementById('fb'); fb.className='fb k'+(cur%4);
-  if(submitted[cur]){ fb.textContent='📊 결과 다시 보기'; }
-  else if(autoTotal(cur)===0){ fb.textContent='📊 결과 보기'; }
-  else { const ans=countAnswered(cur); fb.textContent=ans>0?`✅ 제출하고 채점 (${ans}/${autoTotal(cur)})`:'✅ 제출하고 채점'; }
+function graded(sid){ return !!S.graded[sid]; }
+function judgeMC(a,correct){
+  a=a||[];
+  if(a.length===0) return false;
+  if(a.length!==correct.length) return false;
+  return correct.every(v=>a.includes(v));
+}
+function markRow(row,sid,key,ok){
+  if(ok===null) return;
+  row.classList.add(ok?'ok':'no');
 }
 
-function resetTab(t){
-  if(!confirm('이 탭의 모든 답을 초기화할까요?')) return;
-  picks[t]={}; submitted[t]=false; sub[t]={}; subT[t]={};
-  Object.keys(msel).filter(k=>k.startsWith(t+'_')).forEach(k=>msel[k]=[]);
-  localStorage.removeItem(keyD(t));
-  buildOMR(t); updScore(t); updFloat();
-}
-
-function showResult(){
-  const t=cur; if(!submitted[t]){ submitTab(); return; }
-  const auto=autoTotal(t), tch=tchTotal(t);
-  const done=Object.keys(sub[t]).length, correct=Object.values(sub[t]).filter(v=>v).length, pct=done>0?Math.round(correct/done*100):0;
-  if(auto===0){
-    const tcor=Object.values(subT[t]).filter(v=>v).length, tdone=Object.keys(subT[t]).length, tp=tdone>0?Math.round(tcor/tdone*100):0;
-    document.getElementById('me').textContent= tp>=90?'🏆':tp>=70?'😊':tp>=50?'🤔':'✍️';
-    document.getElementById('mt').textContent='서술형 자가채점';
-    document.getElementById('msc').className='ms '+(tp>=70?'s':tp>=50?'w':'d'); document.getElementById('msc').textContent=`${tcor} / ${tch}`;
-    document.getElementById('mb').textContent= tdone<tch?`아직 ${tch-tdone}문항 미채점 · 🔍 정답 보고 O/X로 채점하세요`:`서술형 정답률 ${tp}%`;
-  } else {
-    const emoji=pct>=90?'🏆':pct>=70?'😊':pct>=50?'🤔':'😅';
-    const title=pct>=90?'훌륭해요!':pct>=70?'잘했어요!':pct>=50?'조금 더 노력해요!':'다시 도전해봐요!';
-    const cls=pct>=70?'s':pct>=50?'w':'d';
-    document.getElementById('me').textContent=emoji; document.getElementById('mt').textContent=title;
-    document.getElementById('msc').className='ms '+cls; document.getElementById('msc').textContent=`${correct} / ${done}`;
-    document.getElementById('mb').textContent=`객관식 정답률 ${pct}% · 미응답 ${auto-done}문항`+(tch?` · 서술형 정답 ${Object.values(subT[t]).filter(v=>v).length}/${tch}`:'');
-  }
-  document.getElementById('ov').classList.add('on');
-}
-function closeOv(){ document.getElementById('ov').classList.remove('on'); }
-
-function sw(t){
-  cur=t;
-  document.querySelectorAll('#tabs .tab').forEach((b,i)=>b.classList.toggle('on',i===t));
-  document.querySelectorAll('#panels .panel').forEach((p,i)=>p.classList.toggle('on',i===t));
-  updFloat();
-}
-
-function saveState(t){
-  const multi={}; Object.keys(msel).filter(k=>k.startsWith(t+'_')).forEach(k=>multi[k]=msel[k]);
-  localStorage.setItem(keyD(t), JSON.stringify({picks:picks[t], multi, submitted:submitted[t], subT:subT[t]}));
-}
-function loadState(){
-  A.forEach((_,t)=>{
-    const raw=localStorage.getItem(keyD(t)); if(!raw)return;
-    let st; try{ st=JSON.parse(raw); }catch(e){ return; }
-    if(st.picks){ picks[t]=st.picks; Object.entries(st.picks).forEach(([i,n])=>{ const b=document.getElementById(`cb${t}_${i}_${n}`); if(b)b.classList.add('sel'); }); }
-    if(st.multi){ Object.entries(st.multi).forEach(([k,arr])=>{ msel[k]=arr.slice(); arr.forEach(n=>{ const b=document.getElementById(`mc${k}_${n}`); if(b)b.classList.add('sel'); }); }); }
-    if(st.subT){ subT[t]=st.subT; Object.entries(st.subT).forEach(([i,ok])=>{ revealTch(t,Number(i)); const bo=document.getElementById(`oxo${t}_${i}`), bx=document.getElementById(`oxx${t}_${i}`); if(bo)bo.classList.toggle('on',ok); if(bx)bx.classList.toggle('on',!ok); const ic=document.getElementById(`ic${t}_${i}`); if(ic){ic.textContent=ok?'O':'X'; ic.className='ricon '+(ok?'ok':'ng');} }); }
-    submitted[t]=!!st.submitted;
+/* ============ 결과 ============ */
+function showResult(sh){
+  let total=0, right=0, wrong=[];
+  sh.groups.forEach((g,gi)=>{
+    g.items.forEach(it=>{
+      const key=k(sh.id,gi,it[0]); total++;
+      let ok=false;
+      if(g.type==='mc') ok=judgeMC(S.ans[key],it[1]);
+      else if(g.type==='pick') ok=((S.ans[key]||[])[0]===it[2]);
+      else ok=(S.self[key]==='O');
+      if(ok) right++; else wrong.push(g.t.replace(/ · /g,' ')+' '+it[0]);
+    });
   });
+  const r=document.getElementById('res'); r.className='result show';
+  let html='<div class="score"><b>'+right+'</b> / '+total+' 개 맞았어요</div>';
+  if(wrong.length){
+    html+='<div class="wronglist"><b>다시 볼 문제</b><br>'+wrong.join(' · ')+'</div>';
+  } else {
+    html+='<div class="wronglist">전부 맞았습니다. 선생님께 보여주세요.</div>';
+  }
+  html+='<div class="wronglist" style="margin-top:10px">'+S.school+' '+S.name+'</div>';
+  r.innerHTML=html;
 }
-renderWeek(0);
 </script>
 </body>
 </html>
