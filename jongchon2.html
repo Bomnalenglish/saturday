@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>중2 비상(황) Lesson 5~6 OMR 자가채점</title>
+<title>종촌중 2학년 · 비상(황) Lesson 5~6 OMR</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
 :root{
@@ -26,7 +26,12 @@ header{background:var(--surface);border-bottom:1px solid var(--line);position:st
 .hd{display:flex;align-items:baseline;gap:10px;padding:14px 0 10px;flex-wrap:wrap}
 .hd h1{font-size:18px;font-weight:700;margin:0;letter-spacing:-0.02em}
 .hd .who{font-size:13px;color:var(--muted);margin-left:auto}
-.hd .who b{color:var(--ink);font-weight:600}
+.hd .who input{
+  width:88px;padding:4px 8px;border:1px solid var(--line);border-radius:7px;
+  background:var(--surface);font-size:13px;font-family:inherit;color:var(--ink);font-weight:600
+}
+.hd .who input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.hd .who span{margin-left:6px}
 .tabs{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{
@@ -140,31 +145,13 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:26px 0}
 </head>
 <body>
 
-<!-- 로그인 -->
-<div id="login" class="wrap">
-  <h2>Lesson 5~6 답안지</h2>
-  <p>비상(황종배) 중2 · 문법 최종점검</p>
-  <div class="field">
-    <label for="nm">이름</label>
-    <input id="nm" type="text" placeholder="이름을 쓰세요" autocomplete="off">
-  </div>
-  <div class="field">
-    <label>학교</label>
-    <div class="schools">
-      <button type="button" data-s="종촌중">종촌중</button>
-      <button type="button" data-s="어진중">어진중</button>
-    </div>
-  </div>
-  <button id="start" class="primary" disabled>시작하기</button>
-</div>
-
 <!-- 본화면 -->
-<div id="app" style="display:none">
+<div id="app">
   <header>
     <div class="wrap">
       <div class="hd">
         <h1>Lesson 5~6 답안지</h1>
-        <div class="who"><b id="whoName"></b> <span id="whoSchool"></span></div>
+        <div class="who"><input id="whoName" type="text" placeholder="이름(선택)" autocomplete="off"><span id="whoSchool"></span></div>
       </div>
       <div class="tabs" id="tabs"></div>
     </div>
@@ -334,7 +321,7 @@ const SHEETS = [
 ];
 
 /* ============ 상태 ============ */
-const KEY='bn_omr_m2_L56_v1';
+const KEY='bn_omr_m2_L56_v1_jc';
 let S = load();
 function load(){
   try{ return JSON.parse(localStorage.getItem(KEY)) || blank(); }catch(e){ return blank(); }
@@ -342,34 +329,18 @@ function load(){
 function blank(){ return {name:'', school:'', ans:{}, self:{}, seen:{}, graded:{}}; }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 
-/* ============ 로그인 ============ */
-const nmEl=document.getElementById('nm'), startEl=document.getElementById('start');
-let pickedSchool = S.school || localStorage.getItem('bn_school') || '';
-nmEl.value = S.name || localStorage.getItem('bn_name') || '';
-document.querySelectorAll('.schools button').forEach(b=>{
-  if(b.dataset.s===pickedSchool) b.classList.add('on');
-  b.onclick=()=>{
-    document.querySelectorAll('.schools button').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on'); pickedSchool=b.dataset.s; checkReady();
-  };
-});
-nmEl.oninput=checkReady;
-function checkReady(){ startEl.disabled = !(nmEl.value.trim() && pickedSchool); }
-checkReady();
-startEl.onclick=()=>{
-  S.name=nmEl.value.trim(); S.school=pickedSchool;
-  try{ localStorage.setItem('bn_name',S.name); localStorage.setItem('bn_school',S.school); }catch(e){}
-  save(); enter();
-};
-if(S.name && S.school) enter();
+/* ============ 이름(선택) · 학교 고정 ============ */
+const SCHOOL='종촌중';
+S.school=SCHOOL;
+document.getElementById('whoSchool').textContent=SCHOOL;
 
-function enter(){
-  document.getElementById('login').style.display='none';
-  document.getElementById('app').style.display='block';
-  document.getElementById('whoName').textContent=S.name;
-  document.getElementById('whoSchool').textContent=S.school;
-  buildTabs(); render(0);
-}
+const nmEl=document.getElementById('whoName');
+nmEl.value = S.name || localStorage.getItem('bn_name') || '';
+nmEl.oninput=()=>{
+  S.name=nmEl.value.trim();
+  try{ localStorage.setItem('bn_name',S.name); }catch(e){}
+  save();
+};
 
 /* ============ 탭 ============ */
 let cur=0;
@@ -527,6 +498,11 @@ function showResult(sh){
   html+='<div class="wronglist" style="margin-top:10px">'+S.school+' '+S.name+'</div>';
   r.innerHTML=html;
 }
+
+/* ============ 시작 ============
+   모든 선언(let cur 등)이 끝난 뒤에 호출해야 한다.
+   위쪽에서 부르면 'cur' 초기화 전 접근으로 화면이 빈다. */
+buildTabs(); render(0);
 </script>
 </body>
 </html>
