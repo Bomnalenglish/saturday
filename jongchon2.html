@@ -3,104 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>종촌중 2학년 · 비상(황) Lesson 5~6 OMR</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<title>종촌중 2학년 · 2학기 기말 7~8과 OMR</title>
 <style>
 :root{
   --bg:#FAF6EF; --surface:#FFFFFF; --ink:#2E2A24; --muted:#8A7F70;
   --line:#E6DCCB; --accent:#3D7A5A; --accent-soft:#EAF2ED;
-  --wrong:#B23A2E; --wrong-soft:#FBEDEB; --gold:#C9821F;
-  --radius:10px;
+  --wrong:#B23A2E; --gold:#C9821F; --radius:10px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{
   background:var(--bg); color:var(--ink);
-  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
-  font-size:16px; line-height:1.55; padding-bottom:80px;
+  font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:15px; line-height:1.55; padding-bottom:80px;
 }
 .wrap{max-width:720px;margin:0 auto;padding:0 14px}
 
-/* ── 헤더 ── */
 header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
-.hd{display:flex;align-items:baseline;gap:10px;padding:14px 0 10px;flex-wrap:wrap}
-.hd h1{font-size:18px;font-weight:700;margin:0;letter-spacing:-0.02em}
-.hd .who{font-size:13px;color:var(--muted);margin-left:auto}
+.hd{display:flex;align-items:center;gap:10px;padding:14px 0 10px;flex-wrap:wrap}
+.hd h1{font-size:17px;font-weight:700;margin:0;letter-spacing:-0.02em}
+.hd .who{font-size:13px;color:var(--muted);margin-left:auto;display:flex;align-items:center;gap:6px}
 .hd .who input{
-  width:88px;padding:4px 8px;border:1px solid var(--line);border-radius:7px;
+  width:88px;padding:5px 9px;border:1px solid var(--line);border-radius:7px;
   background:var(--surface);font-size:13px;font-family:inherit;color:var(--ink);font-weight:600
 }
 .hd .who input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
-.hd .who span{margin-left:6px}
 .tabs{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{
   flex:0 0 auto;border:1px solid var(--line);background:var(--bg);color:var(--muted);
-  padding:7px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;
+  padding:7px 13px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;
+  font-family:inherit
 }
 .tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.tab.l8{}
+.tab.done::after{content:' ✓';color:var(--gold)}
+.tab.on.done::after{color:#fff}
 
-/* ── 로그인 ── */
-#login{padding:56px 0}
-#login h2{font-size:22px;margin:0 0 6px;letter-spacing:-0.02em}
-#login p{color:var(--muted);font-size:14px;margin:0 0 26px}
-.field{margin-bottom:16px}
-.field label{display:block;font-size:13px;font-weight:600;margin-bottom:7px}
-.field input{
-  width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:var(--radius);
-  font-size:16px;font-family:inherit;background:var(--surface);color:var(--ink)
-}
-.field input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
-.schools{display:flex;gap:8px}
-.schools button{
-  flex:1;padding:13px;border:1px solid var(--line);background:var(--surface);
-  border-radius:var(--radius);font-size:15px;font-weight:600;font-family:inherit;color:var(--ink);cursor:pointer
-}
-.schools button.on{background:var(--accent);border-color:var(--accent);color:#fff}
-.primary{
-  width:100%;padding:15px;border:0;border-radius:var(--radius);background:var(--accent);
-  color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:10px
-}
-.primary:disabled{background:#CFC7B8;cursor:not-allowed}
-
-/* ── 시험지 ── */
-.sheet-head{padding:20px 0 6px}
+.sheet-head{padding:20px 0 4px}
 .sheet-head h2{font-size:20px;margin:0;letter-spacing:-0.02em}
 .sheet-head span{font-size:13px;color:var(--muted)}
+.note{
+  background:#FDF6E6;border:1px solid #EFE0BE;border-radius:8px;padding:11px 13px;
+  font-size:13px;color:#6B5626;line-height:1.6;margin:12px 0
+}
 .group{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin:14px 0;overflow:hidden}
 .group>h3{
   margin:0;padding:12px 14px;font-size:14px;font-weight:700;
   background:#F4EEE3;border-bottom:1px solid var(--line);letter-spacing:-0.01em
 }
-.group>h3 em{font-style:normal;font-weight:500;color:var(--muted);font-size:12px;margin-left:6px}
+.group>h3 em{font-style:normal;font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
 
 .row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid #F2EBDE;flex-wrap:wrap}
 .row:last-child{border-bottom:0}
-.num{width:30px;flex:0 0 30px;font-size:14px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.num{width:30px;flex:0 0 30px;font-size:14px;font-weight:700;color:var(--muted)}
 .row.ok .num{color:var(--accent)}
 .row.no .num{color:var(--wrong)}
 
-/* 객관식 */
 .bubbles{display:flex;gap:6px}
 .bubble{
   width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);
   font-size:15px;font-family:inherit;color:var(--muted);cursor:pointer;display:grid;place-items:center;padding:0
 }
 .bubble.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:700}
-/* 2택 */
-.picks{display:flex;gap:6px;flex-wrap:wrap}
-.pick{
-  padding:8px 14px;min-height:38px;border:1.5px solid var(--line);background:var(--surface);
-  border-radius:999px;font-size:14px;font-family:inherit;color:var(--ink);cursor:pointer
-}
-.pick.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:700}
-.multi{font-size:11px;color:var(--gold);font-weight:700;margin-left:2px}
 
-/* 서술형 */
 .rev{flex:1;min-width:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .showbtn{
   padding:7px 14px;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;
-  font-size:13px;font-family:inherit;color:var(--muted);cursor:pointer;font-weight:600
+  font-size:13px;font-family:inherit;color:var(--muted);cursor:pointer;font-weight:700
 }
 .ans{
   flex:1;min-width:200px;background:var(--accent-soft);border-radius:8px;padding:8px 11px;
@@ -114,7 +84,6 @@ header{background:var(--surface);border-bottom:1px solid var(--line);position:st
 .ox button.o.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .ox button.x.on{background:var(--wrong);border-color:var(--wrong);color:#fff}
 
-/* 결과 */
 .actions{display:flex;gap:8px;margin:18px 0 10px}
 .actions button{
   flex:1;padding:13px;border-radius:var(--radius);font-size:15px;font-weight:700;font-family:inherit;cursor:pointer
@@ -127,13 +96,11 @@ header{background:var(--surface);border-bottom:1px solid var(--line);position:st
 }
 .result.show{display:block}
 .score{font-size:15px;font-weight:700;margin-bottom:8px}
-.score b{font-size:26px;color:var(--accent);font-variant-numeric:tabular-nums}
-.wronglist{font-size:13px;color:var(--muted);line-height:1.7}
+.score b{font-size:26px;color:var(--accent)}
+.score .sub{font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
+.wronglist{font-size:13px;color:var(--muted);line-height:1.8}
 .wronglist b{color:var(--wrong)}
-.note{
-  background:#FDF6E6;border:1px solid #EFE0BE;border-radius:8px;padding:11px 13px;
-  font-size:13px;color:#6B5626;line-height:1.6;margin:12px 0
-}
+.stamp{margin-top:10px;font-size:13px;color:var(--muted)}
 footer{text-align:center;font-size:12px;color:var(--muted);padding:26px 0}
 @media (max-width:420px){
   .bubble{width:34px;height:34px;font-size:14px}
@@ -145,309 +112,182 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:26px 0}
 </head>
 <body>
 
-<!-- 본화면 -->
-<div id="app">
-  <header>
-    <div class="wrap">
-      <div class="hd">
-        <h1>Lesson 5~6 답안지</h1>
-        <div class="who"><input id="whoName" type="text" placeholder="이름(선택)" autocomplete="off"><span id="whoSchool"></span></div>
+<header>
+  <div class="wrap">
+    <div class="hd">
+      <h1>종촌중 2학년 · 기말 7~8과</h1>
+      <div class="who">
+        <input id="nm" type="text" placeholder="이름" autocomplete="off">
+        <span>종촌중</span>
       </div>
-      <div class="tabs" id="tabs"></div>
     </div>
-  </header>
-  <main class="wrap" id="sheet"></main>
-  <footer>봄날영어수학학원</footer>
-</div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+</header>
+<main class="wrap" id="sheet"></main>
+<footer>봄날영어수학학원</footer>
 
 <script>
-/* ============ 데이터 ============
-   mc   : ['번호', [정답번호들], 복수정답여부]
-   pick : ['번호', ['보기1','보기2'], 정답인덱스]
-   rev  : ['번호', '정답 텍스트']
-================================== */
-const SHEETS = [
-{id:'s1', tab:'L5 확인문제', title:'Lesson 5 핵심 Grammar 확인 문제', sub:'교재 pp.8~9 · 전부 정답 확인형',
- groups:[
-  {t:'Point 1 · 교과서 문장 속 Grammar', type:'rev', items:[
-   ['01','as happy as'],['02','as fast as'],['03','as exciting as'],['04','as long as'],['05','as beautiful as'],
-   ['06','as big as'],['07','as strong as'],['08','as quiet as'],['09','as busy as'],['10','as free as']]},
-  {t:'Point 1 · More Exercise', type:'rev', items:[
-   ['01','I read as many books as Mike.'],
-   ['02','Her hair is as long as mine.'],
-   ['03','Mr. Jones is twice as old as Nick.'],
-   ['04',"Susan's backpack is not so heavy as Mike's."],
-   ['05','This mountain is not so high as Mt. Everest.'],
-   ['06','These carrots are not so fresh as those.'],
-   ['07','Math is not as interesting as Science.']]},
-  {t:'Point 2 · 교과서 문장 속 Grammar', type:'rev', items:[
-   ['01','which'],['02','whom[who]'],['03','which'],['04','whom[who]'],['05','which'],['06','which'],
-   ['07','which'],['08','which'],['09','which'],['10','which'],['11','which']]},
-  {t:'Point 2 · More Exercise', type:'rev', items:[
-   ['01','Jessie is the girl whom I told you about.'],
-   ['02','I love all the songs which the band played.'],
-   ['03','The film that you recommended was really boring.'],
-   ['04','The person to whom James talked is our principal.'],
-   ['05','The man who I interviewed this morning is a doctor.'],
-   ['06','The church that a famous architect designed looks so beautiful.']]}
+/* 데이터: mc[0]=1번 정답, rev=['번호','정답'] */
+const SHEETS=[
+{id:'L7R1', tab:'7과 1회', title:'7과 · 내신 대비 1회',
+ mc:[3,2,4,1,4,2,4,5,3,3,5,3,5,1,1,5,2,2,5,2,1,4,1,4,3],
+ rev:[
+  ['26','Baking the bread together makes our community stronger.'],
+  ['27','The hawker centers are so popular that they are always full of people.'],
+  ['28','It is always good to get together with family.'],
+  ['29','(A) Would you like some　(B) that would be great'],
+  ['30','(A) get together　(B) spending']
  ]},
-
-{id:'s2', tab:'L5 워크시트', title:'Lesson 5 GRAMMAR worksheet', sub:'원급 비교 · 목적격 관계대명사',
- groups:[
-  {t:'❶ 원급 비교 · A', s:'괄호 고르기', type:'pick', items:[
-   ['01',['as','so'],0],['02',['you','yours'],1],['03',['tall','taller'],0],
-   ['04',['not so','so not'],0],['05',['two','twice'],1]]},
-  {t:'❶ 원급 비교 · B', s:'빈칸 쓰기', type:'rev', items:[
-   ['01','as many books as'],['02','as long as mine'],['03','twice as old as'],
-   ['04','not as[so] heavy as'],['05','not as[so] high as']]},
-  {t:'❶ 원급 비교 · C', s:'틀린 곳 고치기', type:'rev', items:[
-   ['01','prettier → pretty'],['02',"Brian → Brian's"],['03','taller → tall'],
-   ['04','so → as'],['05','so not → not so']]},
-  {t:'❷ 목적격 관계대명사 · A', s:'괄호 고르기', type:'pick', items:[
-   ['01',['that','who'],0],['02',['who','which'],1],['03',['that','who'],0],
-   ['04',['whom','which'],0],['05',['who','which'],1]]},
-  {t:'❷ 목적격 관계대명사 · B', s:'두 문장 → 한 문장 (that 쓰지 말 것)', type:'rev', items:[
-   ['01','The man who(m) my sister likes works at the bakery.'],
-   ['02','Do you know the girl who(m) Andy is waiting for?'],
-   ['03','They are the children who(m) my aunt is taking care of.'],
-   ['04','This is the vase which I broke yesterday.'],
-   ['05','The music which I listened to last night was so good.']]},
-  {t:'❷ 목적격 관계대명사 · C', s:'틀린 곳 고치기', type:'rev', items:[
-   ['01','who → which[that]'],['02','which → who(m)[that]'],['03','it → 삭제'],
-   ['04','which → who(m)[that]'],['05','to that I enjoy listening → which[that] I enjoy listening to']]}
+{id:'L7R2', tab:'7과 2회', title:'7과 · 내신 대비 2회',
+ mc:[3,1,5,2,2,1,3,1,2,1,5,5,4,3,4,4,2,5,4,3,3,2,5,4,1],
+ rev:[
+  ['26','It is fun to share tables with strangers.'],
+  ['27','The flatbread is so big that it covers her shoulder.'],
+  ['28','Have you ever been there?'],
+  ['29','It is made only from flour, salt, and water.'],
+  ['30','(1) to become → becoming　(2) enjoy → to enjoy']
  ]},
-
-{id:'s3', tab:'L5 실전문제', title:'Lesson 5 Grammar Test', sub:'5-1 원급 비교 · 5-2 목적격 관계대명사',
- groups:[
-  {t:'5-1 원급 비교 · 객관식', type:'mc', items:[
-   ['01',[2]],['02',[2,3],true],['03',[2]],['04',[5]],['05',[5]],
-   ['07',[4]],['08',[5]],['09',[5]],['10',[3]],['11',[2]],['12',[4]],
-   ['13',[5]],['14',[1]],['15',[5]],['16',[1]],['18',[3]],['19',[2]]]},
-  {t:'5-1 원급 비교 · 서술형', type:'rev', items:[
-   ['06','not as[so] smart as'],
-   ['17','(1) as expensive as　(2) not as[so] expensive as [cheaper than]　(3) not as[so] cheap as [more expensive than]'],
-   ['20','(1) Smith is as smart as Harry.　(2) This book is not as interesting as that book. [that one / not so interesting as …]']]},
-  {t:'5-2 목적격 관계대명사 · 객관식', type:'mc', items:[
-   ['01',[3,4],true],['02',[2]],['03',[4]],['04',[3]],['05',[3]],
-   ['07',[1,5],true],['08',[3]],['10',[5]],['11',[5]],['12',[4]],
-   ['14',[1,2,5],true],['15',[4]],['17',[3]],['18',[3]],['19',[2]]]},
-  {t:'5-2 목적격 관계대명사 · 서술형', type:'rev', items:[
-   ['06','(1) the novel which[that] my mom has written recently　(2) The man who(m)[that] I hope to meet'],
-   ['09','who → which[that]'],
-   ['13','She gave me the purse (which[that]) I tried to find.'],
-   ['16','(1) that　(2) that　(3) whom　(4) which'],
-   ['20','The food that[which] I want to eat[have]']]}
+{id:'L7R3', tab:'7과 3회', title:'7과 · 내신 대비 3회',
+ mc:[4,4,4,1,5,1,4,3,5,5,2,4,1,2,1,2,2,5,3,3,3,5,1,3,2],
+ rev:[
+  ['26','It is fun to try food from other countries.'],
+  ['27','Have you taken a one-day class here before?'],
+  ['28','Because they make the bread bigger on special days.'],
+  ['29','The paella smelled so good that I wanted to try some.'],
+  ['30','(A) likes　(B) strangers']
  ]},
-
-{id:'s4', tab:'L6 확인문제', title:'Lesson 6 핵심 Grammar 확인 문제', sub:'교재 pp.22~23 · 전부 정답 확인형',
- groups:[
-  {t:'Point 1 · 교과서 문장 속 Grammar', type:'rev', items:[
-   ['01','If you smile'],['02','If you lose'],['03','If it rains tomorrow'],['04','If you turn off'],
-   ['05','If I practice hard'],['06','If you hold my hand'],['07','If you speak kind words'],
-   ['08','If you face a storm'],['09','If we water this tree'],["10","If she doesn't get up"],
-   ['11','If you make enough space']]},
-  {t:'Point 1 · More Exercise', type:'rev', items:[
-   ['01','If you need help, please call me.'],
-   ['02','If it rains tomorrow, we will cancel the picnic.'],
-   ['03',"If you don't hurry, you will be late for school."],
-   ['04','If you exercise every day, you will be healthy.'],
-   ['05','If it snows tomorrow, we will make a snowman.'],
-   ['06','If you tell him the truth, he will understand.'],
-   ['07','If you eat more vegetables, you will feel better.']]},
-  {t:'Point 2 · 교과서 문장 속 Grammar', type:'rev', items:[
-   ['01','heard, someone, calling'],['02','heard, birds, singing'],['03','saw, a woman, walking'],
-   ['04','heard, his phone, ringing'],['05','saw, a big turtle, swimming'],['06','saw, a dolphin, jumping'],
-   ['07','watched, hundreds of stars, shining'],['08','saw, a boy'],['09','heard, a bell, ringing']]},
-  {t:'Point 2 · More Exercise', type:'rev', items:[
-   ['01','felt the ground shaking'],
-   ['02','smelled something burning in the kitchen'],
-   ['03','heard someone playing the piano'],
-   ['04','watched a cat jumping over the fence'],
-   ['05','noticed someone staring at me']]}
+{id:'L7R4', tab:'7과 4회', title:'7과 · 내신 대비 4회',
+ mc:[3,5,4,1,4,4,5,1,3,1,3,2,3,2,1,5,2,2,2,5,3,4,1,4,5],
+ rev:[
+  ['26','It is easy to find something we like at the hawker centers.'],
+  ['27',"The bread is so big that we can't make it alone."],
+  ['28',"I'd love to make a Vietnamese hat."],
+  ['29','It is a Korean cultural tradition to get together and make a lot of kimchi before winter comes.'],
+  ['30','(1) what → that　(2) kind → kinds']
  ]},
-
-{id:'s5', tab:'L6 실전문제', title:'Lesson 6 Grammar Test', sub:'6-1 접속사 if · 6-2 지각동사',
- groups:[
-  {t:'6-1 접속사 if · 객관식', type:'mc', items:[
-   ['01',[2]],['02',[1]],['03',[5]],['04',[1]],['06',[1]],['07',[5]],['08',[4]],['09',[3]],
-   ['11',[2]],['12',[2]],['13',[2]],['15',[5]],['17',[2]],['18',[2]],['19',[2]]]},
-  {t:'6-1 접속사 if · 서술형', type:'rev', items:[
-   ['05','If, get, will be'],
-   ['10',"Unless → If　(또는 won't → will)"],
-   ['14',"you speak up, I can't hear you"],
-   ['16','if'],
-   ['20','(1) turn, will see　(2) has, will exercise']]},
-  {t:'6-2 지각동사 · 객관식', type:'mc', items:[
-   ['01',[2]],['02',[2]],['03',[3]],['05',[2]],['06',[2,5],true],['08',[1,4],true],['09',[3]],
-   ['10',[2]],['11',[1]],['13',[3]],['14',[1,5],true],['15',[3]],['16',[5]],['18',[2]],['19',[3,4],true]]},
-  {t:'6-2 지각동사 · 서술형', type:'rev', items:[
-   ['04','to fly → fly[flying]'],
-   ['07','(1) study[studying]　(2) talk[talking]'],
-   ['12','screaming'],
-   ['17','paint[painting]'],
-   ['20','(1) He felt something touch[touching] his leg.　(2) She watched children read[reading] books in the library.']]}
+{id:'L8R1', tab:'8과 1회', title:'8과 · 내신 대비 1회',
+ mc:[1,2,1,1,2,5,3,2,5,2,2,3,5,1,1,3,5,4,3,5,4,3,4,4,4],
+ rev:[
+  ['26','Do you know what the most challenging race in the world is?'],
+  ['27','This wild journey is not only exciting but also meaningful.'],
+  ['28',"Don't forget to take your library card."],
+  ['29','They check their skills in using ropes, reading maps, and giving first aid.'],
+  ['30','(1) do the teams find out → the teams find out　(2) go → goes']
  ]},
-
-{id:'s6', tab:'L6 워크시트', title:'Lesson 6 GRAMMAR worksheet', sub:'접속사 if · 지각동사',
- groups:[
-  {t:'❶ 접속사 if · A', s:'괄호 고르기', type:'pick', items:[
-   ['01',['is','will be'],0],['02',['So','If'],1],['03',['is','will be'],0],
-   ['04',["won't water","don't water"],1],['05',['If','Unless'],1]]},
-  {t:'❶ 접속사 if · B', s:'틀린 곳 고쳐 문장 다시 쓰기', type:'rev', items:[
-   ['01','If it is sunny tomorrow, I will go to the beach.'],
-   ['02','Clark will win the contest if he does his best.'],
-   ['03','If you see Brian, please give him this book.'],
-   ['04',"If you don't water the plants enough [Unless you water the plants enough], they won't grow well."],
-   ['05',"We will be late if we don't leave now [unless we leave now]."]]},
-  {t:'❶ 접속사 if · C', s:'문장 완성', type:'rev', items:[
-   ['01',"If you are[you're] free"],
-   ['02','Unless you do your best'],
-   ['03',"If it doesn't rain tomorrow"],
-   ['04','If you exercise regularly'],
-   ['05','Unless you speak loudly']]},
-  {t:'❷ 지각동사 · A', s:'괄호 고르기', type:'pick', items:[
-   ['01',['saw','had'],0],['02',['play','to play'],0],['03',['heard','made'],0],
-   ['04',['to shine','shining'],1],['05',['played','playing'],1]]},
-  {t:'❷ 지각동사 · B', s:'밑줄 친 부분 고치기', type:'rev', items:[
-   ['01','sleep[sleeping]'],['02','burn[burning]'],['03','shake[shaking]'],
-   ['04','cry[crying]'],['05','talk[talking]']]},
-  {t:'❷ 지각동사 · C', s:'빈칸 쓰기', type:'rev', items:[
-   ['01','I felt something bite[biting]'],
-   ['02','She noticed him tell[telling]'],
-   ['03','heard her dog bark[barking]'],
-   ['04','They watched the player hit[hitting]'],
-   ['05','We saw the singers dance[dancing]']]}
+{id:'L8R2', tab:'8과 2회', title:'8과 · 내신 대비 2회',
+ mc:[1,5,4,5,3,3,3,3,5,1,1,5,2,2,1,3,5,4,2,4,2,2,4,4,1],
+ rev:[
+  ['26','Can you tell me where the first checkpoint is?'],
+  ['27','Teams not only walk on rough ground but also row boats on rapid water.'],
+  ['28','Is it okay to eat snacks in the library?'],
+  ['29','They must not make fires or leave trash behind during the race.'],
+  ['30','They find out the course just a day before the race.']
+ ]},
+{id:'L8R3', tab:'8과 3회', title:'8과 · 내신 대비 3회',
+ mc:[2,3,3,2,1,5,2,3,2,5,5,1,4,5,5,4,2,4,1,3,3,1,1,4,4],
+ rev:[
+  ['26','Do you know how long the race is?'],
+  ['27','We need not only maps but also ropes.'],
+  ['28',"Don't forget to put on sunscreen."],
+  ['29','It must have at least one man and one woman.'],
+  ['30','(1) shows → show　(2) checks → check']
+ ]},
+{id:'L8R4', tab:'8과 4회', title:'8과 · 내신 대비 4회',
+ mc:[5,5,4,4,4,1,2,1,1,5,2,3,3,2,3,5,3,2,3,4,1,4,1,2,5],
+ rev:[
+  ['26','I wonder why the course changed.'],
+  ['27','For this race, you need not only strength but also teamwork.'],
+  ['28','Is it okay to feed the animals?'],
+  ['29','They must not make fires or leave trash behind during the race.'],
+  ['30','(A) finishes　(B) first']
  ]}
 ];
 
-/* ============ 상태 ============ */
-const KEY='bn_omr_m2_L56_v1_jc';
-let S = load();
+const KEY='bn_omr_m2_final78_jc';
+const SCHOOL='종촌중';
+let S=load(), cur=0;
+
 function load(){
-  try{ return JSON.parse(localStorage.getItem(KEY)) || blank(); }catch(e){ return blank(); }
+  try{ const v=JSON.parse(localStorage.getItem(KEY)); if(v&&v.ans) return v; }catch(e){}
+  return {name:'', ans:{}, self:{}, seen:{}, graded:{}};
 }
-function blank(){ return {name:'', school:'', ans:{}, self:{}, seen:{}, graded:{}}; }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 
-/* ============ 이름(선택) · 학교 고정 ============ */
-const SCHOOL='종촌중';
-S.school=SCHOOL;
-document.getElementById('whoSchool').textContent=SCHOOL;
-
-const nmEl=document.getElementById('whoName');
-nmEl.value = S.name || localStorage.getItem('bn_name') || '';
+const nmEl=document.getElementById('nm');
+nmEl.value = S.name || (function(){ try{ return localStorage.getItem('bn_name')||''; }catch(e){ return ''; } })();
 nmEl.oninput=()=>{
   S.name=nmEl.value.trim();
-  try{ localStorage.setItem('bn_name',S.name); }catch(e){}
+  try{ localStorage.setItem('bn_name',S.name); localStorage.setItem('bn_school',SCHOOL); }catch(e){}
   save();
 };
 
-/* ============ 탭 ============ */
-let cur=0;
+function k(sid,n){ return sid+'|'+n; }
+
 function buildTabs(){
   const t=document.getElementById('tabs'); t.innerHTML='';
   SHEETS.forEach((sh,i)=>{
     const b=document.createElement('button');
-    b.className='tab'+(i===cur?' on':''); b.textContent=sh.tab;
-    b.onclick=()=>render(i); t.appendChild(b);
+    b.className='tab'+(i===cur?' on':'')+(S.graded[sh.id]?' done':'');
+    b.textContent=sh.tab;
+    b.onclick=()=>{ render(i); window.scrollTo({top:0}); };
+    t.appendChild(b);
   });
 }
 
-/* ============ 렌더 ============ */
-function k(sid,gi,n){ return sid+'|'+gi+'|'+n; }
-
 function render(i){
   cur=i;
-  document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('on',j===i));
+  buildTabs();
   const sh=SHEETS[i], m=document.getElementById('sheet');
   m.innerHTML='';
 
   const head=document.createElement('div');
   head.className='sheet-head';
-  head.innerHTML='<h2>'+sh.title+'</h2><span>'+sh.sub+'</span>';
+  head.innerHTML='<h2>'+sh.title+'</h2><span>객관식 1~25번 · 서술형 26~30번</span>';
   m.appendChild(head);
 
   const note=document.createElement('div');
   note.className='note';
-  note.textContent='객관식은 답을 골라 마킹하고, 서술형은 [정답 보기]를 눌러 내 답과 비교한 뒤 O 또는 X를 직접 누르세요.';
+  note.textContent='객관식은 고른 번호를 마킹하세요. 서술형은 [정답 보기]를 눌러 내 답과 비교한 뒤 O 또는 X를 직접 누르면 됩니다.';
   m.appendChild(note);
 
-  sh.groups.forEach((g,gi)=>{
-    const box=document.createElement('div'); box.className='group';
-    const h=document.createElement('h3');
-    h.innerHTML=g.t+(g.s?'<em>'+g.s+'</em>':'');
-    box.appendChild(h);
-    g.items.forEach(it=>box.appendChild(rowFor(sh.id,gi,g,it)));
-    m.appendChild(box);
-  });
-
-  const act=document.createElement('div'); act.className='actions';
-  const gb=document.createElement('button'); gb.className='btn-grade'; gb.textContent='채점하기';
-  gb.onclick=()=>{ S.graded[sh.id]=1; save(); render(i); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}); };
-  const rb=document.createElement('button'); rb.className='btn-reset'; rb.textContent='다시 풀기';
-  rb.onclick=()=>{
-    if(!confirm('이 시험지의 답을 모두 지울까요?')) return;
-    Object.keys(S.ans).forEach(x=>{ if(x.startsWith(sh.id+'|')) delete S.ans[x]; });
-    Object.keys(S.self).forEach(x=>{ if(x.startsWith(sh.id+'|')) delete S.self[x]; });
-    Object.keys(S.seen).forEach(x=>{ if(x.startsWith(sh.id+'|')) delete S.seen[x]; });
-    delete S.graded[sh.id]; save(); render(i); window.scrollTo({top:0});
-  };
-  act.appendChild(gb); act.appendChild(rb); m.appendChild(act);
-
-  const res=document.createElement('div'); res.className='result'; res.id='res';
-  m.appendChild(res);
-  if(S.graded[sh.id]) showResult(sh);
-}
-
-function rowFor(sid,gi,g,it){
-  const row=document.createElement('div'); row.className='row';
-  const key=k(sid,gi,it[0]);
-  const n=document.createElement('div'); n.className='num'; n.textContent=it[0];
-  row.appendChild(n);
-
-  if(g.type==='mc'){
+  /* 객관식 */
+  const g1=document.createElement('div'); g1.className='group';
+  const h1=document.createElement('h3'); h1.innerHTML='객관식<em>1~25번</em>'; g1.appendChild(h1);
+  sh.mc.forEach((correct,idx)=>{
+    const n=String(idx+1);
+    const row=document.createElement('div'); row.className='row';
+    const nd=document.createElement('div'); nd.className='num'; nd.textContent=n; row.appendChild(nd);
     const wrap=document.createElement('div'); wrap.className='bubbles';
-    const multi=!!it[2];
+    const key=k(sh.id,n);
     for(let v=1;v<=5;v++){
       const b=document.createElement('button'); b.className='bubble';
       b.textContent='①②③④⑤'[v-1];
-      const picked=(S.ans[key]||[]).includes(v);
-      if(picked) b.classList.add('on');
-      b.onclick=()=>{
-        let a=S.ans[key]||[];
-        if(multi){ a = a.includes(v) ? a.filter(x=>x!==v) : a.concat(v).sort(); }
-        else { a = a.includes(v) ? [] : [v]; }
-        S.ans[key]=a; save(); render(cur);
-      };
+      if(S.ans[key]===v) b.classList.add('on');
+      b.onclick=()=>{ S.ans[key]=(S.ans[key]===v?0:v); save(); render(cur); };
       wrap.appendChild(b);
     }
     row.appendChild(wrap);
-    if(multi){ const m=document.createElement('span'); m.className='multi'; m.textContent='모두 고르기'; row.appendChild(m); }
-    markRow(row,sid,key,graded(sid)?judgeMC(S.ans[key],it[1]):null);
-  }
+    if(S.graded[sh.id]) row.classList.add(S.ans[key]===correct?'ok':'no');
+    g1.appendChild(row);
+  });
+  m.appendChild(g1);
 
-  else if(g.type==='pick'){
-    const wrap=document.createElement('div'); wrap.className='picks';
-    it[1].forEach((label,idx)=>{
-      const b=document.createElement('button'); b.className='pick'; b.textContent=label;
-      if((S.ans[key]||[])[0]===idx) b.classList.add('on');
-      b.onclick=()=>{ S.ans[key]=((S.ans[key]||[])[0]===idx)?[]:[idx]; save(); render(cur); };
-      wrap.appendChild(b);
-    });
-    row.appendChild(wrap);
-    const a=(S.ans[key]||[])[0];
-    markRow(row,sid,key, graded(sid) ? (a===undefined?false:a===it[2]) : null);
-  }
-
-  else { // rev
+  /* 서술형 */
+  const g2=document.createElement('div'); g2.className='group';
+  const h2=document.createElement('h3'); h2.innerHTML='서술형<em>26~30번 · 정답 보고 스스로 채점</em>'; g2.appendChild(h2);
+  sh.rev.forEach(it=>{
+    const key=k(sh.id,it[0]);
+    const row=document.createElement('div'); row.className='row';
+    const nd=document.createElement('div'); nd.className='num'; nd.textContent=it[0]; row.appendChild(nd);
     const box=document.createElement('div'); box.className='rev';
     if(S.seen[key]){
-      const a=document.createElement('div'); a.className='ans'; a.textContent=it[1];
-      box.appendChild(a);
+      const a=document.createElement('div'); a.className='ans'; a.textContent=it[1]; box.appendChild(a);
       const ox=document.createElement('div'); ox.className='ox';
-      [['O','o'],['X','x']].forEach(([t,c])=>{
-        const b=document.createElement('button'); b.className=c+(S.self[key]===t?' on':''); b.textContent=t;
-        b.onclick=()=>{ S.self[key]=(S.self[key]===t?'':t); save(); render(cur); };
+      [['O','o'],['X','x']].forEach(p=>{
+        const b=document.createElement('button');
+        b.className=p[1]+(S.self[key]===p[0]?' on':''); b.textContent=p[0];
+        b.onclick=()=>{ S.self[key]=(S.self[key]===p[0]?'':p[0]); save(); render(cur); };
         ox.appendChild(b);
       });
       box.appendChild(ox);
@@ -459,50 +299,53 @@ function rowFor(sid,gi,g,it){
     row.appendChild(box);
     if(S.self[key]==='O') row.classList.add('ok');
     if(S.self[key]==='X') row.classList.add('no');
-  }
-  return row;
-}
-
-function graded(sid){ return !!S.graded[sid]; }
-function judgeMC(a,correct){
-  a=a||[];
-  if(a.length===0) return false;
-  if(a.length!==correct.length) return false;
-  return correct.every(v=>a.includes(v));
-}
-function markRow(row,sid,key,ok){
-  if(ok===null) return;
-  row.classList.add(ok?'ok':'no');
-}
-
-/* ============ 결과 ============ */
-function showResult(sh){
-  let total=0, right=0, wrong=[];
-  sh.groups.forEach((g,gi)=>{
-    g.items.forEach(it=>{
-      const key=k(sh.id,gi,it[0]); total++;
-      let ok=false;
-      if(g.type==='mc') ok=judgeMC(S.ans[key],it[1]);
-      else if(g.type==='pick') ok=((S.ans[key]||[])[0]===it[2]);
-      else ok=(S.self[key]==='O');
-      if(ok) right++; else wrong.push(g.t.replace(/ · /g,' ')+' '+it[0]);
-    });
+    g2.appendChild(row);
   });
+  m.appendChild(g2);
+
+  /* 버튼 */
+  const act=document.createElement('div'); act.className='actions';
+  const gb=document.createElement('button'); gb.className='btn-grade'; gb.textContent='채점하기';
+  gb.onclick=()=>{
+    S.graded[sh.id]=1; save(); render(cur);
+    const r=document.getElementById('res'); if(r) r.scrollIntoView({behavior:'smooth',block:'center'});
+  };
+  const rb=document.createElement('button'); rb.className='btn-reset'; rb.textContent='다시 풀기';
+  rb.onclick=()=>{
+    if(!confirm(sh.title+' 답을 모두 지울까요?')) return;
+    [S.ans,S.self,S.seen].forEach(o=>{ Object.keys(o).forEach(x=>{ if(x.indexOf(sh.id+'|')===0) delete o[x]; }); });
+    delete S.graded[sh.id]; save(); render(cur); window.scrollTo({top:0});
+  };
+  act.appendChild(gb); act.appendChild(rb); m.appendChild(act);
+
+  const res=document.createElement('div'); res.className='result'; res.id='res'; m.appendChild(res);
+  if(S.graded[sh.id]) showResult(sh);
+}
+
+function showResult(sh){
+  let mcRight=0, mcWrong=[], rvRight=0, rvWrong=[], blank=0;
+  sh.mc.forEach((correct,idx)=>{
+    const n=String(idx+1), a=S.ans[k(sh.id,n)];
+    if(!a) blank++;
+    if(a===correct) mcRight++; else mcWrong.push(n);
+  });
+  sh.rev.forEach(it=>{
+    const v=S.self[k(sh.id,it[0])];
+    if(v==='O') rvRight++; else rvWrong.push(it[0]);
+  });
+  const total=sh.mc.length+sh.rev.length, right=mcRight+rvRight;
   const r=document.getElementById('res'); r.className='result show';
-  let html='<div class="score"><b>'+right+'</b> / '+total+' 개 맞았어요</div>';
-  if(wrong.length){
-    html+='<div class="wronglist"><b>다시 볼 문제</b><br>'+wrong.join(' · ')+'</div>';
-  } else {
-    html+='<div class="wronglist">전부 맞았습니다. 선생님께 보여주세요.</div>';
-  }
-  html+='<div class="wronglist" style="margin-top:10px">'+S.school+' '+S.name+'</div>';
+  let html='<div class="score"><b>'+right+'</b> / '+total+' 개 정답'
+         +'<span class="sub">객관식 '+mcRight+'/'+sh.mc.length+' · 서술형 '+rvRight+'/'+sh.rev.length+'</span></div>';
+  if(blank) html+='<div class="wronglist" style="color:var(--gold)">아직 마킹하지 않은 객관식이 '+blank+'개 있어요.</div>';
+  if(mcWrong.length) html+='<div class="wronglist"><b>객관식 다시 볼 문제</b>　'+mcWrong.join(' · ')+'</div>';
+  if(rvWrong.length) html+='<div class="wronglist"><b>서술형 다시 볼 문제</b>　'+rvWrong.join(' · ')+'</div>';
+  if(!mcWrong.length && !rvWrong.length) html+='<div class="wronglist">전부 맞았습니다. 선생님께 보여주세요.</div>';
+  html+='<div class="stamp">'+SCHOOL+' '+(S.name||'이름 미입력')+' · '+sh.title+'</div>';
   r.innerHTML=html;
 }
 
-/* ============ 시작 ============
-   모든 선언(let cur 등)이 끝난 뒤에 호출해야 한다.
-   위쪽에서 부르면 'cur' 초기화 전 접근으로 화면이 빈다. */
-buildTabs(); render(0);
+render(0);
 </script>
 </body>
 </html>
